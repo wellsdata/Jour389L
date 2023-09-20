@@ -1,0 +1,304 @@
+---
+title: "Geography"
+author: "Rob Wells"
+date: "2023-09-04"
+output: html_document
+---
+This notebook will clean and geocode the cities and states of the newspapers. 
+And then it will geocode the cities and states of the crimes.
+And then it will measure:
+1) Whether the newspaper was reporting on an in-state or out-of-state event
+2) The distance from the newspaper's city to the city of the lynching
+
+```{r}
+#install.packages("here")
+here::here()
+library(tidyverse)
+library(tidyr)
+#install.packages("ggmap")
+library(ggmap)
+#register_google(key = "YOUR KEY HERE")
+library(googlesheets4)
+#install.packages("geosphere")
+library(geosphere)
+```
+#Building the Data
+
+## Import newspaper index, clean
+```{r}
+jackindex_geo <- read_csv("../data/extracted_articles_aug25.csv")
+
+jackindex_geo <- separate(data = jackindex_geo, col = newspaper_name, into = c("newspaper_name1","city"), sep = "[(]", extra ="merge", fill = "right") 
+
+jackindex_geo <- separate(data = jackindex_geo, col = city, into = c("city1","state"), sep = ",", extra ="merge", fill = "right") 
+
+jackindex_geo <- separate(data = jackindex_geo, col = city1, into = c("city1","crap"), sep = "\\[")
+
+#removes ...)
+jackindex_geo$city1 <- gsub("\\.\\.\\.)", "", jackindex_geo$city1)
+
+jackindex_geo <- jackindex_geo %>% 
+  mutate(news_address = paste(city1, newspaper_state, sep=", "))
+
+```
+
+
+## Geocode
+```{r}
+
+
+#do this once, skip to next chunk to import results
+# jackindex_geo <- jackindex_geo %>% 
+#   mutate(news_location = geocode(news_address))
+# 
+# jackindex_geo <- jackindex_geo %>% as.data.frame()
+# 
+# write.csv(jackindex_geo, "../output/geocoded_newspapers_sept4.csv")
+```
+
+```{r}
+#Import geocoded newspapers
+jackindex_geo <- read.csv("../output/geocoded_newspapers_sept4.csv")
+
+#import geocoded articles from class
+
+googlesheets4::gs4_deauth()
+articles <- read_sheet("https://docs.google.com/spreadsheets/d/1zDWMbuoTHVtiJDrrJ9mDfBTp-VxNFTmMHiGcGA-UvjE/edit?usp=sharing") %>% 
+  as.data.frame()
+#Sort of a bullshit workaround to deal with the university's Google: https://stackoverflow.com/questions/61356212/client-doesnt-have-sufficient-permission
+
+articles$file_id2 <- as.integer(articles$file_id)
+
+joined <- jackindex_geo %>% 
+  inner_join(articles, by=c("file_id"="file_id2"))
+
+#write_csv(joined, "../output/geocoded_TEST_joined_sept15.csv")
+```
+
+
+```{r}
+#prepare new locations
+joined <- joined %>% 
+  rename(city_lynch1 = "City, town where lynching event took place", state_lynch1 = "State where lynching event took place", city_lynch2 = "Second Article: City, town of lynching event", state_lynch2 = "Second Article: State of lynching event", city_lynch3 =  "Third Article: City, town of lynching event", state_lynch3 = "Third Article: State of lynching event")
+
+joined <- joined %>% 
+  mutate(lynch_address1 = paste(city_lynch1, state_lynch1, sep=", ")) %>% 
+  mutate(lynch_address2 = paste(city_lynch2, state_lynch2, sep=", ")) %>%
+  mutate(lynch_address3 = paste(city_lynch3, state_lynch3, sep=", ")) 
+
+joined <- joined %>% 
+  select(file_id, newspaper_name1, news_address, news_location.lon, news_location.lat, city1, newspaper_state, date, year, month, day, page, URL, lynch_address1, lynch_address2, lynch_address3, city_lynch1, state_lynch1, city_lynch2, state_lynch2, city_lynch3, state_lynch3, `Comments or notes?`,  index, sn)
+#write_csv(joined, "../output/geocoded_TEST_joined_sept15.csv")
+
+#rename newspaper_state to Postal code
+joined$newspaper_state_code <- state.abb[match(joined$newspaper_state, state.name)]
+
+#write_csv(joined, "../output/geocoded_TEST_joined_sept15.csv")
+```
+
+```{r}
+
+joined <- joined %>%
+  mutate(lynching1 = geocode(lynch_address1)) %>% 
+  mutate(lynching2 = geocode(lynch_address2)) %>% 
+  mutate(lynching3 = geocode(lynch_address3)) 
+
+#write.csv(joined, "../output/geocoded_TEST2_joined_sept15.csv")
+
+```
+
+```{r}
+#restructure df in tidy format
+x <- joined %>% 
+  select(newspaper_state_code) %>% 
+  group_by(newspaper_state_code) %>% 
+  count(newspaper_state_code) %>%
+  rename(news_state_total =n)
+
+y <- joined %>% 
+  select(state_lynch1) %>% 
+  group_by(state_lynch1) %>% 
+  count(state_lynch1) %>% 
+  rename(state_lynch_total =n)
+
+states_compare <- x %>% 
+  inner_join(y, by=c("newspaper_state_code" = "state_lynch1"))
+
+# write.csv(states_compare, "../output/states_compared_TEST_sept15.csv" )
+
+```
+
+```{r}
+# joined1 <- read.csv ("../output/geocoded_TEST2_joined_sept15.csv" )
+#Newspaper state abbreviation
+joined1$newspaper_state_code <- state.abb[match(joined1$newspaper_state, state.name)]
+
+df1 <- joined1 %>% 
+  select(file_id, newspaper_name1, news_address, news_location.lon, news_location.lat, city1, newspaper_state_code, date, year, page, URL, lynch_address1, city_lynch1, state_lynch1, lynching1.lon, lynching1.lat,  Comments.or.notes.,  index, sn) %>% 
+  rename(lynch_address=lynch_address1, city_lynch=city_lynch1, state_lynch=state_lynch1, lynching.lon=lynching1.lon, lynching.lat=lynching1.lat)
+
+df2 <- joined1 %>% 
+  select(file_id, newspaper_name1, news_address, news_location.lon, news_location.lat, city1, newspaper_state_code, date, year, page, URL, lynch_address2, city_lynch2, state_lynch2, lynching2.lon, lynching2.lat, Comments.or.notes., index, sn) %>%   rename(lynch_address=lynch_address2, city_lynch=city_lynch2, state_lynch=state_lynch2, lynching.lon=lynching2.lon, lynching.lat=lynching2.lat) %>% 
+    drop_na(city_lynch)
+
+df3 <- joined1 %>% 
+  select(file_id, newspaper_name1, news_address, news_location.lon, news_location.lat, city1, newspaper_state_code, date, year, page, URL, lynch_address3, city_lynch3, state_lynch3, lynching3.lon, lynching3.lat, Comments.or.notes.,  index, sn) %>%   rename(lynch_address=lynch_address3, city_lynch=city_lynch3, state_lynch=state_lynch3, lynching.lon=lynching3.lon, lynching.lat=lynching3.lat) %>% 
+    drop_na(city_lynch)
+
+lynch_geocoded_9.16 <- rbind(df1, df2, df3)
+
+# write.csv(lynch_geocoded_9.16, "../output/lynch_geocoded_9.16.csv")
+#df10 <- read.csv("../output/lynch_geocoded_9.16.csv")
+```
+## Calculate Distance
+```{r}
+# install.packages("geosphere")
+# library(geosphere)
+
+
+# Calculate the distance
+df4$meters <- distVincentySphere(p1 = df4[,c('news_location.lon', 'news_location.lat')], p2 = df4[,c('lynching.lon', 'lynching.lat')])
+
+# The distance is in meters, convert to miles
+df4$miles <- df4$meters * 0.000621371
+
+df4$miles <- round(df4$miles)
+
+df4 <- subset(df4, select = -meters) 
+
+lynch_geocoded_9.16 <- df4
+#write.csv(lynch_geocoded_9.16, "../output/lynch_geocoded_9.16.csv")
+
+```
+
+## In v Out State
+```{r}
+#in vs out of state
+
+lynch_geocoded_9.16 <- lynch_geocoded_9.16 %>% 
+  mutate(in_state = case_when(
+    newspaper_state_code == state_lynch~ "Y", TRUE ~ "N"
+  ))
+
+#write.csv(lynch_geocoded_9.16, "../output/lynch_geocoded_9.16.csv")
+
+```
+
+
+#Analysis
+```{r}
+lynch_geocoded_9.16 <- read.csv("../data/lynch_geocoded_9.16.csv")
+
+
+```
+
+```{r}
+## Pct of Newspapers in state vs out of state
+ lynch_geocoded_9.16 %>% 
+  count(in_state) %>% 
+  mutate(pct = round(n/3292,2))
+
+
+# in_state
+# N	3068	0.93		
+# Y	223	0.07	
+
+
+summary(lynch_geocoded_9.16$miles)
+#Newspapers, on average, were 878 miles away from a lynching event during the whole time period
+```
+
+## Compile by decade
+```{r}
+
+lynch_geocoded_9.16 <- lynch_geocoded_9.16 %>% 
+    mutate(decade = case_when(
+      year < 1800 ~ "pre1800",
+      year >= 1800 & year <=1809 ~ "1800s",
+      year >= 1810 & year <=1819 ~ "1810s",
+      year >= 1820 & year <=1829 ~ "1820s",
+      year >= 1830 & year <=1839 ~ "1830s",
+      year >= 1840 & year <=1849 ~ "1840s",
+      year >= 1850 & year <=1859 ~ "1850s",
+      year >= 1860 & year <=1869 ~ "1860s",
+      year >= 1870 & year <=1879 ~ "1870s",
+      year >= 1880 & year <=1889 ~ "1880s",
+      year >= 1890 & year <=1899 ~ "1890s",
+      year >= 1900 & year <=1909 ~ "1900s",
+      year >= 1910 & year <=1919 ~ "1910s",
+      year >= 1920 & year <=1929 ~ "1920s",
+      year >= 1930 & year <=1939 ~ "1930s",
+      year >= 1940 & year <=1949 ~ "1940s",
+      year >= 1950 & year <=1959 ~ "1950s",
+      year >= 1960 & year <=1969 ~ "1960s",
+      year >= 1970 ~ "post1970s"
+         ))
+```
+
+
+## Regional classification for newspaper
+```{r}
+library(datasets)
+state_info <- tibble(state_name = state.name, State = state.abb, Region = state.region) %>% 
+  as.data.frame()
+
+lynch_geocoded_9.16 <- lynch_geocoded_9.16 %>% 
+  inner_join(state_info, by=c("newspaper_state_code"="State"))
+
+lynch_geocoded_9.16 <- lynch_geocoded_9.16 %>% 
+  rename(Newspaper_State = state_name, Newspaper_Region = Region)
+
+# write.csv(lynch_geocoded_9.16, "../output/lynch_geocoded_9.16.csv")
+
+```
+
+## Viz the decades
+```{r}
+
+x <- lynch_geocoded_9.16 %>% 
+  select(decade, miles, in_state) %>% 
+  group_by(decade) %>% 
+  count(in_state)
+
+  ggplot(x, aes(x=decade, y=n, color=in_state, fill=in_state)) +
+    geom_col(position = "dodge") + 
+  theme(legend.position = "none") +
+  labs(title = "DRAFT FINDINGS: Little Local Coverage of Lynching",
+       subtitle = "Local (teal) vs Out-of-State (red) Lynching Coverage",
+       caption = "Teal bar=In-state. Red Bar=Out-of-State. Source: Library of Congress. n=3188 Graphic by Rob Wells. Sept 20 2024",
+       y="Count of articles",
+       x="")
+
+
+```
+
+### Figure 8: Regional Sentiment with Afinn
+
+
+ggplot(sent_regions, aes(x=value))+
+  geom_point(aes(y=south_pct), position=position_jitter(h=0.01, w=.09), size=4, color="orange") +
+    # geom_point(aes(y=south_pct),  size=4, color="orange") +
+  geom_point(aes(y=north_pct), position=position_jitter(h=0.01, w=.09), size=4, color="blue") +
+    geom_point(aes(y=border_pct), position=position_jitter(h=0.01, w=.09), size=4, color="red") +
+    geom_point(aes(y=misc_pct), position=position_jitter(h=0.01, w=.09), size=4, color="green") +
+   scale_y_continuous(labels = scales::percent) +
+  labs(title = "Similar Overall Sentiment by Region in Lynching News Coverage",
+       subtitle = "Based in 846 extracted articles, 1837-1960",
+       caption = "Blue = North. Orange = South. Red= Border. Green = Misc.  Graphic by Rob Wells, 1-05-2023",
+       y="Pct of Words",
+       x="Afinn Sentiment analysis. Sentiment -5 = Negative and 5 = Positive")
+# ggsave("Figure8_regional_sentiment_afinn_jan5.png",device = "png",width=9,height=6, dpi=1000)
+
+
+#new location column for long/lat
+#location is the column containing each observation's long/lat coordinates, in the following format (-76.218922,36.841287).
+
+df4 <- lynch_geocoded_9.16 %>% 
+  mutate(news_location = paste(news_location.lon, news_location.lat, sep= ", ")) %>% 
+  mutate(lynch_location = paste(lynching.lon, lynching.lat, sep=", "))
+
+df5 <- df4 %>% 
+  mutate(distance = mapdist("lynch_location", "news_location"))
+
+
+```
