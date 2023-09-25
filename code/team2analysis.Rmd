@@ -1,0 +1,115 @@
+---
+title: "Team 2 Analysis"
+author: "Hannah Marszalek, Apurva Mahajan, Sasha Allen, Marwa Barakat"
+date: "2023-09-21"
+output: html_document
+---
+
+In this notebook, we are using the geocoding data to look at how the distance between the newspapers and the lynchings they reported on changed over time.
+
+```{r}
+#install.packages("here")
+here::here()
+library(tidyverse)
+library(tidyr)
+#install.packages("ggmap")
+library(ggmap)
+#register_google(key = "YOUR KEY HERE")
+library(googlesheets4)
+#install.packages("geosphere")
+library(geosphere)
+```
+
+# Analysis
+```{r}
+lynch_geocoded_9.16 <- read.csv("../data/lynch_geocoded_9.16.csv")
+
+```
+
+```{r}
+## Pct of Newspapers in state vs out of state
+ lynch_geocoded_9.16 %>% 
+  count(in_state) %>% 
+  mutate(pct = round(n/3292,2))
+
+
+# in_state
+# N	3068	0.93		
+# Y	223	0.07	
+
+
+summary(lynch_geocoded_9.16$miles)
+#Newspapers, on average, were 878 miles away from a lynching event during the whole time period
+```
+
+## In State v Out of State by Decade
+```{r}
+
+x <- lynch_geocoded_9.16 %>% 
+  select(decade, miles, in_state) %>% 
+  group_by(decade) %>% 
+  count(in_state)
+
+  ggplot(x, aes(x=decade, y=n, color=in_state, fill=in_state)) +
+    geom_col(position = "dodge") + 
+  theme(legend.position = "none") +
+  labs(title = "DRAFT FINDINGS: Little Local Coverage of Lynching",
+       subtitle = "Local (teal) vs Out-of-State (red) Lynching Coverage",
+       caption = "Teal bar=In-state. Red Bar=Out-of-State. Source: Library of Congress. n=3188 Graphic by Rob Wells. Sept 20 2024",
+       y="Count of articles",
+       x="")
+
+
+```
+
+## Distance Over Time
+```{r}
+#starter code
+distance <- lynch_geocoded_9.16 %>% 
+  select(decade, miles, in_state) %>% 
+  group_by(decade) %>% 
+  summarize(mean_miles = mean(miles, na.rm=TRUE)) %>%
+  arrange(desc(mean_miles))
+
+distance_by_paper <- lynch_geocoded_9.16 %>%
+  select(newspaper_name1, miles) %>%
+  group_by(newspaper_name1) %>%
+  summarize(mean_miles = mean(miles, na.rm=TRUE)) %>%
+  arrange(desc(mean_miles))
+
+#write.csv(distance_by_paper, "../output/average_reporting_distance_newspapers.csv")
+
+# in_state_yn <- lynch_geocoded_9.16 %>%
+#   select(decade, in_state) %>%
+#   mutate(
+#     yes = case_when(
+#     in_state == "Y" ~ "Y",
+#     TRUE ~ NA_character_
+#     )) %>%
+#   mutate(
+#     no = case_when(
+#     in_state == "N" ~ "N",
+#     TRUE ~ NA_character_
+#     ))
+
+  # ggplot(x, aes(x=decade, y=n, color=in_state, fill=in_state)) +
+  #   geom_col(position = "dodge") + 
+  # theme(legend.position = "none") +
+  # labs(title = "DRAFT FINDINGS: Little Local Coverage of Lynching",
+  #      subtitle = "Local (teal) vs Out-of-State (red) Lynching Coverage",
+  #      caption = "Teal bar=In-state. Red Bar=Out-of-State. Source: Library of Congress. n=3188 Graphic by Rob Wells. Sept 20 2024",
+  #      y="Count of articles",
+  #      x="")
+
+```
+
+```{r}
+## Regional differences
+
+#starter code
+m <- lynch_geocoded_9.16 %>% 
+  select(decade, Newspaper_Region, in_state) %>% 
+  group_by(Newspaper_Region) %>% 
+  count(in_state)
+
+```

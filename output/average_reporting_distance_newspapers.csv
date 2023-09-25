@@ -1,0 +1,586 @@
+"","newspaper_name1","mean_miles"
+"1","The Parma herald. ",5065
+"2","The Hawaiian gazette ",4472
+"3","The Hawaiian star ",4405
+"4","The Maui news ",4357.66666666667
+"5","Detroit evening times. ",3936
+"6","Iditarod pioneer. ",3748
+"7","The Nome nugget ",3711
+"8","The Nome nugget. ",3677
+"9","The Nome daily nugget. ",3675.5
+"10","Seward weekly gateway. ",3449
+"11","The Alaska citizen. ",3148
+"12","The Cordova daily times ",3007
+"13","Chicago tribune ",2793
+"14","The Alaska daily empire ",2654.2
+"15","The Daily Alaska empire ",2516
+"16","Green-Mountain freeman ",2469
+"17","Seward daily gateway ",2465
+"18","Wilmington journal ",2390
+"19","Gloucester County Democrat. ",2387
+"20","Washington standard ",2322
+"21","Adams County news ",2296
+"22","The North-Carolinian ",2257
+"23","The daily Alaska citizen. ",2243.66666666667
+"24","The spirit of democracy ",2164
+"25","Republican vindicator ",2151
+"26","The Kendrick gazette ",2081
+"27","The weekly Portage sentinel ",2081
+"28","The Wenatchee daily world ",1990
+"29","Richmond enquirer ",1978.6
+"30","Sacramento daily record-union ",1962.25
+"31","The New York herald ",1961.5
+"32","The Evening statesman ",1957
+"33","The daily morning Astorian ",1956
+"34","The San Juan islander ",1951
+"35","The Seattle star ",1949
+"36","Eureka daily sentinel ",1943
+"37","The primitive Republican. ",1923
+"38","The Spanish Fork press ",1865
+"39","Great Falls tribune ",1864
+"40","The new North-west ",1785
+"41","The Seattle post-intelligencer ",1778.61538461538
+"42","The Tacoma times ",1773
+"43","The record-union ",1768.25
+"44","The Portsmouth inquirer ",1757.875
+"45","The Northwest worker ",1753
+"46","Vermont watchman and State journal ",1733.71428571429
+"47","Idaho semi-weekly world ",1708
+"48","Los Angeles herald ",1694.5
+"49","The weekly Arizona miner ",1682
+"50","The Havre herald ",1678
+"51","The herald ",1658.5
+"52","Richmond daily times ",1640.68421052632
+"53","The daily morning journal and courier ",1592
+"54","Red Lodge picket ",1587.5
+"55","Morning appeal ",1583.5
+"56","Mineral Point tribune ",1583
+"57",NA,1563.98598130841
+"58","The Ogden standard ",1558.33333333333
+"59","Northwest enterprise ",1532
+"60","The Daily Missoulian ",1531
+"61","The Northwest enterprise ",1524
+"62","Weekly Trinity journal ",1524
+"63","Los Angeles daily herald ",1517.66666666667
+"64","The Caldwell tribune ",1509
+"65","Tonopah daily bonanza ",1508
+"66","The Coalville times ",1503.28571428571
+"67","Perrysburg journal. ",1470.66666666667
+"68","Deseret evening news ",1462.92857142857
+"69","Bisbee daily review ",1451.8
+"70","The San Francisco call ",1451.5
+"71","The Ogden standard-examiner ",1434
+"72","North Carolina standard ",1418.5
+"73","Idaho County free press ",1417.66666666667
+"74","The Kennewick courier ",1413
+"75","Daily Kennebec journal ",1409.63636363636
+"76","The Salt Lake herald-Republican ",1407
+"77","The Salt Lake herald ",1397.42857142857
+"78","Burlington free press ",1387
+"79","Arizona weekly journal-miner ",1386.33333333333
+"80","Salt Lake evening Democrat ",1383
+"81","New-York dispatch ",1382.66666666667
+"82","Arizona republican ",1373.08333333333
+"83","The Spokane press ",1372
+"84","The Anaconda standard ",1359.33333333333
+"85","The Butte inter mountain ",1353
+"86","Weekly journal-miner ",1347
+"87","The Hillsborough recorder ",1335
+"88","The Idaho Springs siftings-news. ",1327
+"89","The Manitowoc pilot ",1318.33333333333
+"90","The pioneer express ",1288
+"91","The Flagstaff sun-democrat ",1279
+"92","Santa Fe new Mexican ",1263
+"93","The Loup City northwestern ",1220
+"94","The evening bulletin ",1218.5
+"95","Emmons County record ",1216
+"96","The Middlebury register ",1196
+"97","The Salt Lake tribune ",1195.5
+"98","The Ordway new era. ",1193
+"99","Indiana State sentinel ",1187
+"100","Shoshone journal ",1186
+"101","The Athens post ",1174.66666666667
+"102","Rocky Ford enterprise. ",1170
+"103","The Hope pioneer ",1163.25
+"104","The Colorado statesman ",1162.8
+"105","Vermont phœnix ",1147.66666666667
+"106","Pierre weekly free press. ",1145
+"107","Milford chronicle ",1143
+"108","Fremont weekly freeman ",1134.33333333333
+"109","The Bismarck tribune ",1134
+"110","Franklin's paper the statesman. ",1124
+"111","Grand Forks herald ",1124
+"112","The Fargo forum and daily republican ",1120.5
+"113","Jamestown weekly alert ",1115.5
+"114","The Utah County Democrat ",1113
+"115","New Orleans daily crescent ",1109.5
+"116","The Princeton union ",1107
+"117","The Evansville daily journal ",1097.25
+"118","Western Kansas world ",1093.5
+"119","Wheeling daily intelligencer ",1091
+"120","The Washburn leader ",1078.2
+"121","Phoenix tribune ",1063
+"122","The Sauk Centre herald. ",1058
+"123","The Waco evening news ",1057
+"124","The Portland daily press ",1054.53333333333
+"125","The Brookings register ",1048
+"126","The Snyder signal. ",1048
+"127","The Hillsdale standard ",1038.25
+"128","Evening bulletin ",1031.5
+"129","The Elbert County tribune ",1030.33333333333
+"130","Chicago daily tribune ",1022.33333333333
+"131","New Ulm weekly review ",1022
+"132","Wessington Springs herald. ",1020.33333333333
+"133","Griggs courier. ",1018.2
+"134","Arizona daily citizen. ",1018
+"135","The Oakes times ",1017
+"136","Casper daily tribune ",1014.25
+"137","Daily Los Angeles herald ",1013.5
+"138","The Coconino weekly sun ",1012
+"139","Hot Springs weekly star. ",1011.33333333333
+"140","Kenosha telegraph ",1011
+"141","Norwich bulletin ",1006.28571428571
+"142","Pueblo chieftain. ",1004
+"143","The Ekalaka eagle ",996
+"144","Reporter and farmer ",995
+"145","Daily inter mountain ",993.5
+"146","American Falls press ",992
+"147","The Irish standard ",991.4
+"148","The Dalles times-mountaineer ",990
+"149","The Globe-republican ",983.666666666667
+"150","The L'Anse sentinel. ",965.25
+"151","Minneapolis spokesman ",962
+"152","Democratic Northwest and Henry County news ",961
+"153","Birmingham age-herald ",960
+"154","Martinsburg independent ",956.285714285714
+"155","Valentine Democrat. ",955.333333333333
+"156","Courier Democrat. ",954.3
+"157","Tulsa daily world ",947.5
+"158","The sun ",946
+"159","The Wahpeton times ",945
+"160","The Miller sun. ",944
+"161","New-York tribune ",942
+"162","The Penn's Grove record ",941.333333333333
+"163","Eastern times ",941
+"164","Sunday dispatch ",932.8
+"165","Northern Wisconsin advertiser ",925
+"166","Vilas County news ",919.333333333333
+"167","The evening world ",919.166666666667
+"168","The Butler weekly times. ",919
+"169","Lewisburg chronicle ",913
+"170","The Bridgeport times and evening farmer. ",906
+"171","Mower County transcript ",903.090909090909
+"172","Dakota farmers' leader. ",902.2
+"173","The Magnolia gazette ",900
+"174","Owingsville outlook ",898
+"175","The Minnesota pioneer ",897
+"176","Waterbury evening Democrat ",896
+"177","The Redwood gazette ",893
+"178","The Dickinson press. ",890
+"179","Southport telegraph ",886.8
+"180","The Barre daily times. ",880.666666666667
+"181","The farmer and mechanic ",880
+"182","El Paso herald. ",879
+"183","San Marcos free press ",878
+"184","The Ohio star ",871
+"185","The Omaha guide ",864
+"186","Watertown weekly leader ",862.714285714286
+"187","The Superior times ",861
+"188","The Saint Paul globe. ",860
+"189","American Republican and Baltimore daily clipper ",859
+"190","Pioneer press ",858
+"191","Western Reserve chronicle ",858
+"192","Ladysmith news-budget ",856
+"193","Essex County herald ",854
+"194","The Waterbury Democrat ",848
+"195","Rock Island daily Argus. ",841
+"196","Newark evening star and Newark advertiser ",838.5
+"197","Albuquerque morning journal ",836
+"198","The daily dispatch ",827.52
+"199","The Dolores star ",816
+"200","Daily Republican ",811
+"201","The Dakota chief. ",802.875
+"202","Helena weekly herald ",801.5
+"203","The Lake Charles echo ",800
+"204","The citizen ",799.8
+"205","The Mankato free press ",795
+"206","South Branch intelligencer ",793.333333333333
+"207","Barton County democrat ",786.25
+"208","Litchfield enquirer ",783
+"209","The Madison daily leader ",782.2
+"210","Lynchburg daily Virginian ",779.388888888889
+"211","Democratic Northwest ",778
+"212","Richmond planet ",773.333333333333
+"213","Watertown leader ",773.333333333333
+"214","Morning journal and courier ",773
+"215","The Michigan chronicle ",773
+"216","The Detroit tribune. ",770
+"217","Newport weekly independent. ",764.666666666667
+"218","Burlington tri-weekly hawk-eye ",763
+"219","The Chanute times ",761.5
+"220","Wausau pilot ",756.368421052632
+"221","Bismarck daily tribune ",752.142857142857
+"222","Nogales international ",750
+"223","The Abilene reflector ",749.5
+"224","Little Falls herald ",744
+"225","The daily Minnesota pioneer ",742
+"226","The true northerner ",735
+"227","Willmar tribune ",734.761904761905
+"228","The Wichita daily eagle ",727.25
+"229","The daily Gate City ",727
+"230","The Savannah morning news. ",724
+"231","River Falls journal ",723.122807017544
+"232","Evening capital. ",722
+"233","The Chattanooga news ",719
+"234","The Kimball graphic. ",717
+"235","Alma record. ",710
+"236","The times dispatch ",704
+"237","The Topeka state journal ",703.193548387097
+"238","Wauwatosa news ",702.5
+"239","The La Jara chronicle. ",697
+"240","The McDowell times ",695.5
+"241","Eagle River review ",691.857142857143
+"242","The Chicago whip. ",691
+"243","The Austin weekly statesman. ",687
+"244","Brownsville herald ",684.8
+"245","The North-Carolina standard ",683.666666666667
+"246","Bismarck weekly tribune ",682
+"247","The daily gazette ",676
+"248","New Britain herald ",675
+"249","Watertown republican ",669.444444444444
+"250","The Keota news. ",668
+"251","Wood County reporter ",666.931034482759
+"252","The Columbia evening Missourian ",666
+"253","The true Democrat ",660
+"254","The state herald. ",655.666666666667
+"255","Fisherman & farmer ",655
+"256","The weekly pioneer and Democrat ",653
+"257","The Mt. Sterling advocate. ",652
+"258","The free press. ",647.666666666667
+"259","The Guthrie daily leader ",647.571428571429
+"260","Fremont journal ",636
+"261","The Rock Island Argus and daily union. ",636
+"262","The broad ax ",635.333333333333
+"263","The Intermountain Catholic. ",634
+"264","The log cabin Democrat ",633
+"265","Manchester Democrat ",632
+"266","The Key West citizen ",632
+"267","Perth Amboy evening news ",630
+"268","Belmont chronicle ",627.5
+"269","St. Paul daily globe ",624
+"270","Indian chieftain ",621.5
+"271","The Monticellonian ",621
+"272","Barbour County index ",620.8
+"273","The daily worker ",614.65
+"274","El heraldo de Brownsville ",613
+"275","The northern galaxy ",611
+"276","Omaha daily bee. ",605.7
+"277","Cincinnati daily press ",603
+"278","Gallipolis journal ",602
+"279","Little Falls weekly transcript. ",600
+"280","The Sedalia weekly bazoo ",600
+"281","Cleveland morning leader ",592
+"282","The Raymer enterprise. ",591
+"283","The Greenville times ",588
+"284","The Lamar register ",588
+"285","The Cheyenne daily leader ",586.666666666667
+"286","Staunton spectator ",580.5
+"287","Rock Island Argus. ",580.428571428571
+"288","The Marion daily mirror. ",579.5
+"289","Vernon County censor ",571.666666666667
+"290","The Opelousas patriot ",571
+"291","St. Landry democrat. ",570
+"292","The Appeal ",568
+"293","Twice-a-week plain dealer. ",567
+"294","The Red Cloud chief ",566.5
+"295","The Hocking sentinel ",566
+"296","The Kadoka press ",565
+"297","The Texas Republican ",563.5
+"298","Watson's weekly Jeffersonian ",561
+"299","Lynchburg Virginian ",560
+"300","The potters herald ",559
+"301","Holmes County Republican ",556
+"302","The Durham daily globe. ",556
+"303","Evening journal ",555
+"304","The Iola register ",554.857142857143
+"305","Shepherdstown register ",553
+"306","The weekly Corinthian. ",551.5
+"307","The daily press. ",550
+"308","Wheeling register ",544.695652173913
+"309","Kansas City daily journal ",542
+"310","Semi-weekly standard ",541.666666666667
+"311","Macon beacon ",541
+"312","New Iberia enterprise and independent observer. ",539
+"313","People's voice ",539
+"314","The progress-advertiser. ",538
+"315","The Perrysburg journal ",532
+"316","The Donaldsonville chief ",531.928571428571
+"317","Martinsburg journal ",523
+"318","The Kenosha telegraph ",520.96875
+"319","Bloomington herald ",518
+"320","Urbana union ",515
+"321","The Rice belt journal. ",511
+"322","The Wheeling intelligencer ",510.066666666667
+"323","Abilene weekly reflector ",509.666666666667
+"324","The Norfolk weekly news-journal. ",508.375
+"325","Mrs. Grundy of Grundy. ",506
+"326","The press and tribune ",502
+"327","The Daily Ardmoreite ",500.888888888889
+"328","The Breckenridge news. ",500
+"329","Evening times-Republican ",496
+"330","The advocate ",495
+"331","Iuka reporter. ",491
+"332","Highland recorder. ",489.857142857143
+"333","The New era ",489
+"334","The Prescott daily news. ",486.75
+"335","The Cairo bulletin. ",486
+"336","Palestine daily herald ",485.333333333333
+"337","The Mena weekly star. ",482
+"338","The state chronicle ",481
+"339","The daily crescent ",480.285714285714
+"340","The Watertown news ",479
+"341","The morning news ",478.518518518519
+"342","Oxford eagle. ",477
+"343","The News-Herald ",476.818181818182
+"344","Grant County herald ",474
+"345","Indiana daily times ",474
+"346","The Dallas daily herald ",473
+"347","The Tupelo journal. ",473
+"348","The Louisiana Democrat ",470
+"349","The Wilmington daily Republican. ",469.875
+"350","The Goodland republic ",464
+"351","Fort Worth gazette ",462
+"352","The World ",460.666666666667
+"353","Iron County register ",458.333333333333
+"354","The St. Louis Republic ",458
+"355","The Adair County news ",455
+"356","Marshall County independent. ",448.842105263158
+"357","The Kalida venture ",448
+"358","Squatter sovereign ",445
+"359","Delaware gazette and state journal. ",443
+"360","Potosi journal. ",442
+"361","Judsonia weekly advance. ",438.5
+"362","The Wheeling daily intelligencer ",438.25
+"363","Scott County kicker. ",438
+"364","The farmers' union. ",434.067961165049
+"365","Knoxville daily chronicle ",430.5
+"366","Bluefield evening leader ",428
+"367","Iowa state bystander ",426.6
+"368","Ottumwa semi-weekly courier ",425.666666666667
+"369","The Hartford herald ",421.5
+"370","Savannah morning news ",420.5
+"371","The Ohio Democrat. ",420.347826086957
+"372","The diamond drill. ",419
+"373","The frontier. ",409.6
+"374","The Dermott news. ",406
+"375","Tarboro' press ",402.714285714286
+"376","Gainesville daily sun. ",402
+"377","Memphis daily appeal ",396
+"378","The Stark County Democrat ",395.333333333333
+"379","Marietta daily leader. ",393.5
+"380","The Bossier banner ",393
+"381","The age-herald ",392.2
+"382","The western sentinel ",389.5
+"383","Baxter Springs news ",386
+"384","The semi-weekly messenger ",381.375
+"385","Daily public ledger ",379.1
+"386","The times-news ",375.75
+"387","Fair play ",372.5
+"388","The Democratic advocate ",371
+"389","The daily citizen ",367
+"390","The Mena weekly star ",361
+"391","The news & observer ",360.333333333333
+"392","The Canton advocate ",359
+"393","The Birmingham age-herald ",358.32
+"394","The Houston daily post ",357.285714285714
+"395","Goldsboro weekly argus ",354.5
+"396","The Jasper weekly courier ",352.6
+"397","The Paducah sun ",341.25
+"398","Daily Iowa State Democrat ",341
+"399","Democratic banner. ",338
+"400","The Emporia weekly news ",335
+"401","The Hickman courier ",333
+"402","The Sentinel=record. ",330.6
+"403","Democratic messenger ",330
+"404","Huntsville gazette ",327.75
+"405","Martinsburg herald ",327
+"406","Palatka daily news ",327
+"407","The Ohio Democrat ",327
+"408","Times-promoter. ",327
+"409","American union ",326
+"410","The Big Sandy news ",324.75
+"411","The Calhoun chronicle ",324.75
+"412","New York dispatch ",324
+"413","Martinsburg gazette ",321
+"414","Richmond daily Whig ",320.25
+"415","Fayetteville observer ",314
+"416","The Delta independent ",314
+"417","The Indianapolis journal ",310.666666666667
+"418","The Atlanta constitution ",310.416666666667
+"419","The Gainesville star ",308.333333333333
+"420","The Morning Tulsa daily world ",307.5
+"421","The Grenada sentinel ",303.666666666667
+"422","American Lancaster gazette ",298
+"423","Eureka weekly sentinel ",298
+"424","The weekly Butte record ",297
+"425","The enterprise ",296
+"426","The Waxahachie daily light ",291
+"427","True American ",288
+"428","Portage sentinel ",282
+"429","Tensas gazette ",280
+"430","Pine Bluff daily graphic. ",276.5
+"431","Weekly hawk-eye and telegraph ",276
+"432","Southern sentinel ",273.5
+"433","Crittenden press ",266.222222222222
+"434","Hopkinsville Kentuckian ",264
+"435","The Cadiz Democratic sentinel ",262
+"436","The leader ",257
+"437","The Pensacola journal. ",251
+"438","The Billings gazette ",249
+"439","Martinsburg W Va evening journal ",242
+"440","The New Orleans daily Democrat ",242
+"441","Kansas City journal ",241.6
+"442","The progressive farmer ",235.666666666667
+"443","Fulton County tribune. ",231
+"444","Americus times-recorder ",229.75
+"445","Vermont telegraph ",228.5
+"446","Constantine republican ",224
+"447","The news boy. ",223
+"448","The Fairmont West Virginian. ",222.25
+"449","The Greeneville daily sun. ",220
+"450","The Cincinnati daily star ",216
+"451","The comet. ",205
+"452","Iowa County democrat ",203
+"453","The Russellville Democrat ",202
+"454","Smyrna times ",198.5
+"455","The Wheeling daily register ",198.333333333333
+"456","Weekly North Carolina standard ",194
+"457","Weekly independent ",194
+"458","The Arkansas advocate ",193
+"459","The Indianapolis times ",191
+"460","The Forrest City times ",190.5
+"461","The Bolivar bulletin. ",186
+"462","The Conway log cabin. ",184
+"463","The Trinity times ",177
+"464","The Evansville journal ",169
+"465","News-observer-chronicle ",162
+"466","Staunton spectator and vindicator ",160
+"467","The Brunswick news ",158
+"468","The Emporia news ",158
+"469","Southern Argus ",155
+"470","Semi-weekly interior journal ",144.166666666667
+"471","Shiner gazette ",144
+"472","The mountain sentinel ",144
+"473","Phillipsburg herald ",143
+"474","Ceredo advance ",140
+"475","Hickory daily record ",140
+"476","Saint Mary's beacon ",138
+"477","The interior journal ",131.5
+"478","Harrison press-journal ",129
+"479","Richmond dispatch ",128.4
+"480","Semi=weekly graphic. ",116
+"481","The Paducah daily sun ",115.25
+"482","Sistersville daily oil review ",107
+"483","Port Tobacco times, and Charles County advertiser. ",90
+"484","Henderson daily dispatch. ",72.3333333333333
+"485","St. Landry clarion. ",71
+"486","The Somerset herald ",71
+"487","The north Iowa times ",69
+"488","Tribune and telegraph ",60.9
+"489","Daily Yellowstone journal ",57
+"490","The Brookhaven leader ",57
+"491","The Bourbon news ",53
+"492","The champion. ",47
+"493","Worcester Democrat and the ledger-enterprise. ",44
+"494","The Cecil Whig ",43.3333333333333
+"495","Democratic standard ",37
+"496","Atlanta Georgian ",35
+"497","Middletown transcript ",25
+"498","Montgomery County sentinel ",22.3333333333333
+"499","The Jackson herald. ",16
+"500","Daily globe ",9
+"501","Woodruff County news ",9
+"502","Anti-slavery bugle ",1
+"503","Akron daily Democrat ",NA
+"504","Albuquerque daily citizen ",NA
+"505","Arizona tribune ",NA
+"506","Arkansas true Democrat ",NA
+"507","Asheville daily citizen ",NA
+"508","Auttaja ",NA
+"509","Bent County register. ",NA
+"510","Berkeley and Jefferson intelligencer ",NA
+"511","Bryan morning eagle ",NA
+"512","Carson City daily appeal ",NA
+"513","Cayton's weekly ",NA
+"514","Chicago eagle ",NA
+"515","Daily intelligencer ",NA
+"516","Daily tobacco leaf-chronicle. ",NA
+"517","Delaware weekly Republican ",NA
+"518","Evening capital and Maryland gazette. ",NA
+"519","Five Mile Beach weekly journal. ",NA
+"520","Grand River times ",NA
+"521","Herald and tribune ",NA
+"522","Jackson advocate ",NA
+"523","Kansas weekly herald ",NA
+"524","Kenosha tribune & telegraph ",NA
+"525","Lincoln County record ",NA
+"526","Live Oak daily Democrat. ",NA
+"527","Minnesota weekly times ",NA
+"528","Mississippi palladium ",NA
+"529","Muscatine weekly journal ",NA
+"530","Plymouth advertiser ",NA
+"531","Pullman herald ",NA
+"532","Red Wing sentinel ",NA
+"533","Richmond palladium ",NA
+"534","Roanoke Rapids daily herald. ",NA
+"535","Southwest Washington labor press ",NA
+"536","St. Paul recorder ",NA
+"537","The Bennington evening banner. ",NA
+"538","The Bon Homme County independent ",NA
+"539","The Butler County press ",NA
+"540","The Chicago star. ",NA
+"541","The Chronicle-star combined with the Moss Point advertiser. ",NA
+"542","The Cook County news-herald ",NA
+"543","The Durham recorder ",NA
+"544","The Fairfield herald ",NA
+"545","The Fulton County news ",NA
+"546","The Hartford republican. ",NA
+"547","The Helena independent ",NA
+"548","The Hood River glacier. ",NA
+"549","The Idaho Republican ",NA
+"550","The Jeffersonian ",NA
+"551","The Jersey City news. ",NA
+"552","The Kalispell bee ",NA
+"553","The Leavenworth echo ",NA
+"554","The Mena star. ",NA
+"555","The Mississippi Creole ",NA
+"556","The Monroe journal ",NA
+"557","The Montgomery advertiser ",NA
+"558","The Muskogee cimeter ",NA
+"559","The Opelousas courier ",NA
+"560","The Pacific commercial advertiser ",NA
+"561","The Port Gibson reveille ",NA
+"562","The Santa Fe weekly gazette ",NA
+"563","The Seattle Republican ",NA
+"564","The Tiffin tribune ",NA
+"565","The Union and eastern journal ",NA
+"566","The Union times ",NA
+"567","The Washburn times ",NA
+"568","The West Virginian ",NA
+"569","The Winslow mail. ",NA
+"570","The Wisconsin weekly blade ",NA
+"571","The Worthington advance ",NA
+"572","The Yazoo Democrat. ",NA
+"573","The commonwealth. ",NA
+"574","The daily Alaskan ",NA
+"575","The daily banner. ",NA
+"576","The gold leaf ",NA
+"577","The mirror. ",NA
+"578","The monitor. ",NA
+"579","The people's voice ",NA
+"580","The public ledger ",NA
+"581","The review ",NA
+"582","The times ",NA
+"583","University Missourian ",NA
+"584","Virginia Argus ",NA
+"585","Wheeling times and advertiser ",NA
