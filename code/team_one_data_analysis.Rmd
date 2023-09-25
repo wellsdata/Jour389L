@@ -1,0 +1,89 @@
+---
+title: "Geographic Analysis"
+author: "Rob Wells"
+date: "2023-09-20"
+output: html_document
+---
+This notebook has two parts.
+
+The BUILDING THE DATA:
+Will clean and geocode the cities and states of the newspapers. 
+And then it will geocode the cities and states of the crimes.
+And then it will measure:
+1) Whether the newspaper was reporting on an in-state or out-of-state event
+2) The distance from the newspaper's city to the city of the lynching
+
+
+The ANALYSIS
+--Looks at In state / out of state coverage
+--Distance over time
+--Southern vs other regions
+
+```{r}
+#install.packages("here")
+here::here()
+library(tidyverse)
+library(tidyr)
+#install.packages("ggmap")
+library(ggmap)
+#register_google(key = "YOUR KEY HERE")
+library(googlesheets4)
+#install.packages("geosphere")
+library(geosphere)
+```
+# Analysis
+```{r}
+lynch_geocoded_9.16 <- read.csv("../data/lynch_geocoded_9.16.csv")
+
+```
+
+```{r}
+## Pct of Newspapers in state vs out of state
+ lynch_geocoded_9.16 %>% 
+  count(in_state) %>% 
+  mutate(pct = round(n/3292,2))
+
+
+# in_state
+# N	3068	0.93		
+# Y	223	0.07	
+
+summary(lynch_geocoded_9.16$miles)
+#Newspapers, on average, were 878 miles away from a lynching event during the whole time period
+
+duplicated_entries <- lynch_geocoded_9.16 %>% 
+  group_by(file_id) %>% 
+  count(lynch_address) %>% 
+  filter(n > 1)
+
+# Repetitions: 
+write_sheet(duplicated_entries, "https://docs.google.com/spreadsheets/d/1mt-K372GEtjE_v0qeiX-57MlnAD-9tT5f4AZr4NxZnY/edit#gid=0")
+
+
+```
+
+## In State v Out of State by Decade
+```{r}
+
+x <- lynch_geocoded_9.16 %>% 
+  select(decade, miles, in_state) %>% 
+  group_by(decade) %>% 
+  count(in_state)
+
+  ggplot(x, aes(x=decade, y=n, color=in_state, fill=in_state)) +
+    geom_col(position = "dodge") + 
+  theme(legend.position = "none") +
+  labs(title = "DRAFT FINDINGS: Little Local Coverage of Lynching",
+       subtitle = "Local (teal) vs Out-of-State (red) Lynching Coverage",
+       caption = "Teal bar=In-state. Red Bar=Out-of-State. Source: Library of Congress. n=3188 Graphic by Rob Wells. Sept 20 2024",
+       y="Count of articles",
+       x="")
+
+  
+state_groupings <- lynch_geocoded_9.16 %>% 
+  distinct(file_id, lynch_address, .keep_all = TRUE) %>% 
+  filter(newspaper_state_code != state_lynch) %>% 
+  group_by(newspaper_state_code) %>% 
+  count(.)
+
+```
