@@ -18,6 +18,9 @@ library(ggmap)
 library(googlesheets4)
 #install.packages("geosphere")
 library(geosphere)
+#install.packages("kableExtra")
+library(kableExtra)
+#webshot::install_phantomjs()
 ```
 
 # Analysis
@@ -64,18 +67,59 @@ x <- lynch_geocoded_9.16 %>%
 
 ## Distance Over Time
 ```{r}
-#starter code
-distance <- lynch_geocoded_9.16 %>% 
-  select(decade, miles, in_state) %>% 
+#distance split by decade
+distance_by_decade <- lynch_geocoded_9.16 %>% 
+  select(decade, miles) %>% 
   group_by(decade) %>% 
   summarize(mean_miles = mean(miles, na.rm=TRUE)) %>%
+  mutate(mean_miles = round(mean_miles, digits = 2)) %>%
   arrange(desc(mean_miles))
 
+#formatted table
+distance_by_decade %>%
+  kbl(caption = "Average Distance of Lynching Reporting by Decade") %>%
+  kable_styling(bootstrap_options = c("striped", "condensed"), full_width = F, font_size = 14)
+
+#write.csv(distance_by_decade, "~/Desktop/average_distance_by_decade.csv")
+
+#distance grouped by newspaper title
 distance_by_paper <- lynch_geocoded_9.16 %>%
-  select(newspaper_name1, miles) %>%
-  group_by(newspaper_name1) %>%
+  select(newspaper_name1, newspaper_state_code, miles) %>%
+  group_by(newspaper_name1, newspaper_state_code) %>%
+  filter(!is.na(newspaper_name1)) %>%
   summarize(mean_miles = mean(miles, na.rm=TRUE)) %>%
+  mutate(mean_miles = round(mean_miles, digits = 2)) %>%
+  rename(newspaper_name = newspaper_name1, newspaper_state = newspaper_state_code) %>%
   arrange(desc(mean_miles))
+
+top_20_papers <- distance_by_paper[1:20, ]
+
+#formatted table
+top_20_papers %>%
+  kbl(caption = "Newspapers with the Highest Average Lynching Reporting Distance") %>%
+  kable_styling(bootstrap_options = c("striped", "condensed"), full_width = F, font_size = 14)
+
+#write.csv(distance_by_paper, "~/Desktop/average_distance_by_paper.csv")
+#write.csv(top_20_papers, "~/Desktop/top_20_papers_distance.csv")
+
+#distance group by newspaper states
+distance_by_state <- lynch_geocoded_9.16 %>%
+  select(newspaper_state_code, miles) %>%
+  group_by(newspaper_state_code) %>%
+  summarize(mean_miles = mean(miles, na.rm=TRUE)) %>%
+  mutate(mean_miles = round(mean_miles, digits = 2)) %>%
+  rename(state = newspaper_state_code) %>%
+  arrange(desc(mean_miles))
+
+top_10_states <- distance_by_state[1:10, ]
+
+#formatted table
+top_10_states %>%
+  kbl(caption = "States with the Highest Average Lynching Reporting Distance") %>%
+  kable_styling(bootstrap_options = c("striped", "condensed"), full_width = F, font_size = 14)
+
+#write.csv(distance_by_state, "~/Desktop/average_distance_by_state.csv")
+#write.csv(top_10_states, "~/Desktop/top_10_states_distance.csv")
 
 #write.csv(distance_by_paper, "../output/average_reporting_distance_newspapers.csv")
 
