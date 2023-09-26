@@ -30,6 +30,8 @@ library(ggmap)
 library(googlesheets4)
 #install.packages("geosphere")
 library(geosphere)
+#install.packages("expss")
+library(expss)
 ```
 # Analysis
 ```{r}
@@ -37,6 +39,7 @@ lynch_geocoded_9.16 <- read.csv("../data/lynch_geocoded_9.16.csv")
 
 ```
 
+# Basic Analysis, Duplicated Entries
 ```{r}
 ## Pct of Newspapers in state vs out of state
  lynch_geocoded_9.16 %>% 
@@ -80,10 +83,33 @@ x <- lynch_geocoded_9.16 %>%
        x="")
 
   
-state_groupings <- lynch_geocoded_9.16 %>% 
+cleaned_articles <- lynch_geocoded_9.16 %>% 
   distinct(file_id, lynch_address, .keep_all = TRUE) %>% 
-  filter(newspaper_state_code != state_lynch) %>% 
-  group_by(newspaper_state_code) %>% 
-  count(.)
+  mutate(location = case_when(
+    newspaper_state_code == state_lynch ~ "in_state",
+    TRUE~"out_of_state"
+  ))
+  
+decade_data <- cleaned_articles %>% 
+  group_by(decade, location) %>% 
+  count(.) %>% 
+  pivot_wider(names_from = location, values_from = n) %>% 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>% 
+  mutate(sum_articles = out_of_state + in_state) %>% 
+  mutate(percent_oos = round(out_of_state/sum_articles*100, 2)) %>% 
+  mutate(percent_is = round(in_state/sum_articles*100, 2))
+
+write_sheet(decade_data, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0")
+
+state_groupings <- cleaned_articles %>%
+  group_by(newspaper_state_code, location) %>% 
+  count(.) %>% 
+  pivot_wider(names_from = location, values_from = n) %>% 
+  mutate_if(is.numeric, ~replace(., is.na(.), 0)) %>% 
+  mutate(sum_articles = out_of_state + in_state) %>% 
+  mutate(percent_oos = round(out_of_state/sum_articles*100, 2)) %>% 
+  mutate(percent_is = round(in_state/sum_articles*100, 2))
+
+write_sheet(state_groupings, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0")
 
 ```
