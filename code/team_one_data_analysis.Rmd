@@ -4,14 +4,6 @@ author: "Rob Wells"
 date: "2023-09-20"
 output: html_document
 ---
-This notebook has two parts.
-
-The BUILDING THE DATA:
-Will clean and geocode the cities and states of the newspapers. 
-And then it will geocode the cities and states of the crimes.
-And then it will measure:
-1) Whether the newspaper was reporting on an in-state or out-of-state event
-2) The distance from the newspaper's city to the city of the lynching
 
 
 The ANALYSIS
@@ -112,4 +104,80 @@ state_groupings <- cleaned_articles %>%
 
 write_sheet(state_groupings, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0")
 
+```
+
+
+# Analyze Lynching Data Trends
+```{r}
+tolnay_beck <- read_csv("../data/Bailey_Beck_lynching_list_8_1_2022.csv") %>% 
+  as.data.frame()
+
+tolnay_beck <- janitor::clean_names(tolnay_beck)
+
+```
+
+## Regional classification for newspaper
+```{r}
+#Adapt this code to the tolnay_beck data to create a regional identifier
+
+
+
+lynch_geocoded_9.27 <- lynch_geocoded_9.27 %>% 
+  mutate(Newspaper_Region2=Newspaper_State) %>% 
+  mutate(Newspaper_Region2 = case_when(Newspaper_State=="South Carolina" ~ "South",
+                           Newspaper_State=="Texas" ~ "South",
+                            Newspaper_State=="Louisiana" ~ "South",
+                            Newspaper_State=="Tennessee" ~ "South",
+                            Newspaper_State=="Mississippi" ~ "South",
+                            Newspaper_State=="Arkansas" ~ "South",
+                            Newspaper_State=="Alabama" ~ "South",
+                            Newspaper_State=="Georgia" ~ "South",
+                            Newspaper_State=="Virginia" ~ "South",
+                            Newspaper_State=="Florida" ~ "South",
+                            Newspaper_State=="North Carolina" ~ "South",
+                            Newspaper_State=="Maryland" ~ "Border",
+                            Newspaper_State=="Delaware" ~ "Border",
+                            Newspaper_State=="West Virginia" ~ "Border",
+                            Newspaper_State=="Kentucky" ~ "Border",
+                            Newspaper_State=="Missouri" ~ "Border",
+                            Newspaper_State=="Maine" ~ "North",
+                            Newspaper_State=="New York" ~ "North",
+                            Newspaper_State=="New Hampshire" ~ "North",
+                            Newspaper_State=="Vermont" ~ "North",
+                            Newspaper_State=="Massassachusetts" ~ "North",
+                            Newspaper_State=="Connecticut" ~ "North",
+                            Newspaper_State=="Rhode Island" ~ "North",
+                            Newspaper_State=="Pennsylvania" ~ "North",
+                            Newspaper_State=="New Jersey" ~ "North",
+                            Newspaper_State=="Ohio" ~ "North",
+                            Newspaper_State=="Indiana" ~ "North",
+                            Newspaper_State=="Kansas" ~ "North",
+                            Newspaper_State=="Michigan" ~ "North",
+                             Newspaper_State=="Wisconsin" ~ "North",
+                             Newspaper_State=="Minnesota" ~ "North",
+                             Newspaper_State=="Iowa" ~ "North",
+                             Newspaper_State=="California" ~ "North",
+                             Newspaper_State=="Nevada" ~ "North",
+                             Newspaper_State=="Oregon" ~ "North",
+                            Newspaper_State=="Illinois" ~ "North",
+                            Newspaper_State=="Nebraska" ~ "Misc",
+                            Newspaper_State=="Colorado" ~ "Misc",
+                            Newspaper_State=="North Dakota" ~ "Misc",
+                            Newspaper_State=="South Dakota" ~ "Misc",
+                            Newspaper_State=="Montana" ~ "Misc",
+                            Newspaper_State=="Washington" ~ "Misc",
+                            Newspaper_State=="Idaho" ~ "Misc",
+                            Newspaper_State=="Wyoming" ~ "Misc",
+                            Newspaper_State=="Utah" ~ "Misc",
+                            Newspaper_State=="Oklahoma" ~ "Misc",
+                            Newspaper_State=="New Mexico" ~ "Misc",
+                            Newspaper_State=="Arizona" ~ "Misc",
+                            Newspaper_State=="Alaska" ~ "Misc",
+                            Newspaper_State=="Hawaii" ~ "Misc",
+                            Newspaper_State=="District of Columbia" ~ "Misc",
+                            Newspaper_State=="Virgin Islands" ~ "Misc",
+                                                     TRUE~Newspaper_State)) 
+
+
+#write.csv(lynch_geocoded_9.27, "../data/lynch_geocoded_9.27.csv")
 ```
