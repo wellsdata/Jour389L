@@ -1,0 +1,138 @@
+---
+title: "lynching_geography"
+output: html_document
+date: "2023-09-21"
+---
+
+```{r setup, include=FALSE}
+
+#install.packages("here")
+#here::here()
+library(tidyverse)
+library(tidyr)
+#install.packages("ggmap")
+library(ggmap)
+#install.packages("geosphere")
+library(geosphere)
+library(janitor)
+
+```
+
+## Group 3
+
+Southern coverage vs other regions (north, border)
+
+```{r}
+
+lynching_data <- read.csv("data/lynch_geocoded_9.16.csv")
+
+# vibe check
+lynching_data %>%
+  head(10)
+
+#check for duplicate rows
+lynching_data_distinct <- lynching_data %>%
+  distinct()
+
+#all good
+
+## Regional differences
+
+#starter code
+starter_code <- lynching_data %>% 
+  select(decade, Newspaper_Region, in_state) %>% 
+  group_by(Newspaper_Region) %>% 
+  count(in_state)
+
+write_csv(starter_code, "in_out_of_state_breakdown.csv")
+
+# starter code takeaways 
+# - northeast only covered one in-state lynching but reported on 222 out of state ones
+# - north central region had overwhelmingly the most out of state lynching coverage, which make sense because these states are close to the south in proximity, and therefore it makes sense to cover things, but 1384 out of state vs. 55 in state is crazy
+
+# let's clean up this dataframe
+
+geography_starter_df <- lynching_data %>%
+  clean_names() %>%
+  select(newspaper_name1, newspaper_state_code, state_lynch, newspaper_region, in_state, year, decade, lynching_lon, lynching_lat, news_location_lon, news_location_lat)
+
+# overall picture of lynching coverage year-over-year
+
+geography_starter_df %>%
+  group_by(year) %>%
+  summarise(total_count = n()) %>%
+  arrange(desc(total_count))
+
+# what percent of all lynchings covered in the south vs. the non-south
+# what region outside of the south covered the most lynchings? how did that change over time?
+
+# remembering how to do this
+geography_starter_df %>%
+  filter(newspaper_region == "South") %>%
+  group_by(year) %>%
+  summarise(southern_count = n()) %>%
+  arrange(desc(southern_count))
+
+# same thing just zooming out for decades -- let's use decades for this preliminary vibe check
+
+south_count_over_time <- geography_starter_df %>%
+  filter(newspaper_region == "South") %>%
+  group_by(decade) %>%
+  summarise(southern_count = n()) %>%
+  arrange(desc(southern_count))
+
+north_count_over_time <- geography_starter_df %>%
+  filter(newspaper_region == "North Central" | newspaper_region == "Northeast") %>%
+  group_by(decade) %>%
+  summarise(northern_count = n()) %>%
+  arrange(desc(northern_count))
+
+west_count_over_time <- geography_starter_df %>%
+  filter(newspaper_region == "West") %>%
+  group_by(decade) %>%
+  summarise(western_count = n()) %>%
+  arrange(desc(western_count))
+
+overall_count_over_time <- geography_starter_df %>%
+  group_by(decade) %>%
+  summarise(total_count = n()) %>%
+  arrange(desc(total_count))
+
+lynching_geog_over_time <- overall_count_over_time %>% left_join(south_count_over_time, by="decade") 
+lynching_geog_over_time <- lynching_geog_over_time %>% left_join(north_count_over_time, by='decade')
+lynching_geog_over_time <- lynching_geog_over_time %>% left_join(west_count_over_time, by='decade')
+
+write_csv(lynching_geog_over_time, "lynching_regional_decades.csv")
+
+# in what state did the most lynching take place?
+# in what state was lynching covered the most?
+
+coverage_occurrences_states <- geography_starter_df %>% 
+  group_by(newspaper_state_code) %>% 
+  summarise(coverage_count = n()) %>%
+  arrange(desc(coverage_count))
+
+lyching_occurrences_states <- geography_starter_df %>%
+  group_by(state_lynch) %>%
+  summarise(lynching_count = n()) %>%
+  arrange(desc(lynching_count))
+
+# the top 5 states where the most lynchings occurred were georgia, tennessee, mississippi, kentucky, alabama and texas
+# the top 5 states where the most lynchings were covered were wisconsin, missouri, kansas, ohio, south dakota and north dakota
+
+coverage_vs_lynch_occurrence <- left_join(coverage_occurrences_states, lyching_occurrences_states, by=c('newspaper_state_code'='state_lynch'))
+
+write_csv(coverage_vs_lynch_occurrence, "coverage_vs_lynch_occurrence.csv")
+
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
