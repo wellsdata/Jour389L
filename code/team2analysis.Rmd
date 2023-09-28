@@ -156,7 +156,7 @@ check_duplicates <- duplicates %>%
 
 city_and_date <- duplicates[duplicated(duplicates[, c("lynch_address", "month")]) | duplicated(duplicates[, c("lynch_address", "month")], fromLast = TRUE), ]
 
-write_sheet(city_and_date, "https://docs.google.com/spreadsheets/d/1yt78ISXWJxpqig1x2feStOdtcnjOHA8vLf46lqe6zcE/edit#gid=0", sheet = "duplicate_cities_and_months")
+#write_sheet(city_and_date, "https://docs.google.com/spreadsheets/d/1yt78ISXWJxpqig1x2feStOdtcnjOHA8vLf46lqe6zcE/edit#gid=0", sheet = "duplicate_cities_and_months")
 ```
 
 ```{r}
