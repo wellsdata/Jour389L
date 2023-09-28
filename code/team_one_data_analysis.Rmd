@@ -5,12 +5,6 @@ date: "2023-09-20"
 output: html_document
 ---
 
-
-The ANALYSIS
---Looks at In state / out of state coverage
---Distance over time
---Southern vs other regions
-
 ```{r}
 #install.packages("here")
 here::here()
@@ -22,8 +16,8 @@ library(ggmap)
 library(googlesheets4)
 #install.packages("geosphere")
 library(geosphere)
-#install.packages("expss")
-library(expss)
+#install.packages("tigris")
+library(tigris)
 ```
 # Analysis
 ```{r}
@@ -31,7 +25,82 @@ lynch_geocoded_9.16 <- read.csv("../data/lynch_geocoded_9.16.csv")
 
 ```
 
-# Basic Analysis, Duplicated Entries
+# Analyze Lynching Data Trends
+```{r}
+tolnay_beck <- read_csv("../data/Bailey_Beck_lynching_list_8_1_2022.csv") %>% 
+  as.data.frame()
+
+tolnay_beck <- janitor::clean_names(tolnay_beck)
+
+```
+
+## Regional classification for newspaper
+```{r}
+#Adapt this code to the tolnay_beck data to create a regional identifier
+
+`lynch_geocoded_9.27 <- lynch_geocoded_9.27 %>% 
+  mutate(Newspaper_Region2=Newspaper_State) %>% 
+  mutate(Newspaper_Region2 = case_when(
+    Newspaper_State=="South Carolina" ~ "South",
+    Newspaper_State=="Texas" ~ "South",
+    Newspaper_State=="Louisiana" ~ "South",
+    Newspaper_State=="Tennessee" ~ "South",
+    Newspaper_State=="Mississippi" ~ "South",
+    Newspaper_State=="Arkansas" ~ "South",
+    Newspaper_State=="Alabama" ~ "South",
+    Newspaper_State=="Georgia" ~ "South",
+    Newspaper_State=="Virginia" ~ "South",
+    Newspaper_State=="Florida" ~ "South",
+    Newspaper_State=="North Carolina" ~ "South",
+    Newspaper_State=="Maryland" ~ "Border",
+    Newspaper_State=="Delaware" ~ "Border",
+    Newspaper_State=="West Virginia" ~ "Border",
+    Newspaper_State=="Kentucky" ~ "Border",
+    Newspaper_State=="Missouri" ~ "Border",
+    Newspaper_State=="Maine" ~ "North",
+    Newspaper_State=="New York" ~ "North",
+    Newspaper_State=="New Hampshire" ~ "North",
+    Newspaper_State=="Vermont" ~ "North",
+    Newspaper_State=="Massassachusetts" ~ "North",
+    Newspaper_State=="Connecticut" ~ "North",
+    Newspaper_State=="Rhode Island" ~ "North",
+    Newspaper_State=="Pennsylvania" ~ "North",
+    Newspaper_State=="New Jersey" ~ "North",
+    Newspaper_State=="Ohio" ~ "North",
+    Newspaper_State=="Indiana" ~ "North",
+    Newspaper_State=="Kansas" ~ "North",
+    Newspaper_State=="Michigan" ~ "North",
+    Newspaper_State=="Wisconsin" ~ "North",
+    Newspaper_State=="Minnesota" ~ "North",
+    Newspaper_State=="Iowa" ~ "North",
+    Newspaper_State=="California" ~ "North",
+    Newspaper_State=="Nevada" ~ "North",
+    Newspaper_State=="Oregon" ~ "North",
+    Newspaper_State=="Illinois" ~ "North",
+    Newspaper_State=="Nebraska" ~ "Misc",
+    Newspaper_State=="Colorado" ~ "Misc",
+    Newspaper_State=="North Dakota" ~ "Misc",
+    Newspaper_State=="South Dakota" ~ "Misc",
+    Newspaper_State=="Montana" ~ "Misc",
+    Newspaper_State=="Washington" ~ "Misc",
+    Newspaper_State=="Idaho" ~ "Misc",
+    Newspaper_State=="Wyoming" ~ "Misc",
+    Newspaper_State=="Utah" ~ "Misc",
+    Newspaper_State=="Oklahoma" ~ "Misc",
+    Newspaper_State=="New Mexico" ~ "Misc",
+    Newspaper_State=="Arizona" ~ "Misc",
+    Newspaper_State=="Alaska" ~ "Misc",
+    Newspaper_State=="Hawaii" ~ "Misc",
+    Newspaper_State=="District of Columbia" ~ "Misc",
+    Newspaper_State=="Virgin Islands" ~ "Misc",
+    TRUE~Newspaper_State
+    )) 
+
+
+#write.csv(lynch_geocoded_9.27, "../data/lynch_geocoded_9.27.csv")
+```
+
+# WEEK ONE
 ```{r}
 ## Pct of Newspapers in state vs out of state
  lynch_geocoded_9.16 %>% 
@@ -105,78 +174,50 @@ write_sheet(state_groupings, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qo
 
 ```
 
-
-# Analyze Lynching Data Trends
+# WEEK TWO
 ```{r}
+# Analyze broader dataset of all lynchings by decade and state and region. Want to see if our sample of lynchings by state is skewed. Total and percentage by state. Group in Regional categories. Next, calculate baseline totals of the newspapers in the states. 
 tolnay_beck <- read_csv("../data/Bailey_Beck_lynching_list_8_1_2022.csv") %>% 
   as.data.frame()
 
 tolnay_beck <- janitor::clean_names(tolnay_beck)
 
+lynch_article_data <- read_csv("~/Desktop/GitHub/Jour389L/data/lynch_geocoded_9.27.csv")
+
+# Basic filter to distinct lynchings
+lynch_data <- lynch_article_data %>% 
+  mutate(date = as.Date(date, "%m/%d/%Y")) %>% 
+  distinct(year, lynch_address, .keep_all = TRUE)
+
+beck_lynchings <- tolnay_beck %>% 
+  filter(!str_detect(status, "death"))
+
 ```
 
-## Regional classification for newspaper
+## Analysis by State
 ```{r}
-#Adapt this code to the tolnay_beck data to create a regional identifier
+beck_by_state <- beck_lynchings %>%
+  group_by(lynch_state) %>% 
+  count(.) %>% 
+  rename(state_lynch = lynch_state) %>% 
+  rename(beck_count = n) %>% 
+  mutate(percent_lynchings_beck = round(beck_count/nrow(beck_lynchings)*100,2))
+    
+
+# Percent of all lynchings that are in each state
+lynch_by_state <- lynch_data %>% 
+  group_by(state_lynch) %>% 
+  count(.) %>% 
+  rename(input_count = n) %>% 
+  mutate(percent_lynchings_input = round(input_count/nrow(lynch_data)*100,2))
+
+state_lynchings_compare <- lynch_by_state %>% 
+  left_join(beck_by_state, by = "state_lynch") %>% 
+  mutate(beck_input_dif = percent_lynchings_beck-percent_lynchings_input)
 
 
-
-lynch_geocoded_9.27 <- lynch_geocoded_9.27 %>% 
-  mutate(Newspaper_Region2=Newspaper_State) %>% 
-  mutate(Newspaper_Region2 = case_when(Newspaper_State=="South Carolina" ~ "South",
-                           Newspaper_State=="Texas" ~ "South",
-                            Newspaper_State=="Louisiana" ~ "South",
-                            Newspaper_State=="Tennessee" ~ "South",
-                            Newspaper_State=="Mississippi" ~ "South",
-                            Newspaper_State=="Arkansas" ~ "South",
-                            Newspaper_State=="Alabama" ~ "South",
-                            Newspaper_State=="Georgia" ~ "South",
-                            Newspaper_State=="Virginia" ~ "South",
-                            Newspaper_State=="Florida" ~ "South",
-                            Newspaper_State=="North Carolina" ~ "South",
-                            Newspaper_State=="Maryland" ~ "Border",
-                            Newspaper_State=="Delaware" ~ "Border",
-                            Newspaper_State=="West Virginia" ~ "Border",
-                            Newspaper_State=="Kentucky" ~ "Border",
-                            Newspaper_State=="Missouri" ~ "Border",
-                            Newspaper_State=="Maine" ~ "North",
-                            Newspaper_State=="New York" ~ "North",
-                            Newspaper_State=="New Hampshire" ~ "North",
-                            Newspaper_State=="Vermont" ~ "North",
-                            Newspaper_State=="Massassachusetts" ~ "North",
-                            Newspaper_State=="Connecticut" ~ "North",
-                            Newspaper_State=="Rhode Island" ~ "North",
-                            Newspaper_State=="Pennsylvania" ~ "North",
-                            Newspaper_State=="New Jersey" ~ "North",
-                            Newspaper_State=="Ohio" ~ "North",
-                            Newspaper_State=="Indiana" ~ "North",
-                            Newspaper_State=="Kansas" ~ "North",
-                            Newspaper_State=="Michigan" ~ "North",
-                             Newspaper_State=="Wisconsin" ~ "North",
-                             Newspaper_State=="Minnesota" ~ "North",
-                             Newspaper_State=="Iowa" ~ "North",
-                             Newspaper_State=="California" ~ "North",
-                             Newspaper_State=="Nevada" ~ "North",
-                             Newspaper_State=="Oregon" ~ "North",
-                            Newspaper_State=="Illinois" ~ "North",
-                            Newspaper_State=="Nebraska" ~ "Misc",
-                            Newspaper_State=="Colorado" ~ "Misc",
-                            Newspaper_State=="North Dakota" ~ "Misc",
-                            Newspaper_State=="South Dakota" ~ "Misc",
-                            Newspaper_State=="Montana" ~ "Misc",
-                            Newspaper_State=="Washington" ~ "Misc",
-                            Newspaper_State=="Idaho" ~ "Misc",
-                            Newspaper_State=="Wyoming" ~ "Misc",
-                            Newspaper_State=="Utah" ~ "Misc",
-                            Newspaper_State=="Oklahoma" ~ "Misc",
-                            Newspaper_State=="New Mexico" ~ "Misc",
-                            Newspaper_State=="Arizona" ~ "Misc",
-                            Newspaper_State=="Alaska" ~ "Misc",
-                            Newspaper_State=="Hawaii" ~ "Misc",
-                            Newspaper_State=="District of Columbia" ~ "Misc",
-                            Newspaper_State=="Virgin Islands" ~ "Misc",
-                                                     TRUE~Newspaper_State)) 
-
-
-#write.csv(lynch_geocoded_9.27, "../data/lynch_geocoded_9.27.csv")
+write_sheet(state_lynchings_compare, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "state_lynchings_compare")
 ```
+
+## Analysis by Region
+
