@@ -18,19 +18,12 @@ library(googlesheets4)
 library(geosphere)
 #install.packages("tigris")
 library(tigris)
+library(stringr)
+library(janitor)
 ```
 # Analysis
 ```{r}
 lynch_geocoded_9.16 <- read.csv("../data/lynch_geocoded_9.16.csv")
-
-```
-
-# Analyze Lynching Data Trends
-```{r}
-tolnay_beck <- read_csv("../data/Bailey_Beck_lynching_list_8_1_2022.csv") %>% 
-  as.data.frame()
-
-tolnay_beck <- janitor::clean_names(tolnay_beck)
 
 ```
 
@@ -220,4 +213,22 @@ write_sheet(state_lynchings_compare, "https://docs.google.com/spreadsheets/d/1ud
 ```
 
 ## Analysis by Region
+```{r}
+beck_region_coded <- beck_lynchings %>%
+  select(status, lynch_state) %>% 
+  mutate(lynch_region = case_when(
+    str_detect(lynch_state, "SC|TX|LA|TN|MS|AR|AL|GA|VA|FL|NC") ~ "south",
+    str_detect(lynch_state, "MD|DE|WV|KY|MO") ~ "border",
+    str_detect(lynch_state, "ME|NY|NH|VT|MA|CT|RI|PA|NJ|OH|IN|KS|MI|WI|MN|IA|CA|NV|OR|IL") ~ "north",
+    str_detect(lynch_state, "NE|CO|ND|SD|MT|WA|ID|WY|UT|OK|NM|AZ|AK|HI") ~ "misc",
+    TRUE~lynch_state
+    )) 
+
+lynch_cleaned <- lynch_data %>% 
+  clean_names() %>% 
+  mutate(newspaper_region2 = tolower(newspaper_region2))
+
+beck_by_region <- beck_region_coded %>% 
+  
+```
 
