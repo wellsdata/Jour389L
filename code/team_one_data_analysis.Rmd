@@ -228,7 +228,22 @@ lynch_cleaned <- lynch_data %>%
   clean_names() %>% 
   mutate(newspaper_region2 = tolower(newspaper_region2))
 
+lynch_by_region <- lynch_cleaned %>% 
+  group_by(newspaper_region2) %>% 
+  count(.) %>% 
+  rename(input_count = n) %>% 
+  mutate(percent_lynchings_input = round(input_count/nrow(lynch_data)*100,2))
+
 beck_by_region <- beck_region_coded %>% 
-  
+  group_by(lynch_region) %>% 
+  count(.) %>% 
+  rename(beck_count = n) %>% 
+  mutate(percent_lynchings_beck = round(beck_count/nrow(beck_region_coded)*100,2))
+
+regional_comparison <- lynch_by_region %>% 
+  left_join(beck_by_region, by = c("newspaper_region2" = "lynch_region")) %>% 
+    mutate(beck_input_dif = percent_lynchings_beck-percent_lynchings_input)
+
+write_sheet(regional_comparison, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "regional_comparison")
 ```
 
