@@ -138,11 +138,11 @@ top_10_states %>%
 
 #maybe write a case_when for if the date is greater than 15 make it the ceiling date and otherwise make it the floor date?
 wire_coverage <- lynch_geocoded_9.27 %>%
-  select(newspaper_name, lynch_address, date) %>%
+  select(newspaper_name, lynch_address, date, miles, newspaper_state_code) %>%
   mutate(fixed_date=mdy(date)) %>%
-
   mutate(month = floor_date(fixed_date, "month")) %>%
-  select(-date)
+  select(-date) %>%
+  rename(paper_state = newspaper_state_code)
 
 duplicates <- wire_coverage[duplicated(wire_coverage$lynch_address) | duplicated(wire_coverage$lynch_address, fromLast = TRUE), ]
 
@@ -157,6 +157,32 @@ check_duplicates <- duplicates %>%
 city_and_date <- duplicates[duplicated(duplicates[, c("lynch_address", "month")]) | duplicated(duplicates[, c("lynch_address", "month")], fromLast = TRUE), ]
 
 #write_sheet(city_and_date, "https://docs.google.com/spreadsheets/d/1yt78ISXWJxpqig1x2feStOdtcnjOHA8vLf46lqe6zcE/edit#gid=0", sheet = "duplicate_cities_and_months")
+
+#counting possible total of wire coverage cases
+counting_wire_cases <- lynch_geocoded_9.27 %>%
+  select(newspaper_name, lynch_address, date, miles, newspaper_state_code, state_lynch) %>%
+  mutate(fixed_date=mdy(date)) %>%
+  mutate(month = floor_date(fixed_date, "month")) %>%
+  select(-date) %>%
+  rename(paper_state = newspaper_state_code)
+
+counting_wire_cases <- counting_wire_cases[duplicated(counting_wire_cases[, c("lynch_address", "month")]) | duplicated(counting_wire_cases[, c("lynch_address", "month")], fromLast = TRUE), ]
+
+counting_wire_cases <- counting_wire_cases %>%
+  mutate(wire_case = 
+           case_when(
+             paper_state == state_lynch ~ "n",
+             TRUE ~ "y"
+             )) %>%
+  filter(wire_case == "y") %>%
+  filter(lynch_address != "NA, NA" & lynch_address != "None, NONE") %>%
+  select(-wire_case)
+
+wire_newspapers <- counting_wire_cases %>%
+  group_by(newspaper_name, paper_state) %>%
+  summarize(mean_miles = mean(miles, na.rm=TRUE), count = n()) %>%
+  filter(!is.na(newspaper_name)) %>%
+  mutate(mean_miles = round(mean_miles, digits = 2))
 ```
 
 ```{r}
