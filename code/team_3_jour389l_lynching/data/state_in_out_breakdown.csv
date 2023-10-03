@@ -1,0 +1,86 @@
+newspaper_state,in_state,n
+Alabama,N,55
+Alabama,Y,7
+Alaska,N,24
+Arizona,N,41
+Arkansas,N,44
+Arkansas,Y,8
+California,N,54
+California,Y,5
+Colorado,N,45
+Colorado,Y,2
+Connecticut,N,57
+Delaware,N,51
+Delaware,Y,1
+Florida,N,14
+Florida,Y,5
+Georgia,N,57
+Georgia,Y,10
+Hawaii,N,12
+Idaho,N,22
+Idaho,Y,1
+Illinois,N,86
+Illinois,Y,6
+Indiana,N,24
+Indiana,Y,6
+Iowa,N,39
+Iowa,Y,4
+Kansas,N,105
+Kansas,Y,7
+Kentucky,N,75
+Kentucky,Y,20
+Louisiana,N,43
+Louisiana,Y,9
+Maine,N,22
+Maine,Y,2
+Maryland,N,33
+Maryland,Y,14
+Michigan,N,65
+Minnesota,N,104
+Minnesota,Y,2
+Mississippi,N,68
+Mississippi,Y,11
+Missouri,N,79
+Missouri,Y,7
+Montana,N,34
+Montana,Y,1
+Nebraska,N,66
+Nebraska,Y,5
+Nevada,N,12
+Nevada,Y,1
+New Jersey,N,22
+New Jersey,Y,2
+New Mexico,N,19
+New York,N,76
+New York,Y,1
+North Carolina,N,94
+North Carolina,Y,13
+North Dakota,N,84
+Ohio,N,107
+Ohio,Y,6
+Oklahoma,N,26
+Oklahoma,Y,3
+Oregon,N,6
+Oregon,Y,1
+Pennsylvania,N,5
+South Carolina,N,3
+South Carolina,Y,1
+South Dakota,N,88
+South Dakota,Y,1
+Tennessee,N,20
+Tennessee,Y,5
+Texas,N,38
+Texas,Y,12
+Utah,N,74
+Utah,Y,1
+Vermont,N,48
+Virginia,N,104
+Virginia,Y,13
+Washington,N,72
+Washington,Y,2
+West Virginia,N,104
+West Virginia,Y,10
+Wisconsin,N,243
+Wisconsin,Y,6
+Wyoming,N,10
+Wyoming,Y,1
