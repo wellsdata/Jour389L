@@ -183,6 +183,48 @@ wire_newspapers <- counting_wire_cases %>%
   summarize(mean_miles = mean(miles, na.rm=TRUE), count = n()) %>%
   filter(!is.na(newspaper_name)) %>%
   mutate(mean_miles = round(mean_miles, digits = 2))
+
+#write_sheet(wire_newspapers, "https://docs.google.com/spreadsheets/d/1yt78ISXWJxpqig1x2feStOdtcnjOHA8vLf46lqe6zcE/edit#gid=0", sheet = "out_of_state_newspapers")
+
+states_wire_coverage <- wire_newspapers %>%
+  group_by(paper_state) %>%
+  summarize(mean_miles = mean(mean_miles, na.rm=TRUE), count = n()) %>%
+  arrange(desc(count))
+
+top_35_states_wire <- states_wire_coverage[1:35, ]
+
+top_20_states_wire_coverage <- states_wire_coverage[1:20, ]
+```
+
+## Visualizations for Reporting Distance
+```{r}
+distance_by_decade %>%
+  ggplot() +
+  geom_bar(aes(x=decade, weight=mean_miles), fill="slategray2") +
+  labs(
+    title="Reporting Distance by Decade\n",
+    x = "\nDecade",
+    y = "Average Miles\n"
+  )
+
+top_20_states_wire_coverage %>%
+  ggplot() +
+  geom_bar(aes(x=paper_state, weight=mean_miles), fill="slategray2") +
+  labs(
+    title="Average Distance for States Reporting on Out-of-State Lynching Incidents\n",
+    x = "\nState",
+    y = "Average Miles\n"
+  )
+
+ggplot(top_35_states_wire, aes(x = paper_state, y = mean_miles)) +
+  geom_point(aes(size = count), color = "blue") +
+  labs(
+    x = "State",
+    y = "Average Miles",
+    title = "Average Distance for States Reporting on Out-of-State Lynching Incidents"
+  ) +
+  theme(text = element_text(size = 9))
+
 ```
 
 ```{r}
