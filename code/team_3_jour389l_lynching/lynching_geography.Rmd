@@ -15,10 +15,14 @@ library(ggmap)
 #install.packages("geosphere")
 library(geosphere)
 library(janitor)
+install.packages('scales')
+library(scales)
 
 ```
 
-## Group 3
+## Group 3 Week 1 Analysis
+
+## with messy, not fully updated data
 
 Southern coverage vs other regions (north, border)
 
@@ -127,12 +131,215 @@ write_csv(coverage_vs_lynch_occurrence, "coverage_vs_lynch_occurrence.csv")
 ```
 
 
-## Including Plots
+## Week 2 Analysis
 
-You can also embed plots, for example:
+## Checking Group #1's work (lynchings in vs. out of state)
+
 
 ```{r pressure, echo=FALSE}
-plot(pressure)
+
+# read in new data
+
+lynch_updated <- read_csv("data/lynch_geocoded_9.27.csv")
+
+# CHECK: vibe check for data
+
+lynch_updated %>%
+  group_by(in_state) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+# ANSWER: overall, there were 2574 lynchings covered from out of state and 212 that were covered in the state where they occurred.
+
+# make less ugly
+lynch_updated <- lynch_updated %>%
+  clean_names()
+
+state_in_out_breakdown <- lynch_updated %>%
+  select(decade, newspaper_state, in_state) %>% 
+  group_by(newspaper_state) %>% 
+  count(in_state)
+
+# ----
+
+# CHECK: what state covered the most lynchings that were out of state?
+out_of_state_coverage <- state_in_out_breakdown %>%
+  filter(in_state == "N") %>%
+  arrange(desc(n))
+
+# ANSWER: wisconsin, ohio, kansas, minnesota, virginia and west virginia all covered 100+ out of state lynchings
+
+# ----
+
+# CHECK: what state covered the most lynchings that were in state?
+in_state_coverage <- state_in_out_breakdown %>%
+  filter(in_state == "Y") %>%
+  arrange(desc(n))
+
+# ANSWER: kentucky and maryland covered the most lynchings that were in their own states
+# ANSWER: tennessee covered 5 total lynchings, despite being a big state that popped out (just anecdotally) during our geocoding
+
+# ----
+
+# CHECK: Team 1's second question: What states were featured the most in out-of-state coverage?
+
+states_df <- lynch_updated %>%
+  select(newspaper_name, newspaper_state_code, state_lynch, in_state) 
+
+oos_coverage <- states_df %>%
+  filter(in_state == "N") %>%
+  group_by(state_lynch) %>%
+  count(in_state)
+
+# ANSWER: lynchings in alabama, georgia, kentucky, louisiana, mississippi, missouri, tennessee and texas were most covered in other states
+
+# ----
+
+# CHECK: Were any newspapers covering a large proportion of out-of-state lynchings?
+
+newspapers_oos <- states_df %>%
+  filter(in_state == "N") %>%
+  group_by(newspaper_name) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+# The daily worker, The Birmingham age-herald, River Falls journal, The Topeka state journal, The daily dispatch, The Salt Lake herald, The Seattle post-intelligencer, The sun, The news & observer, Grant County herald, The morning news, The Hope pioneer, The Manitowoc pilot, Waterbury evening Democrat, Wausau pilot	all covered ** 20+ ** out of state lynchings
+
+# prof's initial question
+# What patterns do you see with states and years when focusing on in-state versus out-of-state coverage? Do the patterns change much over time?
+
+# Team 1's first question: What percent of coverage was in-state vs. out of state in each decade (1880s-1920s), are there any patterns in coverage?
+
+states_with_years <- lynch_updated %>%
+  select(decade, newspaper_state_code, state_lynch, in_state, newspaper_name)
+
+# doing this the convoluted way just for ease 
+
+is <- states_with_years %>%
+  filter(in_state == "Y") %>%
+  group_by(decade) %>%
+  summarise(in_state = n())
+  
+oos <- states_with_years %>%
+  filter(in_state == "N") %>%
+  group_by(decade) %>%
+  summarise(out_of_state = n())
+
+coverage_by_decade <- is %>% left_join(oos, by='decade')
+
+# newspapers covered the most lynchings in the 1890s and 1900s and the in state vs. out-of-state proportions are insane
+
+coverage_by_decade <- coverage_by_decade %>%
+  mutate(pct_in_state = percent(in_state/(out_of_state + in_state)), pct_out_of_state = percent(out_of_state/(out_of_state + in_state))) 
+
+# csvs from checking team #1 
+
+write_csv(coverage_by_decade, "data/coverage_by_decade.csv")
+write_csv(newspapers_oos, "data/newspapers_oos.csv")
+write_csv(newspapers_oos, "data/newspapers_oos.csv")
+write_csv(oos_coverage, "data/oos_coverage.csv")
+write_csv(state_in_out_breakdown, "data/state_in_out_breakdown.csv")
+
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Back to regional analysis -- new data has a region category for border states, so let's see how 
+
+
+```{r}
+
+border_states <- lynch_updated %>%
+  select(decade, newspaper_region, newspaper_region2, in_state) %>% 
+  group_by(newspaper_region2) %>% 
+  count(in_state)
+
+write_csv(border_states, "data/border_states.csv")
+
+lynch_regional <- lynch_updated %>%
+  select(decade, newspaper_region, newspaper_region2, in_state)
+
+
+lynch_regional %>%
+  filter(newspaper_region2 == "Border") %>%
+  group_by(decade) %>%
+  summarise(coverage_count = n()) %>%
+  arrange(desc(coverage_count))
+
+lynch_regional %>%
+  filter(newspaper_region2 == "Border") %>%
+  group_by(year) %>%
+  summarise(southern_count = n()) %>%
+  arrange(desc(southern_count))
+
+
+# basically redoing everything from last week with the most updated data
+
+south_count_over_time <- lynch_regional %>%
+  filter(newspaper_region == "South") %>%
+  group_by(decade) %>%
+  summarise(southern_count = n()) %>%
+  arrange(desc(southern_count))
+
+north_count_over_time <- lynch_regional %>%
+  filter(newspaper_region == "North Central" | newspaper_region == "Northeast") %>%
+  group_by(decade) %>%
+  summarise(northern_count = n()) %>%
+  arrange(desc(northern_count))
+
+west_count_over_time <- lynch_regional %>%
+  filter(newspaper_region == "West") %>%
+  group_by(decade) %>%
+  summarise(western_count = n()) %>%
+  arrange(desc(western_count))
+
+overall_count_over_time <- lynch_regional %>%
+  group_by(decade) %>%
+  summarise(total_count = n()) %>%
+  arrange(desc(total_count))
+
+border_count_over_time <- lynch_regional %>%
+  filter(newspaper_region2 == "Border") %>%
+  group_by(decade) %>%
+  summarise(border_count = n()) %>%
+  arrange(desc(border_count))
+
+lynching_geog_over_time <- overall_count_over_time %>% left_join(south_count_over_time, by="decade") 
+lynching_geog_over_time <- lynching_geog_over_time %>% left_join(north_count_over_time, by='decade')
+final_updated_geog <- lynching_geog_over_time %>% left_join(west_count_over_time, by='decade')
+
+write_csv(final_updated_geog, "data/regional_analysis_updated.csv")
+
+write_csv(border_count_over_time, "data/border_decades.csv")
+
+border_decade_in_state <- lynch_regional %>%
+  filter(newspaper_region2 == "Border") %>%
+  group_by(in_state, decade) %>%
+  summarise(count = n()) %>%
+  arrange(decade)
+
+write_csv(border_decade_in_state, "data/border_decade_in_state.csv")
+
+# which border states covered lynchings the most
+
+border_state_coverage <- lynch_updated %>%
+  select(decade, newspaper_state_code, state_lynch, newspaper_region, newspaper_region2, in_state) %>%
+  filter(newspaper_region2 == "Border")
+
+# huge yikes -- the newspaper state code and newspaper region don't line up for delaware -- why is delaware considered a southern state??? or a border state? so taking all of our analysis with a huge grain of salt.
+
+border_state_coverage %>%
+  group_by(newspaper_state_code) %>%
+  summarise(count = n())
+
+lynch_updated %>%
+  filter(newspaper_state_code == "KS")
+
+lynch_updated %>%
+  filter(newspaper_state_code == "CO")
+
+# kansas is 100% a border state, as is colorado, so we can't progress much further with the data being a bit messy on this front.
+
+```
+
+
+

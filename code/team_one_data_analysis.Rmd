@@ -93,6 +93,8 @@ lynch_geocoded_9.16 <- read.csv("../data/lynch_geocoded_9.16.csv")
 #write.csv(lynch_geocoded_9.27, "../data/lynch_geocoded_9.27.csv")
 ```
 
+
+
 # WEEK ONE
 ```{r}
 ## Pct of Newspapers in state vs out of state
@@ -167,9 +169,11 @@ write_sheet(state_groupings, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qo
 
 ```
 
+
 # WEEK TWO
 ```{r}
 # Analyze broader dataset of all lynchings by decade and state and region. Want to see if our sample of lynchings by state is skewed. Total and percentage by state. Group in Regional categories. Next, calculate baseline totals of the newspapers in the states. 
+
 tolnay_beck <- read_csv("../data/Bailey_Beck_lynching_list_8_1_2022.csv") %>% 
   as.data.frame()
 
@@ -246,4 +250,26 @@ regional_comparison <- lynch_by_region %>%
 
 write_sheet(regional_comparison, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "regional_comparison")
 ```
+## Newspapers in States & Regions
+```{r}
+newspaper_list <- lynch_article_data %>% 
+  distinct(newspaper_name, news_address, .keep_all = TRUE)
+
+paper_count_by_state <- newspaper_list %>% 
+  group_by(Newspaper_State) %>% 
+  count(.) %>% 
+  rename(count_papers = n) %>% 
+  mutate(percent_papers = round(count_papers/nrow(newspaper_list)*100,2))
+
+write_sheet(paper_count_by_state, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "count_newspapers_in_states")
+
+paper_count_by_region <- newspaper_list %>% 
+  group_by(Newspaper_Region2) %>% 
+  count(.) %>% 
+  rename(count_papers = n) %>% 
+  mutate(percent_papers = round(count_papers/nrow(newspaper_list)*100,2))
+
+write_sheet(paper_count_by_state, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "count_newspapers_per_region")
+```
+
 
