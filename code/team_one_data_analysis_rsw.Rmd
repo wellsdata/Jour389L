@@ -274,10 +274,10 @@ beck_region_coded <- beck_lynchings %>%
 
 lynch_cleaned <- lynch_data %>% 
   clean_names() %>% 
-  mutate(newspaper_region2 = tolower(newspaper_region2))
+  mutate(newspaper_region = tolower(newspaper_region))
 
 lynch_by_region <- lynch_cleaned %>% 
-  group_by(newspaper_region2) %>% 
+  group_by(newspaper_region) %>% 
   count(.) %>% 
   rename(input_count = n) %>% 
   mutate(percent_lynchings_input = round(input_count/nrow(lynch_data)*100,2))
@@ -289,7 +289,7 @@ beck_by_region <- beck_region_coded %>%
   mutate(percent_lynchings_beck = round(beck_count/nrow(beck_region_coded)*100,2))
 
 regional_comparison <- lynch_by_region %>% 
-  left_join(beck_by_region, by = c("newspaper_region2" = "lynch_region")) %>% 
+  left_join(beck_by_region, by = c("newspaper_region" = "lynch_region")) %>% 
     mutate(beck_input_dif = percent_lynchings_beck-percent_lynchings_input)
 
 write_sheet(regional_comparison, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "regional_comparison")
@@ -297,10 +297,11 @@ write_sheet(regional_comparison, "https://docs.google.com/spreadsheets/d/1udiQCG
 ## Newspapers in States & Regions
 ```{r}
 newspaper_list <- lynch_article_data %>% 
+  clean_names() %>% 
   distinct(newspaper_name, news_address, .keep_all = TRUE)
 
 paper_count_by_state <- newspaper_list %>% 
-  group_by(Newspaper_State) %>% 
+  group_by(newspaper_state) %>% 
   count(.) %>% 
   rename(count_papers = n) %>% 
   mutate(percent_papers = round(count_papers/nrow(newspaper_list)*100,2))
@@ -308,12 +309,12 @@ paper_count_by_state <- newspaper_list %>%
 write_sheet(paper_count_by_state, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "count_newspapers_in_states")
 
 paper_count_by_region <- newspaper_list %>% 
-  group_by(Newspaper_Region2) %>% 
+  group_by(newspaper_region) %>% 
   count(.) %>% 
   rename(count_papers = n) %>% 
   mutate(percent_papers = round(count_papers/nrow(newspaper_list)*100,2))
 
-write_sheet(paper_count_by_state, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "count_newspapers_per_region")
+write_sheet(paper_count_by_region, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "count_newspapers_per_region")
 ```
 
 ```{r}
