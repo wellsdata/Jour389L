@@ -4,6 +4,8 @@ output: html_document
 date: "2023-09-21"
 ---
 
+# Wells added new regional classification code below. This is incorporated in the latest version of lynch_geocoded_9.27.csv but I made it available in case you needed it.
+
 ```{r setup, include=FALSE}
 
 #install.packages("here")
@@ -15,7 +17,7 @@ library(ggmap)
 #install.packages("geosphere")
 library(geosphere)
 library(janitor)
-install.packages('scales')
+#install.packages('scales')
 library(scales)
 
 ```
@@ -28,7 +30,9 @@ Southern coverage vs other regions (north, border)
 
 ```{r}
 
-lynching_data <- read.csv("data/lynch_geocoded_9.16.csv")
+# lynching_data <- read.csv("data/lynch_geocoded_9.16.csv")
+
+lynching_data <- read.csv("data/lynch_geocoded_9.27.csv")
 ```
 
 #Wells added:
@@ -141,7 +145,7 @@ write_csv(starter_code, "in_out_of_state_breakdown.csv")
 
 geography_starter_df <- lynching_data %>%
   clean_names() %>%
-  select(newspaper_name1, newspaper_state_code, state_lynch, newspaper_region, in_state, year, decade, lynching_lon, lynching_lat, news_location_lon, news_location_lat)
+  select(newspaper_name, newspaper_state_code, state_lynch, newspaper_region, in_state, year, decade, lynching_lon, lynching_lat, news_location_lon, news_location_lat)
 
 # overall picture of lynching coverage year-over-year
 

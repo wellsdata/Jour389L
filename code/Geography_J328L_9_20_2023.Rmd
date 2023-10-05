@@ -296,6 +296,7 @@ lynch_geocoded_9.27 <- lynch_geocoded_9.27 %>%
 #delete old version
 # lynch_geocoded_9.27 <- subset(lynch_geocoded_9.27, select =-Newspaper_Region2)
 
+
 #write.csv(lynch_geocoded_9.27, "../data/lynch_geocoded_9.27.csv")
 ```
 
