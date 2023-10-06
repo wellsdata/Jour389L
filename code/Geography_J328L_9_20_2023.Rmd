@@ -51,6 +51,14 @@ jackindex_geo <- jackindex_geo %>%
 
 ```
 
+```{r}
+bf <- jackindex_geo %>% 
+  count(file_id2, file_id) %>% 
+  count(file_id) %>% 
+  arrange(desc(n))
+
+
+```
 
 ## Geocode
 ```{r}

@@ -1,14 +1,14 @@
 ---
-title: "Words Decades Count Analysis"
+title: "Words Articles Decades Count Analysis"
 author: "Rob Wells"
-date: "4-16-2023"
+date: "10-6-2023"
 output: html_document
 ---
 
 This workbook determines the total word count by story and then graphs it over years and decades
 
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 library(tidyverse)
 library(textdata)
 library(tidytext)
@@ -21,14 +21,15 @@ library(rio)
 # Tokenizing data
 
 ```{r}
-#import df created from sequence below
-# lynch <- read_csv("articles_1pct_dec26.csv")
-
+#loads text of 3500 articles
 lynch <- read_csv("../data/articles_aug_25.csv")
 
-#index of 1 pct sample which has been checked by a coder and represents all valid entries
+lynch_geocoded_9.27 <- read.csv("../data/lynch_geocoded_9.27.csv")
+
+# lynch_geocoded_9.27 <- subset(lynch_geocoded_9.27, select =-X.1)
+  
+#Notes from previous version:
 # jackindex <- read_csv("../data/jackindex_march8.csv")
-# lynch_geocoded_9.27 <- read.csv("../data/lynch_geocoded_9.27.csv")
 
 #black <- read_csv("../data/black_press_4_19_2023.csv")
 
@@ -47,10 +48,34 @@ y <- lynch %>%
 
 # append decade information for aggregation
 y$decade <- paste0(substr(y$year, 0, 3), "0")
+```
 
+```{r}
 
 #MAKE A NEW DF THAT GROUPS BY FILE NAME, SUMMARIZES WORD COUNT SO EACH ARTICLE HAS A WORD COUNT 
+z <- y %>% 
+  select(filename, newspaper_name, URL, words, decade) %>% 
+  group_by(filename) %>% 
+  summarize(total=sum(words))
 
+z$file_id <- gsub('.txt',"", z$filename)
+
+# Match the responses without the full file_id
+# https://docs.google.com/spreadsheets/d/1zDWMbuoTHVtiJDrrJ9mDfBTp-VxNFTmMHiGcGA-UvjE/edit#gid=1311419216
+# to the original worksheet that does have the file id
+# https://docs.google.com/spreadsheets/d/18493Qgx3LZZk1h8JAP60Foj0MVLofaCqrfNUlDk0dus/edit#gid=588665898
+# filter original to the responses file ids
+# line up and match()
+
+
+
+gsub(“\","",earningsTOTAL.EARNINGS)
+
+
+```
+
+
+```{r}
 
 z <- y %>% 
   select(filename, newspaper_name, URL, words, decade) %>% 
