@@ -342,7 +342,8 @@ lynch_article_data <- read_csv("../data/lynch_geocoded_10.8.csv")
 lynch_data <- lynch_article_data %>% 
   mutate(date = as.Date(date, "%m/%d/%Y")) %>% 
   mutate(yearmo = as.yearmon(date)) %>% 
-  distinct(year, lynch_address, .keep_all = TRUE) %>% 
+  #distinct(year, lynch_address, .keep_all = TRUE) %>% 
+    distinct(yearmo, lynch_address, .keep_all = TRUE) %>% 
   clean_names() %>% 
   mutate(lynch_region = case_when(
     str_detect(state_lynch, "SC|TX|LA|TN|MS|AR|AL|GA|VA|FL|NC|MD|DE|WV|KY|OK|DC")~"South",
@@ -428,15 +429,26 @@ lynch_by_state_updated <- lynch_data %>%
   rename(lynch_state = state_lynch) %>% 
   mutate(lynch_percent = round(lynch_count/nrow(lynch_data)*100,2))
 
+#code fails on beck_count/nrow(beck_region_coded
+# beck_by_state <- beck_lynchings %>% 
+#   group_by(lynch_state) %>% 
+#   count(.) %>% 
+#   rename(beck_count = n) %>% 
+#   mutate(beck_percent = round(beck_count/nrow(beck_region_coded)*100,2))
+
+#fixed-rsw
 beck_by_state <- beck_lynchings %>% 
   group_by(lynch_state) %>% 
   count(.) %>% 
   rename(beck_count = n) %>% 
-  mutate(beck_percent = round(beck_count/nrow(beck_region_coded)*100,2))
+  mutate(beck_percent = round(beck_count/nrow(beck_lynchings)*100,2))
 
 state_comparison_updated <- lynch_by_state_updated %>% 
   left_join(beck_by_state) %>% 
-  mutate(percent_diff = lynch_percent - beck_percent)
+ # mutate(percent_diff = lynch_percent - beck_percent)
+    mutate(pct_point_diff = lynch_percent - beck_percent)
+
+# write.csv(state_comparison_updated, "/Users/robwells/Code/hcij_lynching_phase_two/narratives/output/state_comparison_updated.csv")
 
 write_sheet(state_comparison_updated, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "oct_nine_state")
 
@@ -452,16 +464,30 @@ lynch_by_decade <- lynch_data %>%
   rename(lynch_count = n) %>%
   mutate(lynch_percent = round(lynch_count/nrow(lynch_data)*100,2))
 
+#code fails on beck_count/nrow(beck_region_coded
+# beck_by_decade <- beck_lynchings %>%
+#   mutate(decade = floor(year/10) * 10) %>% 
+#   group_by(decade) %>% 
+#   count(.) %>% 
+#   rename(beck_count = n) %>% 
+#   mutate(beck_percent = round(beck_count/nrow(beck_region_coded)*100,2))
+
+#fixed - rsw
 beck_by_decade <- beck_lynchings %>%
   mutate(decade = floor(year/10) * 10) %>% 
   group_by(decade) %>% 
   count(.) %>% 
   rename(beck_count = n) %>% 
-  mutate(beck_percent = round(beck_count/nrow(beck_region_coded)*100,2))
+  mutate(beck_percent = round(beck_count/nrow(beck_lynchings)*100,2))
+
 
 decade_comparison <- lynch_by_decade %>% 
   full_join(beck_by_decade) %>% 
-  mutate(percent_diff = lynch_percent - beck_percent)
+  #it's percentage point, not percentage difference - rsw
+  #  mutate(percent_diff = lynch_percent - beck_percent)
+    mutate(pct_point_diff = lynch_percent - beck_percent)
+
+# write.csv(decade_comparison, "/Users/robwells/Code/hcij_lynching_phase_two/narratives/output/decade_comparison.csv")
 
 write_sheet(decade_comparison, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "oct_nine_decades")
 
