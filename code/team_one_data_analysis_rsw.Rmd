@@ -342,18 +342,7 @@ lynch_article_data <- read_csv("../data/lynch_geocoded_10.8.csv")
 lynch_data <- lynch_article_data %>% 
   mutate(date = as.Date(date, "%m/%d/%Y")) %>% 
   mutate(yearmo = as.yearmon(date)) %>% 
-  distinct(year, lynch_address, .keep_all = TRUE)
-
-
-#RSW: Interesting call on the filter, it removes bystanders
-beck_lynchings <- tolnay_beck %>% 
-  filter(!str_detect(status, "death"))
-  
-```
-
-## Region Reclassification and Analysis
-```{r}
-lynch_by_region_updated <- lynch_data %>% 
+  distinct(year, lynch_address, .keep_all = TRUE) %>% 
   clean_names() %>% 
   mutate(lynch_region = case_when(
     str_detect(state_lynch, "SC|TX|LA|TN|MS|AR|AL|GA|VA|FL|NC|MD|DE|WV|KY|OK|DC")~"South",
@@ -362,13 +351,15 @@ lynch_by_region_updated <- lynch_data %>%
     str_detect(state_lynch, "CA|NV|OR|CO|MT|WA|ID|WY|UT|NM|AZ|AK|HI")~"West",
     TRUE~state_lynch
   )) %>% 
-  group_by(lynch_region) %>% 
-  count(.) %>% 
-  rename(lynch_count = n) %>% 
-  mutate(lynch_percent = round(lynch_count/nrow(lynch_data)*100,2))
+  mutate(lynch_border = case_when(
+    str_detect(state_lynch, "MD|DE|WV|KY|MO")~"Border",
+    TRUE~"Not_Border"
+  ))
 
-beck_region_coded <- beck_lynchings %>%
-  select(status, lynch_state) %>% 
+
+#RSW: Interesting call on the filter, it removes bystanders
+beck_lynchings <- tolnay_beck %>% 
+  filter(!str_detect(status, "death")) %>% 
   mutate(lynch_region = case_when(
     str_detect(lynch_state, "SC|TX|LA|TN|MS|AR|AL|GA|VA|FL|NC|MD|DE|WV|KY|OK|DC")~"South",
     str_detect(lynch_state, "MO|OH|IN|KS|MI|WI|MN|IA|IL|NE|ND|SD")~"Midwest",
@@ -376,10 +367,25 @@ beck_region_coded <- beck_lynchings %>%
     str_detect(lynch_state, "CA|NV|OR|CO|MT|WA|ID|WY|UT|NM|AZ|AK|HI")~"West",
     TRUE~lynch_state
   )) %>% 
-  mutate(border = case_when(
+  mutate(lynch_border = case_when(
     str_detect(lynch_state, "MD|DE|WV|KY|MO")~"Border",
     TRUE~"Not_Border"
   ))
+  
+```
+
+## Region & Border Reclassification and Analysis
+```{r}
+lynch_by_region_updated <- lynch_data %>% 
+  group_by(lynch_region) %>% 
+  count(.) %>% 
+  rename(lynch_count = n) %>% 
+  mutate(lynch_percent = round(lynch_count/nrow(lynch_data)*100,2))
+  
+
+beck_region_coded <- beck_lynchings %>%
+  select(status, lynch_state, lynch_region, lynch_border)
+  
 
 beck_regional <- beck_region_coded %>% 
   group_by(lynch_region) %>% 
@@ -392,6 +398,24 @@ regional_comparison_updated <- lynch_by_region_updated %>%
   mutate(percent_diff = lynch_percent - beck_percent)
 
 write_sheet(regional_comparison_updated, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "oct_nine_regional")
+
+lynch_by_border <- lynch_data %>% 
+  group_by(lynch_border) %>% 
+  count(.) %>% 
+  rename(lynch_count = n) %>% 
+  mutate(lynch_percent = round(lynch_count/nrow(lynch_data)*100,2))
+
+beck_border <- beck_region_coded %>% 
+  group_by(lynch_border) %>% 
+  count(.) %>% 
+  rename(beck_count = n) %>% 
+  mutate(beck_percent = round(beck_count/nrow(beck_region_coded)*100,2))
+
+border_state_comparison <- lynch_by_border %>% 
+  left_join(beck_border) %>% 
+  mutate(percent_diff = lynch_percent - beck_percent)
+
+write_sheet(border_state_comparison, "https://docs.google.com/spreadsheets/d/1udiQCGe-Qou-WlAiBYJgW23AccOx-_4pNHKNjzIreXA/edit#gid=0", sheet = "oct_nine_border")
 ```
 
 ## Updated state comparisons
