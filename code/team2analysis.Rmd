@@ -117,6 +117,51 @@ top_10_states %>%
 
 ```
 
+
+# Wire Grouping 
+```{r}
+#I grouped the stories based on whether they were within 15 days of each other
+
+#This code uses the diff function to calculate the difference between consecutive dates and checks if the difference is greater than 15. It then accumulates the results using cumsum to create a new grouping column called group.
+#cumsum: Cumulative Sums, Products, and Extremes
+wire_coverage2 <- lynch_geocoded_10.8 %>%
+  select(newspaper_name, lynch_address, date, miles, newspaper_state_code, file_id, url) %>%
+  mutate(fixed_date=mdy(date)) %>%
+  mutate(group = cumsum(c(TRUE, diff(fixed_date)>15)))%>% 
+  group_by(group)
+
+wire_coverage2 <- wire_coverage2 %>% 
+    filter(lynch_address != "NA, NA" & lynch_address != "None, NONE")
+
+
+#This df will show you the likely groups of wire coverage
+#But we have to read the files to make sure that's the case.
+wire_grouped <- wire_coverage2 %>% 
+  group_by(group) %>% 
+  count(group) %>% 
+  filter(n>=6) %>% 
+  arrange(desc(n))
+
+#For example, group 908 gathered a dozen article, and all but two were about the 1915 lynching of Leo Frank. 
+#I think this might be the way to figure out wire coverage - split up the groupings by date, see of the same victim or place is named.
+#files that are not part of the group can be identified and excluded in a subsequent filtering.
+
+#Count the number of pairs
+#671 pairs
+wire_grouped <- wire_coverage2 %>% 
+  group_by(group) %>% 
+  count(group) %>% 
+  filter(n>=2) %>% 
+  arrange(desc(n))
+
+#I experimented with your excellent code and dropped it down to 128 observations, which is too tight a filter. 
+same_towns <- wire_coverage2[duplicated(wire_coverage2[, c("lynch_address", "group")]) | duplicated(wire_coverage2[, c("lynch_address", "group")], fromLast = TRUE), ]
+
+
+
+```
+
+
 ```{r}
 ## Looking into wire coverage: isolate by date and city
 
