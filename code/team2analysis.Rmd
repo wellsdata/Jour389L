@@ -26,34 +26,18 @@ library(lubridate)
 
 # Analysis
 ```{r}
-lynch_geocoded_9.27 <- read.csv("../data/lynch_geocoded_9.27.csv")
+lynch_geocoded_10.8 <- read.csv("../data/lynch_geocoded_10.8.csv")
 
-```
-
-```{r}
-## Pct of Newspapers in state vs out of state
- lynch_geocoded_9.27 %>% 
-  count(in_state) %>% 
-  mutate(pct = round(n/3292,2))
-
-
-# in_state
-# N	3068	0.93		
-# Y	223	0.07	
-
-
-summary(lynch_geocoded_9.27$miles)
-#Newspapers, on average, were 908.5 miles away from a lynching event during the whole time period
 ```
 
 ## Distance Over Time
 ```{r}
 #cleaning initial data
-lynch_geocoded_9.27 <- lynch_geocoded_9.27 %>%
-  distinct(file_id, lynch_address, .keep_all = TRUE)
+# lynch_geocoded_9.27 <- lynch_geocoded_9.27 %>%
+#   distinct(file_id, lynch_address, .keep_all = TRUE)
 
 #distance split by decade
-distance_by_decade <- lynch_geocoded_9.27 %>% 
+distance_by_decade <- lynch_geocoded_10.8 %>% 
   select(decade, miles) %>% 
   group_by(decade) %>% 
   summarize(mean_miles = mean(miles, na.rm=TRUE)) %>%
@@ -69,7 +53,7 @@ distance_by_decade %>%
 #write_sheet()
 
 #distance grouped by newspaper title
-distance_by_paper <- lynch_geocoded_9.27 %>%
+distance_by_paper <- lynch_geocoded_10.8 %>%
   select(newspaper_name, newspaper_state_code, miles) %>%
   group_by(newspaper_name, newspaper_state_code) %>%
   filter(!is.na(newspaper_name)) %>%
@@ -89,7 +73,7 @@ top_20_papers %>%
 #write.csv(top_20_papers, "~/Desktop/top_20_papers_distance.csv")
 
 #distance group by newspaper states
-distance_by_state <- lynch_geocoded_9.27 %>%
+distance_by_state <- lynch_geocoded_10.8 %>%
   select(newspaper_state_code, miles) %>%
   group_by(newspaper_state_code) %>%
   summarize(mean_miles = mean(miles, na.rm=TRUE)) %>%
@@ -136,13 +120,13 @@ top_10_states %>%
 ```{r}
 ## Looking into wire coverage: isolate by date and city
 
-#maybe write a case_when for if the date is greater than 15 make it the ceiling date and otherwise make it the floor date?
-wire_coverage <- lynch_geocoded_9.27 %>%
-  select(newspaper_name, lynch_address, date, miles, newspaper_state_code) %>%
+wire_coverage <- lynch_geocoded_10.8 %>%
+  select(newspaper_name, lynch_address, date, miles, newspaper_state_code, url) %>%
   mutate(fixed_date=mdy(date)) %>%
   mutate(month = floor_date(fixed_date, "month")) %>%
   select(-date) %>%
-  rename(paper_state = newspaper_state_code)
+  rename(paper_state = newspaper_state_code) %>%
+  filter(lynch_address != "NA, NA" & lynch_address != "None, NONE")
 
 duplicates <- wire_coverage[duplicated(wire_coverage$lynch_address) | duplicated(wire_coverage$lynch_address, fromLast = TRUE), ]
 
@@ -154,37 +138,37 @@ check_duplicates <- duplicates %>%
 
 #write_sheet(duplicates, "https://docs.google.com/spreadsheets/d/1yt78ISXWJxpqig1x2feStOdtcnjOHA8vLf46lqe6zcE/edit#gid=0", sheet = "only_duplicate_cities")
 
-city_and_date <- duplicates[duplicated(duplicates[, c("lynch_address", "month")]) | duplicated(duplicates[, c("lynch_address", "month")], fromLast = TRUE), ]
+city_and_date <- wire_coverage[duplicated(wire_coverage[, c("lynch_address", "month")]) | duplicated(wire_coverage[, c("lynch_address", "month")], fromLast = TRUE), ]
 
 #write_sheet(city_and_date, "https://docs.google.com/spreadsheets/d/1yt78ISXWJxpqig1x2feStOdtcnjOHA8vLf46lqe6zcE/edit#gid=0", sheet = "duplicate_cities_and_months")
 
+#creating a new column to indicate the cases that are potential examples of wire coverage
+lynch_geocoded_10.8 <- lynch_geocoded_10.8 %>%
+  mutate(wire_story = case_when(
+    rownames(lynch_geocoded_10.8) %in% rownames(city_and_date) ~ "yes",
+    TRUE ~ "no"
+  ))
+
+check <- lynch_geocoded_10.8 %>%
+  group_by(wire_story) %>%
+  count()
+
 #counting possible total of wire coverage cases
-counting_wire_cases <- lynch_geocoded_9.27 %>%
-  select(newspaper_name, lynch_address, date, miles, newspaper_state_code, state_lynch) %>%
+counting_wire_cases <- lynch_geocoded_10.8 %>%
+  select(newspaper_name, lynch_address, date, miles, newspaper_state_code, state_lynch, decade, total_words, Newspaper_Region) %>%
   mutate(fixed_date=mdy(date)) %>%
   mutate(month = floor_date(fixed_date, "month")) %>%
   select(-date) %>%
-  rename(paper_state = newspaper_state_code)
+  rename(paper_state = newspaper_state_code) %>%
+  filter(lynch_address != "NA, NA" & lynch_address != "None, NONE")
 
 counting_wire_cases <- counting_wire_cases[duplicated(counting_wire_cases[, c("lynch_address", "month")]) | duplicated(counting_wire_cases[, c("lynch_address", "month")], fromLast = TRUE), ]
-
-counting_wire_cases <- counting_wire_cases %>%
-  mutate(wire_case = 
-           case_when(
-             paper_state == state_lynch ~ "n",
-             TRUE ~ "y"
-             )) %>%
-  filter(wire_case == "y") %>%
-  filter(lynch_address != "NA, NA" & lynch_address != "None, NONE") %>%
-  select(-wire_case)
 
 wire_newspapers <- counting_wire_cases %>%
   group_by(newspaper_name, paper_state) %>%
   summarize(mean_miles = mean(miles, na.rm=TRUE), count = n()) %>%
   filter(!is.na(newspaper_name)) %>%
   mutate(mean_miles = round(mean_miles, digits = 2))
-
-#write_sheet(wire_newspapers, "https://docs.google.com/spreadsheets/d/1yt78ISXWJxpqig1x2feStOdtcnjOHA8vLf46lqe6zcE/edit#gid=0", sheet = "out_of_state_newspapers")
 
 states_wire_coverage <- wire_newspapers %>%
   group_by(paper_state) %>%
@@ -194,6 +178,52 @@ states_wire_coverage <- wire_newspapers %>%
 top_35_states_wire <- states_wire_coverage[1:35, ]
 
 top_20_states_wire_coverage <- states_wire_coverage[1:20, ]
+
+#Looking at article length
+avg_article_length_by_decade <- counting_wire_cases %>%
+  group_by(decade) %>%
+  summarize(avg_length = mean(total_words, na.rm=TRUE), avg_distance = mean(miles, na.rm=TRUE)) %>%
+  arrange(desc(avg_length)) %>%
+  mutate(avg_length = round(avg_length, digits = 2), avg_distance = round(avg_distance, digits = 2))
+
+avg_article_length_by_state <- counting_wire_cases %>%
+  group_by(paper_state) %>%
+  summarize(avg_length = mean(total_words, na.rm=TRUE), avg_distance = mean(miles, na.rm=TRUE)) %>%
+  arrange(desc(avg_length)) %>%
+  mutate(avg_length = round(avg_length, digits = 2), avg_distance = round(avg_distance, digits = 2))
+
+avg_article_length_by_region <- counting_wire_cases %>%
+  group_by(Newspaper_Region) %>%
+  summarize(avg_length = mean(total_words, na.rm=TRUE), avg_distance = mean(miles, na.rm=TRUE)) %>%
+  arrange(desc(avg_length)) %>%
+  mutate(avg_length = round(avg_length, digits = 2), avg_distance = round(avg_distance, digits = 2))
+```
+
+## Attempting to make new labeling system for wire coverage
+```{r}
+label_counter <- 1
+
+# Create a new column for labels and initialize it with NA
+counting_wire_cases$wire_story <- NA
+
+# Iterate through the rows
+for (i in 1:nrow(counting_wire_cases)) {
+  # If it's the first row, assign a new label
+  if (i == 1) {
+    counting_wire_cases$wire_story[i] <- label_counter
+  } else {
+    # Check for missing values and compare the current row with the previous row
+    if (!is.na(counting_wire_cases$address[i - 1]) && !is.na(counting_wire_cases$address[i]) && !is.na(counting_wire_cases$date[i - 1]) && !is.na(counting_wire_cases$date[i]) &&
+        counting_wire_cases$address[i] == counting_wire_cases$address[i - 1] && counting_wire_cases$date[i] == counting_wire_cases$date[i - 1]) {
+      # If they match, assign the same label as the previous row
+      counting_wire_cases$wire_story[i] <- counting_wire_cases$wire_story[i - 1]
+    } else {
+      # If they don't match or there are missing values, increment the label counter and assign the new label
+      label_counter <- label_counter + 1
+      counting_wire_cases$wire_story[i] <- label_counter
+    }
+  }
+}
 ```
 
 ## Visualizations for Reporting Distance
@@ -221,19 +251,10 @@ ggplot(top_35_states_wire, aes(x = paper_state, y = mean_miles)) +
   labs(
     x = "State",
     y = "Average Miles",
-    title = "Average Distance for States Reporting on Out-of-State Lynching Incidents"
+    title = "Average Distance for Wire Coverage by State"
   ) +
   theme(text = element_text(size = 9))
 
-```
-
-```{r}
-## Regional differences
-
-#starter code
-m <- lynch_geocoded_9.16 %>% 
-  select(decade, Newspaper_Region, in_state) %>% 
-  group_by(Newspaper_Region) %>% 
-  count(in_state)
+#Make new version of previous visualization changing the x-axis to be a timeline - so it wouldn't be broken down by state, it would be by decade. Also make sure it doesn't exclude the cases where the newspaper state is the same as the lynching state
 
 ```

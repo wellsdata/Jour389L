@@ -32,7 +32,7 @@ Southern coverage vs other regions (north, border)
 
 # lynching_data <- read.csv("data/lynch_geocoded_9.16.csv")
 
-lynching_data <- read.csv("..data/lynch_geocoded_9.27.csv")
+lynching_data <- read.csv("../data/lynch_geocoded_10.8.csv")
 
 ```
 
@@ -41,7 +41,7 @@ lynching_data <- read.csv("..data/lynch_geocoded_9.27.csv")
 
 ```{r}
 #Classification based on https://www.census.gov/programs-surveys/economic-census/guidance-geographies/levels.html#par_textimage_34
-lynch_geocoded_9.27 <- lynch_geocoded_9.27 %>% 
+lynch_geocoded_10.8 <- lynch_geocoded_10.8 %>% 
   mutate(Newspaper_Region=Newspaper_State) %>% 
   mutate(Newspaper_Region = case_when(Newspaper_State=="South Carolina" ~ "South",
                            Newspaper_State=="Texas" ~ "South",
@@ -228,7 +228,7 @@ write_csv(coverage_vs_lynch_occurrence, "coverage_vs_lynch_occurrence.csv")
 
 # read in new data
 
-lynch_updated <- read_csv("data/lynch_geocoded_9.27.csv")
+lynch_updated <- read_csv("../data/lynch_geocoded_10.8.csv")
 
 # CHECK: vibe check for data
 
@@ -272,7 +272,7 @@ in_state_coverage <- state_in_out_breakdown %>%
 # CHECK: Team 1's second question: What states were featured the most in out-of-state coverage?
 
 states_df <- lynch_updated %>%
-  select(newspaper_name, newspaper_state_code, state_lynch, in_state) 
+  select(decade, newspaper_name, newspaper_state_code, state_lynch, in_state, border, total_words) 
 
 oos_coverage <- states_df %>%
   filter(in_state == "N") %>%
@@ -337,25 +337,25 @@ Back to regional analysis -- new data has a region category for border states, s
 ```{r}
 
 border_states <- lynch_updated %>%
-  select(decade, newspaper_region, newspaper_region2, in_state) %>% 
-  group_by(newspaper_region2) %>% 
+  select(decade, newspaper_region, border, in_state) %>% 
+  group_by(border) %>% 
   count(in_state)
 
 write_csv(border_states, "data/border_states.csv")
 
 lynch_regional <- lynch_updated %>%
-  select(decade, newspaper_region, newspaper_region2, in_state)
+  select(decade, newspaper_region, border, in_state)
 
 
 lynch_regional %>%
-  filter(newspaper_region2 == "Border") %>%
+  filter(border == "Border") %>%
   group_by(decade) %>%
   summarise(coverage_count = n()) %>%
   arrange(desc(coverage_count))
 
 lynch_regional %>%
-  filter(newspaper_region2 == "Border") %>%
-  group_by(year) %>%
+  filter(border == "Border") %>%
+  group_by(decade) %>%
   summarise(southern_count = n()) %>%
   arrange(desc(southern_count))
 
@@ -386,7 +386,7 @@ overall_count_over_time <- lynch_regional %>%
   arrange(desc(total_count))
 
 border_count_over_time <- lynch_regional %>%
-  filter(newspaper_region2 == "Border") %>%
+  filter(border == "Border") %>%
   group_by(decade) %>%
   summarise(border_count = n()) %>%
   arrange(desc(border_count))
@@ -400,34 +400,157 @@ write_csv(final_updated_geog, "data/regional_analysis_updated.csv")
 write_csv(border_count_over_time, "data/border_decades.csv")
 
 border_decade_in_state <- lynch_regional %>%
-  filter(newspaper_region2 == "Border") %>%
-  group_by(in_state, decade) %>%
-  summarise(count = n()) %>%
-  arrange(decade)
+  filter(border == "Border") %>%
+  group_by(in_state) %>%
+  summarise(count = n())
 
 write_csv(border_decade_in_state, "data/border_decade_in_state.csv")
 
 # which border states covered lynchings the most
 
 border_state_coverage <- lynch_updated %>%
-  select(decade, newspaper_state_code, state_lynch, newspaper_region, newspaper_region2, in_state) %>%
-  filter(newspaper_region2 == "Border")
+  select(decade, newspaper_state_code, state_lynch, newspaper_region, border, in_state) %>%
+  filter(border == "Border")
 
-# huge yikes -- the newspaper state code and newspaper region don't line up for delaware -- why is delaware considered a southern state??? or a border state? so taking all of our analysis with a huge grain of salt.
-
-border_state_coverage %>%
-  group_by(newspaper_state_code) %>%
-  summarise(count = n())
-
-lynch_updated %>%
-  filter(newspaper_state_code == "KS")
-
-lynch_updated %>%
-  filter(newspaper_state_code == "CO")
-
-# kansas is 100% a border state, as is colorado, so we can't progress much further with the data being a bit messy on this front.
 
 ```
 
+```{r}
+
+# coverage_by_decade has percent by decade of in-state vs. out of state lynching coverage
+
+# states_df has newspaper_name, newspaper_state_code, state_lynch, in_state, border, total_words
+
+coverage_by_decade
+
+# what newspapers had the highest 
+
+states_df %>%
+  filter(in_state == "Y") %>%
+  group_by(decade, newspaper_name) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+
+lynch_updated %>%
+  group_by(state_lynch) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+# newspapers had a shockingly low amount of coverage for lynchings in their state -- the highest number of in-state lynchings covered in a single decade for any paper was 4, according to the code block above
+
+# dataframe for other newspapers that were in high-lynching states but covered the most out of state lynchings total
+# need newspaper / out of state / in state coverage for GA, MS, AL, TN
+
+# let's start with georgia
+
+georgia_coverage <- states_df %>%
+  filter(newspaper_state_code == "GA")
+
+georgia_coverage %>%
+  group_by(in_state) %>%
+  summarise(georgia_coverage_count = n())
+
+georgia_coverage %>%
+  group_by(newspaper_name) %>%
+  count(in_state)
+
+# what about mississippi 
+
+# quick check
+# states_df %>%
+#  filter(state_lynch == "MS")
+
+mississippi_coverage <- states_df %>%
+  filter(newspaper_state_code == "MS")
+
+mississippi_coverage %>%
+  group_by(in_state) %>%
+  summarise(mississippi_coverage_count = n())
+
+mississippi_coverage %>%
+  group_by(newspaper_name) %>%
+  count(in_state)
+
+# tennessee 
+
+tennessee_coverage <- states_df %>%
+  filter(newspaper_state_code == "TN")
+
+tennessee_coverage %>%
+  group_by(in_state) %>%
+  summarise(tennessee_coverage_count = n())
+
+tennessee_coverage %>%
+  group_by(newspaper_name) %>%
+  count(in_state)
+
+# alabama
+
+alabama_coverage <- states_df %>%
+  filter(newspaper_state_code == "AL")
+
+alabama_coverage %>%
+  group_by(in_state) %>%
+  summarise(alabama_coverage_count = n())
+
+alabama_coverage %>%
+  group_by(newspaper_name) %>%
+  count(in_state)
+
+# for graphic
+
+graphic <- states_df %>%
+  group_by(newspaper_state_code, in_state) %>%
+  summarise(count = n()) %>%
+  arrange(newspaper_state_code)
+
+write_csv(graphic, "team_3_graphic.csv")
+
+word_averages <- states_df %>%
+  na.omit(total_words) %>%
+  group_by(newspaper_state_code) %>%
+  summarise(average_word_count = mean(total_words)) %>%
+  arrange(average_word_count)
+
+# TN, SC and MS were all states in the bottom 10 for average word count for a given article
+
+# rechecking numbers with new data
+# states_df %>%
+#   group_by(border) %>%
+#   summarise(count = n())
+
+border_states <- states_df %>%
+  filter(border == "Border")
+
+border_states %>%
+  na.omit(total_words) %>%
+  group_by(newspaper_state_code) %>%
+  summarise(median_word_count = median(total_words)) %>%
+  arrange(median_word_count)
+
+non_border_median_words <- states_df %>%
+  filter(border == "Not_Border") %>%
+  na.omit(total_words) %>%
+  group_by(newspaper_state_code) %>%
+  summarise(median_word_count = median(total_words)) %>%
+  arrange(median_word_count)
+  
+border_states %>%
+  group_by(newspaper_state_code) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+border_states %>%
+  group_by(newspaper_state_code, decade) %>%
+  count(in_state) 
+
+yearly_lynching_in_state_out_of_state <- lynch_updated %>%
+  group_by(year, in_state) %>%
+  summarise(count = n()) %>%
+  arrange(year)
+
+write_csv(yearly_lynching_in_state_out_of_state, "yearly_lynching.csv")
+
+```
 
 
