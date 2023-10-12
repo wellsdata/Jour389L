@@ -258,8 +258,7 @@ for (i in 1:nrow(counting_wire_cases)) {
     counting_wire_cases$wire_story[i] <- label_counter
   } else {
     # Check for missing values and compare the current row with the previous row
-    if (!is.na(counting_wire_cases$address[i - 1]) && !is.na(counting_wire_cases$address[i]) && !is.na(counting_wire_cases$date[i - 1]) && !is.na(counting_wire_cases$date[i]) &&
-        counting_wire_cases$address[i] == counting_wire_cases$address[i - 1] && counting_wire_cases$date[i] == counting_wire_cases$date[i - 1]) {
+    if (!is.na(counting_wire_cases$address[i - 1]) & !is.na(counting_wire_cases$address[i]) & !is.na(counting_wire_cases$date[i - 1]) & !is.na(counting_wire_cases$date[i]) & counting_wire_cases$address[i] == counting_wire_cases$address[i - 1] & counting_wire_cases$date[i] == counting_wire_cases$date[i - 1]) {
       # If they match, assign the same label as the previous row
       counting_wire_cases$wire_story[i] <- counting_wire_cases$wire_story[i - 1]
     } else {
