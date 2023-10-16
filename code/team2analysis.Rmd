@@ -322,5 +322,11 @@ ggplot(top_35_states_wire, aes(x = paper_state, y = mean_miles)) +
 
 #Idea: make new line graph with two lines: one for word length and one for distance from the lynching to see if there's an inverse relationship between word count and distance
 
+#Looking at the number of wire coverage for each location
+fixed_wire_coverage_groups <- read_csv("~/Desktop/GitHub/jour389L extra stuff/wire_coverage.csv")
+
+fixed_wire_coverage_groups <- fixed_wire_coverage_groups %>%
+  group_by(new_group, lynch_address) %>%
+  summarise(count = n())
 
 ```
