@@ -117,7 +117,6 @@ top_10_states %>%
 
 ```
 
-
 # Wire Grouping 
 ```{r}
 #I grouped the stories based on whether they were within 15 days of each other
@@ -126,13 +125,20 @@ top_10_states %>%
 #cumsum: Cumulative Sums, Products, and Extremes
 wire_coverage2 <- lynch_geocoded_10.8 %>%
   select(newspaper_name, lynch_address, date, miles, newspaper_state_code, file_id, url) %>%
-  mutate(fixed_date=mdy(date)) %>%
-  mutate(group = cumsum(c(TRUE, diff(fixed_date)>15)))%>% 
-  group_by(group)
+  mutate(fixed_date=mdy(date)) 
+
+wire_coverage2 <- wire_coverage2[duplicated(wire_coverage2$lynch_address) | duplicated(wire_coverage2$lynch_address, fromLast = TRUE), ]
 
 wire_coverage2 <- wire_coverage2 %>% 
     filter(lynch_address != "NA, NA" & lynch_address != "None, NONE")
 
+wire_coverage2 <- wire_coverage2 %>%
+  mutate(group = cumsum(c(TRUE, diff(fixed_date)>15)))%>% 
+  group_by(group)
+
+#wire_coverage2 <- wire_coverage2[duplicated(wire_coverage2$group) | duplicated(wire_coverage2$group, fromLast = TRUE), ]
+
+filtered_wire <- wire_coverage2[duplicated(wire_coverage2[, c("lynch_address", "group")]) | duplicated(wire_coverage2[, c("lynch_address", "group")], fromLast = TRUE), ]
 
 #This df will show you the likely groups of wire coverage
 #But we have to read the files to make sure that's the case.
@@ -157,10 +163,23 @@ wire_grouped <- wire_coverage2 %>%
 #I experimented with your excellent code and dropped it down to 128 observations, which is too tight a filter. 
 same_towns <- wire_coverage2[duplicated(wire_coverage2[, c("lynch_address", "group")]) | duplicated(wire_coverage2[, c("lynch_address", "group")], fromLast = TRUE), ]
 
-
+#write_sheet(filtered_wire, "https://docs.google.com/spreadsheets/d/1yt78ISXWJxpqig1x2feStOdtcnjOHA8vLf46lqe6zcE/edit#gid=0", sheet = "filtered_wire_groups")
 
 ```
 
+```{r}
+new_wire_cases <- lynch_geocoded_10.8 %>%
+  select(newspaper_name, lynch_address, date, miles, newspaper_state_code, state_lynch, url) %>%
+  mutate(fixed_date=mdy(date)) %>%
+  rename(paper_state = newspaper_state_code) %>%
+  filter(lynch_address != "NA, NA" & lynch_address != "None, NONE")
+
+new_wire_cases <- new_wire_cases[duplicated(new_wire_cases$lynch_address) | duplicated(new_wire_cases$lynch_address, fromLast = TRUE), ]
+
+new_wire_cases <- new_wire_cases %>%
+  mutate(group = cumsum(c(TRUE, diff(fixed_date)>15)))%>% 
+  group_by(group)
+```
 
 ```{r}
 ## Looking into wire coverage: isolate by date and city
@@ -300,5 +319,8 @@ ggplot(top_35_states_wire, aes(x = paper_state, y = mean_miles)) +
   theme(text = element_text(size = 9))
 
 #Make new version of previous visualization changing the x-axis to be a timeline - so it wouldn't be broken down by state, it would be by decade. Also make sure it doesn't exclude the cases where the newspaper state is the same as the lynching state
+
+#Idea: make new line graph with two lines: one for word length and one for distance from the lynching to see if there's an inverse relationship between word count and distance
+
 
 ```
