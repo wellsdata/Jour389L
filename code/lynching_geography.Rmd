@@ -553,4 +553,53 @@ write_csv(yearly_lynching_in_state_out_of_state, "yearly_lynching.csv")
 
 ```
 
+```{r}
+
+# updating with tolnay/beck data to make comparisons
+
+
+tolnay_beck <- read.csv("../data/bailey_beck_lynching_list_8_1_2022.csv") %>%
+  as.data.frame()
+
+tolnay_beck <- janitor::clean_names(tolnay_beck)
+
+# let's make a dataframe of just the lynchings in the states we're interested in for this circumstance -- for later analysis
+
+al_ga_ms_tolnay_back <- tolnay_beck %>%
+  filter(lynch_state == "GA" | lynch_state == "MS" | lynch_state == "AL")
+
+tolnay_georgia <- al_ga_ms_tolnay_back %>%
+  filter(lynch_state == "GA" & year < 1929 & year >= 1880 & status == "Lynching")
+
+# prof says: add some details from the Tolnay-Beck data to look at all known lynchings in Georgia, total lynchings, line that up with AC coverage and any GA newspaper coverage and illustrate the gaps.
+
+# to do this, we will:
+#   - compare to georgia_coverage
+#   - compare to georgia_coverage when filtered for just Atlanta Constitution
+
+lynch_updated <- lynch_updated %>%
+  mutate(date = as.Date(date, "%m/%d/%Y")) 
+
+new_georgia_coverage <- lynch_updated %>%
+  filter(newspaper_state_code == "GA") %>%
+  select(decade, date, newspaper_name, newspaper_state_code, state_lynch, in_state, border, total_words)
+
+new_georgia_coverage <- new_georgia_coverage %>%
+  dplyr::mutate(year = lubridate::year(date), 
+                month = lubridate::month(date), 
+                day = lubridate::day(date))
+
+new_georgia_coverage %>%
+  filter(in_state == "Y") %>%
+  group_by(year) %>%
+  summarise(count = n()) %>%
+  arrange(year)
+
+tolnay_georgia %>%
+  group_by(year) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+```
+
 
