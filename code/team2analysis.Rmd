@@ -270,6 +270,11 @@ label_counter <- 1
 # Create a new column for labels and initialize it with NA
 counting_wire_cases$wire_story <- NA
 
+#wells comment
+#this didn't run for me: Error in if (!is.na(counting_wire_cases$address[i - 1]) & !is.na(counting_wire_cases$address[i]) &  : 
+#  argument is of length zero
+
+
 # Iterate through the rows
 for (i in 1:nrow(counting_wire_cases)) {
   # If it's the first row, assign a new label
@@ -323,7 +328,11 @@ ggplot(top_35_states_wire, aes(x = paper_state, y = mean_miles)) +
 #Idea: make new line graph with two lines: one for word length and one for distance from the lynching to see if there's an inverse relationship between word count and distance
 
 #Looking at the number of wire coverage for each location
+
+#Wells comment
+#please have links point to the GitHub repo - this failed for me
 fixed_wire_coverage_groups <- read_csv("~/Desktop/GitHub/jour389L extra stuff/wire_coverage.csv")
+
 
 fixed_wire_coverage_groups <- fixed_wire_coverage_groups %>%
   group_by(new_group, lynch_address) %>%

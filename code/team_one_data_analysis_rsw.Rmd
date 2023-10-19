@@ -493,5 +493,13 @@ write_sheet(decade_comparison, "https://docs.google.com/spreadsheets/d/1udiQCGe-
 
 ```
 
+# CLEAN MAIN INDEX
+```{r}
+main_index <- read_csv("../data/mainindex.csv")
 
+x <- main_index %>% 
+  count(newspaper_state) %>% 
+  arrange(desc(n))
+#347 categories in the newspaper_states, needs to be cleaned to 50 or so categories in standard two-digit state format, ie. GA for Georgia, CA for California
 
+```
