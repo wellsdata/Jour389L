@@ -500,6 +500,19 @@ main_index <- read_csv("../data/mainindex.csv")
 x <- main_index %>% 
   count(newspaper_state) %>% 
   arrange(desc(n))
+
+clean_main_index <- main_index %>% 
+  # Clean out any numbers
+  mutate(newspaper_state_clean = str_squish(gsub("[0-9]", "", newspaper_state))) %>% 
+  # Clean out any non-letter characters
+  mutate(newspaper_state_clean = str_squish(gsub("\\W", "", newspaper_state_clean)))
+         
+# A: Arkansas, Ada: Missouri, Ala: Alabama,          
+
+y <- clean_main_index %>% 
+  count(newspaper_state_clean) %>% 
+  arrange(desc(n))
+
 #347 categories in the newspaper_states, needs to be cleaned to 50 or so categories in standard two-digit state format, ie. GA for Georgia, CA for California
 
 ```
