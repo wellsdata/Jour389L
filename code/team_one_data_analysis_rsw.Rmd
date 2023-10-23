@@ -506,8 +506,6 @@ clean_main_index <- main_index %>%
   mutate(newspaper_state_clean = str_squish(gsub("[0-9]", "", newspaper_state))) %>% 
   # Clean out any non-letter characters
   mutate(newspaper_state_clean = str_squish(gsub("\\W", "", newspaper_state_clean)))
-         
-# A: Arkansas, Ada: Missouri, Ala: Alabama,          
 
 y <- clean_main_index %>% 
   count(newspaper_state_clean) %>% 
@@ -516,3 +514,57 @@ y <- clean_main_index %>%
 #347 categories in the newspaper_states, needs to be cleaned to 50 or so categories in standard two-digit state format, ie. GA for Georgia, CA for California
 
 ```
+
+COME BACK TO: MI
+
+Alabama: Ala
+Alaska: Alas, Alask
+Arizona: Ari, Ariz, ArizT, ATA, Cochise, Marico, Pima, PimaCo, Pin
+Arkansas: A, Ark, Arkcurrent, Faulkne
+California: Butte, Ca, Cal, C & Grass Valley, Calif, El, ElDora, Placer
+Colorado: Ba, Co & Canon City, Col, Colo, Conejo, DeltaCo, Elbert, Logan, Montez, RubyCaGunnisonCountyColo
+Connecticut: Co & New Britain, Con, Conn, Litc
+Delaware: De, Del, 
+Florida: F, Fl, Fla, MarionC
+Georgia: Ga
+Hawaii: Hawai, HawaiianIsland, HI, Maui
+Idaho: I & Silver City, Id, Ida, Idah, Idaho, North
+Illinois: Il, Ill
+Indiana: I & Bloomington, I & Indianapolis, Ia, Iai, Ind, MarshallCountyInd, Ran
+Iowa: Audubo, CedarC, How, Howard, I & Marshalltown, I & Independence, Io, Iow, Maha
+Kansas: Allen Cou, K, Ka, Kan, Kansa
+Kentucky: Bourbon, Ky Madis
+Louisiana: Attak, Bossi, Calcasie, GrantP, L, La, Lna, P, Par, Pari
+Maine: Me
+Maryland: M & Port Tobacco, M & Leonard Town, Md
+Massachusetts
+Michigan: LSM, M & Grand Rapids, M & East Saginaw, Mic, Mich
+Minnesota: Be, Bemidji, BlueE, Brown, C & Cook County, Goodh, M & Little Falls, M & Fergus Falls, M & Grand Marais, M & Sauk Rapids, Min, Minn, MT, PineCou
+Mississippi: Cop, DeSot, Lafayet, Lefl, M & Water Valley, M & Philadelphia, MT, Marshal, Mis, Miss
+Missouri: Ada, Audrain, Ch, IronC, Lafa, Missour, Mo (excepting Montana examples), RayC, Salin, ScottC
+Montana: M & Stevensville, M & Diamond City, MTM, Philipsburg & Mo, Mo & Great Falls, Mo & Fort Benton, Mont, Montcurrent, MTM
+Nebraska: BoxB, Cher, H, N & North Platte, N & Grand Island, Ne & Nemaha City, Ne & Dakota City, Neb, Nebr, Nebras, Nebrask, Nem
+Nevada: Ne & Carson City, Ne & Silver City, Nev, NT
+New Hampshire
+New Jersey: Bu & Mount Holly, N & Perth Amboy, NJ, Penn's Grove & S
+New Mexico: Gu, MoraCo, N & Silver City, N & Albuquerque, Ne & Albuquerque, NM, NMT, Rooseve, Socorr
+New York: NY
+North Carolina: E, Edge, Meck, N & Jacksonville, N & Hillsborough, N & Chapel Hill, NC
+North Dakota: Billings, Bott, D, Dakot & Bismarck, Dakota & Pembina, DickeyC, DT, Gr, McLea, N & Valley City, N & Grand Forks, ND, Richl
+Ohio: Ashlan, Bro, Hancoc, High, Ho, HolmesCoOOhio, Mahon, Meigs, O (Excepting Oregon), Oh, Ohi, OO, OOh, OOhi, OOhio, Sandus
+Oklahoma: Choctaw, CraigC, Indi, India, Indian, IndianT, IndTe, Okla, Oklah, OTO
+Oregon: Lin, Lincoln, LinnCo, Morrow, O & Pendleton, Or, Orego
+Pennsylvania: Pa
+Rhode Island
+South Carolina: Claren, SC
+South Dakota: Bl, Broo, Brule, Bu & Dakota, Dako, Dakot & Mitchell, S (Excepting NJ), Dakota & Hurley, Dakota & Miller, DayCo, DTS, Haakon, HandCo, Pen, Rober, SD, South
+Tennessee: GibsonC, Hardem, McNairy, MorganC
+Texas
+Utah: CityUt
+Vermont: St. Johnsb, Orlean
+Virginia: Augus, Highl, 
+Washington: Cheha, OT
+Washington D.C.: DC
+West Virginia
+Wisconsin: Ashland, Jeff, Pi, Rusk
+Wyoming: Carbo
