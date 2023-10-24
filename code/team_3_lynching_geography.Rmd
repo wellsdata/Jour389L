@@ -597,6 +597,10 @@ new_georgia_coverage <- new_georgia_coverage %>%
                 day = lubridate::day(date))
 
 new_georgia_coverage %>%
+  group_by(newspaper_name) %>%
+  summarise(count = n())
+
+new_georgia_coverage %>%
   filter(in_state == "Y") %>%
   group_by(year) %>%
   summarise(count = n()) %>%
@@ -607,6 +611,114 @@ tolnay_georgia %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
+tolnay_georgia %>%
+  group_by(decade) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+tolnay_georgia %>%
+  filter(year > 1887) %>%
+  filter(year < 1900)
+
+new_georgia_coverage %>%
+  filter(in_state == "N") %>%
+  group_by(decade) %>%
+  summarise(count = n()) %>%
+  arrange(decade)
+
+new_georgia_coverage %>%
+  filter(in_state == "N" & newspaper_name == "The Atlanta constitution") %>%
+  group_by(decade) %>%
+  summarise(count = n()) %>%
+  arrange(decade)
+
+new_georgia_coverage %>%
+  filter(newspaper_name == "The Atlanta constitution" & in_state == "Y") %>%
+  group_by(decade) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+  
+new_georgia_coverage %>%
+  filter(newspaper_name == "The morning news" & in_state == "Y") %>%
+  group_by(decade) %>%
+  summarise(count = n())
+
 ```
+
+```{r}
+
+tolnay_ms <-  al_ga_ms_tolnay_back %>%
+  filter(lynch_state == "MS" & year < 1929 & year >= 1880 & status == "Lynching")
+
+new_mississippi_coverage <- lynch_updated %>%
+  filter(newspaper_state_code == "MS") %>%
+  select(decade, year, newspaper_name, newspaper_state_code, state_lynch, in_state, border, total_words)
+
+new_mississippi_coverage %>%
+  group_by(newspaper_name) %>%
+  summarise(count = n())
+
+new_mississippi_coverage %>%
+  filter(in_state == "Y") %>%
+  group_by(year) %>%
+  summarise(count = n()) %>%
+  arrange(year)
+
+new_mississippi_coverage %>%
+  filter(in_state == "N") %>%
+  group_by(year) %>%
+  summarise(count = n()) %>%
+  arrange(year)
+
+# mississippi newspapers 
+
+lynch_updated <- lynch_updated %>%
+  mutate(date = as.Date(date, "%m/%d/%Y")) 
+
+# dataframe for states to leave
+median_word_count <- lynch_updated %>%
+  na.omit(total_words) %>%
+  group_by(newspaper_state_code) %>%
+  summarise(median_word_count = median(total_words))
+
+write_csv(median_word_count, "median_word_count.csv")
+
+new_mississippi_coverage %>%
+  group_by(decade) %>%
+  summarise(count = n()) %>%
+  arrange(desc(decade))
+
+tolnay_ms %>%
+  
+  group_by(decade) %>%
+  summarise(count = n()) %>%
+  arrange(desc(decade))
+
+tolnay_ms %>%
+  count()
+
+new_mississippi_coverage %>%
+  filter(in_state == "N") %>%
+  group_by(newspaper_name) %>%
+  summarise(count = n())
+
+new_mississippi_coverage %>%
+  filter(in_state == "Y") %>%
+  group_by(newspaper_name) %>%
+  summarise(count = n())
+
+new_mississippi_coverage %>%
+  filter(newspaper_name == "Macon beacon") 
+
+tolnay_ms %>%
+  filter(decade == 1890)
+
+```
+
+
+
+
+
+
 
 
