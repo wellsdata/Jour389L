@@ -264,6 +264,7 @@ avg_article_length_by_region <- counting_wire_cases %>%
 ```
 
 ## Attempting to make new labeling system for wire coverage
+#Note: code not used because there is an unresolved error
 ```{r}
 label_counter <- 1
 
@@ -331,8 +332,7 @@ ggplot(top_35_states_wire, aes(x = paper_state, y = mean_miles)) +
 
 #Wells comment
 #please have links point to the GitHub repo - this failed for me
-fixed_wire_coverage_groups <- read_csv("~/Desktop/GitHub/jour389L extra stuff/wire_coverage.csv")
-
+fixed_wire_coverage_groups <- read_csv("~/Desktop/GitHub/Jour389L/data/wire_coverage.csv")
 
 fixed_wire_coverage_groups <- fixed_wire_coverage_groups %>%
   group_by(new_group, lynch_address) %>%
