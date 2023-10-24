@@ -151,11 +151,15 @@ map_plot <- ggplot(data = md_map, aes(x = long, y = lat)) +
   geom_point(data = edited_distinct, aes(x = lynching.lon, y = lynching.lat, color = in_state), size = 3) +
   scale_color_manual(values = c("Out-of-state" = "red", "In-state" = "blue")) +
   coord_quickmap() +
-  theme_minimal() + 
+  theme_void() + 
   labs(title="Map of In-State vs. Out-of-State Coverage for Maryland Lynchings",
-       x="Longitude",
-       y="Latitidue",
-       color = "Newspaper Coverage")
+       color = "Newspaper Coverage") + 
+  theme(axis.title.x = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    axis.title.y = element_blank(),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank())
 
 print(map_plot)
 ```
