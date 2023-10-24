@@ -19,6 +19,7 @@ library(geosphere)
 library(janitor)
 library(lubridate)
 library(kableExtra)
+library(ggplot2)
 ```
 
 ## Creating and Cleaning Maryland Subset
@@ -37,7 +38,7 @@ maryland <- maryland %>%
 maryland <- maryland %>%
   mutate(date = mdy(date),
          month = floor_date(date, "month")) %>%
-  select(newspaper_name:news_address, newspaper_city:year, city_lynch, state_lynch, miles:Newspaper_Region, month)
+  select(newspaper_name:news_address, newspaper_city:year, city_lynch, state_lynch, lynching.lon:Newspaper_Region, month)
 ```
 
 ## Md Lynchings
@@ -129,6 +130,7 @@ total_count <- bind_rows(count_tolnay, count_geocode) %>%
   group_by(decade, source) %>%
   count()
 
+#Graph comparing our data and Tolnay's by decade
 ggplot(total_count, aes(decade, n, fill = source)) +
   geom_bar(stat="identity", position = "dodge", width = 8) + 
   labs(title="Comparing Lynching Counts in Maryland Per Decade",
@@ -136,4 +138,24 @@ ggplot(total_count, aes(decade, n, fill = source)) +
        y="Number of Reported Lynchings",
        fill = "Source")
 
+#Map of in state vs out of state coverage from our data
+#Note: I haven't yet figured out why it is not including all the plot points (besides the ones with missing coordinates)
+edited_distinct <- distinct_md %>%
+  mutate(in_state = str_replace(in_state, "N", "Out-of-state"),
+  in_state = str_replace(in_state, "Y", "In-state"))
+
+md_map <- map_data("state", region = "maryland")
+
+map_plot <- ggplot(data = md_map, aes(x = long, y = lat)) +
+  geom_polygon(fill = "white", color = "black") +
+  geom_point(data = edited_distinct, aes(x = lynching.lon, y = lynching.lat, color = in_state), size = 3) +
+  scale_color_manual(values = c("Out-of-state" = "red", "In-state" = "blue")) +
+  coord_quickmap() +
+  theme_minimal() + 
+  labs(title="Map of In-State vs. Out-of-State Coverage for Maryland Lynchings",
+       x="Longitude",
+       y="Latitidue",
+       color = "Newspaper Coverage")
+
+print(map_plot)
 ```
