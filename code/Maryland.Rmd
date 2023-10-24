@@ -16,47 +16,66 @@ library(googlesheets4)
 #install.packages("geosphere")
 library(geosphere)
 #install.packages("janitor")
+library(janitor)
+library(lubridate)
+library(kableExtra)
 ```
 
-
-## Maryland subset
+## Creating and Cleaning Maryland Subset
 ```{r}
 lynch_geocoded_10.8 <- read.csv("../data/lynch_geocoded_10.8.csv")
-
 
 maryland <- lynch_geocoded_10.8 %>% 
   filter(state_lynch=="MD") 
 
-#Data needs cleaning on city_lynch - Queen annes county Queen Annes County Queen Annes County (eastern shore)
+#Cleaned city_lynch to fix issue with Queen Anne's County and with Bel Air
+maryland <- maryland %>%
+  mutate(city_lynch = ifelse(city_lynch %in% c("Queen annes county", "Queen Annes County", "Queen Annes County (eastern shore)"), "Queen Anne's County", city_lynch)) %>%
+  mutate(city_lynch = str_replace(city_lynch, "Belair", "Bel Air"))
 
+#Formatting date and adding month column
+maryland <- maryland %>%
+  mutate(date = mdy(date),
+         month = floor_date(date, "month")) %>%
+  select(newspaper_name:news_address, newspaper_city:year, city_lynch, state_lynch, miles:Newspaper_Region, month)
 ```
 
-### Md Lynchings
+## Md Lynchings
 ```{r}
-
-x <- maryland %>% 
-    group_by(city_lynch, year) %>% 
-  filter(n()>1)
-
-
-md_single_cases <- 
-    maryland %>% 
-    group_by(city_lynch, year) %>% 
-    distinct(lynch_address, .keep_all = TRUE)  
-
+# Unused code
+# x <- maryland %>% 
+#   group_by(city_lynch, year) %>% 
+#   filter(n()>1)
+# 
+# md_single_cases <- maryland %>% 
+#     group_by(city_lynch, year) %>% 
+#     distinct(lynch_address, .keep_all = TRUE)  
+# 
 # write.csv(md_single_cases, "../output/md_distinct_cases.csv")
+# 
+# zz <- md_single_cases %>% 
+#   select(city_lynch, date, newspaper_name)
 
-md_distinct_cases %>% 
+
+#Filtering to remove duplicates
+distinct_md <- maryland %>%
+  distinct(city_lynch, month, newspaper_name, .keep_all = TRUE)
+
+md_cases_by_decade <- distinct_md %>%
   group_by(decade) %>% 
   count() %>% 
-  arrange(desc(n))
+  rename(geocoded_count = n)
 
-zz <- md_single_cases %>% 
-  select(city_lynch, date, newspaper_name)
+newspapers <- distinct_md %>%
+  group_by(newspaper_name, newspaper_state_code) %>%
+  count()
 
-
+in_vs_out_of_state <- distinct_md %>%
+  group_by(in_state) %>%
+  count()
 ```
-### tolnay md analysis
+
+## Tolnay Md Analysis
 ```{r}
 tolnay_beck <- read_csv("../data/Bailey_Beck_lynching_list_8_1_2022.csv") %>% 
   as.data.frame()
@@ -70,9 +89,51 @@ tolnay_md <- tolnay_beck %>%
 
 #write.csv(tolnay_md, "../output/tolnay_md.csv")
 
-tolnay_md %>% 
+tolnay_by_decade <- tolnay_md %>% 
   group_by(decade) %>% 
-  count() %>% 
-  arrange(decade)
+  count() %>%
+  rename(tolnay_count = n)
+```
+
+## Combined Data Analysis
+```{r}
+# Comparison of numbers by decade
+totals_by_decade <- left_join(md_cases_by_decade, tolnay_by_decade, by = "decade")
+
+#Pulling only cases from Prince George's County
+pg_county <- distinct_md %>%
+  filter(city_lynch == "Prince George's County") %>%
+  select(city_lynch, year)
+
+tolnay_pg <- tolnay_md %>%
+  select(year, lynch_county) %>%
+  filter(lynch_county == "Prince George’s")
+
+total_pg_county <- bind_rows(pg_county, tolnay_pg) %>%
+  group_by(year) %>%
+  count()
+```
+
+## Formatted Tables/Graphs
+```{r}
+#Creating tables for graph
+count_tolnay <- tolnay_md %>%
+  select(decade) %>%
+  mutate(source = "Tolnay")
+
+count_geocode <- distinct_md %>%
+  select(decade) %>%
+  mutate(source = "Our Data")
+
+total_count <- bind_rows(count_tolnay, count_geocode) %>%
+  group_by(decade, source) %>%
+  count()
+
+ggplot(total_count, aes(decade, n, fill = source)) +
+  geom_bar(stat="identity", position = "dodge", width = 8) + 
+  labs(title="Comparing Lynching Counts in Maryland Per Decade",
+       x="Decade",
+       y="Number of Reported Lynchings",
+       fill = "Source")
 
 ```

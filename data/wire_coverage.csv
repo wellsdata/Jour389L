@@ -1,0 +1,119 @@
+newspaper_name,lynch_address,miles,newspaper_state_code,fixed_date,new_group
+Southport telegraph,"San Francisco, CA",1845,WI,1849-02-16,1
+The New York herald,"San Francisco, CA",2569,NY,1849-02-14,1
+Sunday dispatch,"Culpepper, VA",263,NY,1850-07-28,2
+Eastern times,"Culpepper, VA",567,ME,1850-08-01,2
+The daily crescent,"Peoria, IL",712,LA,1851-02-06,3
+The Texas Republican,"Peoria, IL",623,TX,1851-02-08,3
+The Middlebury register,"Milton, FL",1196,VT,1851-07-16,4
+Fremont weekly freeman,"Milton, FL",773,OH,1851-06-28,4
+Eastern times,"Milton, FL",1315,ME,1851-07-10,4
+Fayetteville observer,"Milton, FL",314,TN,1851-06-24,4
+Richmond daily times,"Coloma, CA",2342,VA,1852-05-19,5
+Wilmington journal,"Coloma, CA",2390,NC,1852-05-21,5
+Lynchburg daily Virginian,"Boon County, MO",727,VA,1853-09-08,6
+The daily dispatch,"Boon County, MO",817,VA,1853-09-06,6
+Portage sentinel,"Lynchburg, VA",282,OH,1853-03-02,7
+The daily dispatch,"Lynchburg, VA",94,VA,1853-02-15,7
+Lynchburg daily Virginian,"Bedford County, VA",21,VA,1854-08-05,8
+The daily dispatch,"Bedford County, VA",114,VA,1854-08-07,8
+Richmond enquirer,"Louiseville, KY",457,VA,1856-12-30,9
+Lynchburg daily Virginian,"Louiseville, KY",366,VA,1856-12-30,9
+The Opelousas patriot,"Pottawatomie Creek, KS",571,LA,1856-11-29,10
+Weekly hawk-eye and telegraph,"Pottawatomie Creek, KS",276,IA,1856-12-03,10
+Staunton spectator,"Pottawatomie Creek, KS",876,VA,1856-11-26,10
+Lynchburg daily Virginian,"Lewis County, VA",135,VA,1856-03-29,11
+The daily dispatch,"Lewis County, VA",197,VA,1856-03-28,11
+The north Iowa times,"Jackson County, IA",69,IA,1857-04-24,12
+New Orleans daily crescent,"Jackson County, IA",807,LA,1857-04-20,12
+Cincinnati daily press,"Fort Smith, AR",603,OH,1860-10-06,13
+Nashville union and American,"Fort Smith, AR",432,TN,1860-09-19,13
+The Wheeling daily register,"Martinsburg, WV",153,WV,1874-08-17,14
+The Somerset herald,"Martinsburg, WV",71,PA,1874-08-19,14
+The Democratic advocate,"Franklin, KY",557,MD,1882-03-11,15
+The Cheyenne daily leader,"Franklin, KY",1026,WY,1882-03-08,15
+The Grenada sentinel,"Morgantown, NC",481,MS,1889-09-21,16
+Wheeling register,"Morgantown, NC",303,WV,1889-09-12,16
+Grant County herald,"New Monroeville, AL",805,WI,1892-11-10,17
+The Hope pioneer,"New Monroeville, AL",1223,ND,1892-11-04,17
+Baxter Springs news,"Millington, TN",294,KS,1894-11-03,18
+Dakota farmers' leader.,"Millington, TN",799,SD,1894-09-14,18
+The Wichita daily eagle,"Yreka, CA",1370,KS,1895-08-27,19
+The Seattle post-intelligencer,"Yreka, CA",406,WA,1895-08-27,19
+The Wichita daily eagle,"Springfield, KY",662,KS,1895-08-27,20
+The Seattle post-intelligencer,"Springfield, KY",1987,WA,1895-08-27,20
+The Seattle post-intelligencer,"Fulton, MO",1634,WA,1895-08-16,21
+The Potosi Journal,"Fulton, MO",8222,MO,1895-08-21,21
+The Taney County republican.,"Ponchatoula, LA",459,MO,1900-09-27,22
+Courier Democrat.,"Ponchatoula, LA",1334,ND,1900-09-27,22
+Crittenden press,"Corinth, MS",168,KY,1900-08-23,23
+The united opinion,"Corinth, MS",1073,VT,1900-08-17,23
+Emmons County record,"Elkins, WV",1216,ND,1901-08-02,24
+Northern Wisconsin advertiser,"Elkins, WV",637,WI,1901-08-01,24
+Reporter and farmer,"Elkins, WV",1006,SD,1901-08-01,24
+The semi-weekly messenger,"Wilmington, DE",404,NC,1903-06-26,25
+The gold leaf,"Wilmington, DE",283,NC,1903-06-25,25
+Wood County reporter,"Belleville, IL",406,WI,1903-06-16,26
+Deseret evening news,"Belleville, IL",1205,UT,1903-06-24,26
+Wood County reporter,"Joplin, MO",563,WI,1903-06-11,27
+The Spokane press,"Joplin, MO",1372,WA,1903-04-16,27
+Hot Springs weekly star.,"Danville, IL",847,SD,1903-07-31,28
+The Dickinson press.,"Danville, IL",890,ND,1903-08-01,28
+Valentine Democrat.,"Eudora, MS",788,NE,1904-07-07,29
+Wausau pilot,"Eudora, MS",701,WI,1904-07-05,29
+The Butler weekly times.,"Thebes, IL",276,MO,1904-01-07,30
+The Jackson herald.,"Thebes, IL",16,MO,1904-01-07,30
+Northern Wisconsin advertiser,"Laramie, WY",896,WI,1904-09-08,31
+Willmar tribune,"Laramie, WY",593,MN,1904-09-07,31
+The evening world,"Elkton, KY",758,NY,1905-10-12,32
+The Madison daily leader,"Elkton, KY",722,SD,1905-10-13,32
+Vilas County news,"East Point, GA",884,WI,1906-10-01,33
+Times-promoter.,"East Point, GA",327,MS,1906-09-28,33
+The Birmingham age-herald,"Chattanooga, TN",136,AL,1907-06-30,34
+Americus times-recorder,"Chattanooga, TN",215,GA,1907-01-22,34
+The Donaldsonville chief,"Tunica, MS",319,LA,1907-10-19,35
+The Elbert County tribune,"Tunica, MS",842,CO,1907-10-17,35
+,"Dothan, AL",1073,NE,1908-01-22,36
+New-York tribune,"Dothan, AL",913,NY,1908-01-21,36
+,"Meridian, MS",819,MD,1910-04-14,37
+Watertown leader,"Meridian, MS",749,WI,1910-04-15,37
+The Hawaiian star,"Shelbyville, KY",4405,HI,1911-01-16,38
+Oxford eagle.,"Shelbyville, KY",358,MS,1911-01-19,38
+The Birmingham age-herald,"Princeton, WV",417,AL,1912-09-08,39
+Evening journal,"Princeton, WV",223,WV,1912-09-07,39
+The Manitowoc pilot,"Spartanburg, SC",702,WI,1912-04-04,40
+Wausau pilot,"Spartanburg, SC",803,WI,1912-04-09,40
+Evening times-Republican,"Fort Smith, AR",468,IA,1912-03-25,41
+The Sisseton weekly standard.,"Fort Smith, AR",724,SD,1912-04-05,42
+The McDowell times,"Dyersburg, TN",450,WV,1913-11-21,43
+The Greenville journal,"Dyersburg, TN",382,OH,1913-11-13,43
+Rocky Ford enterprise.,"Monticello, GA",1170,CO,1915-01-22,44
+The Ordway new era.,"Monticello, GA",1174,CO,1915-01-22,44
+The Bridgeport evening farmer,"Atlanta, GA",800,CT,1915-08-19,45
+The Dermott news.,"Atlanta, GA",406,AR,1915-08-26,45
+The Keota news.,"Phoenix, AZ",668,CO,1917-05-11,46
+The Dolores star,"Phoenix, AZ",343,CO,1917-05-11,46
+The Tacoma times,"Collinsville, IL",1732,WA,1918-04-05,47
+The Seattle star,"Collinsville, IL",1731,WA,1918-04-05,47
+The Bridgeport times and evening farmer.,"Collinsville, IL",906,CT,1918-04-06,47
+The Raymer enterprise.,"Pueblo, CO",168,CO,1919-09-25,48
+The sun,"Pueblo, CO",1634,NY,1919-10-01,48
+,"Omaha, NE",679,TX,1919-09-30,49
+The Chattanooga news,"Omaha, NE",719,TN,1919-09-30,49
+The daily Alaska citizen.,"Omaha, NE",2586,AK,1919-09-30,49
+,"Omaha, NE",1182,CT,1919-10-03,49
+Norwich bulletin,"Omaha, NE",1234,CT,1919-10-01,49
+El Paso herald.,"Omaha, NE",879,TX,1919-09-30,49
+The Raymer enterprise.,"Omaha, NE",416,CO,1919-10-09,49
+The Wheeling intelligencer,"Chapmanville, WV",160,WV,1919-12-20,50
+Martinsburg W Va evening journal,"Chapmanville, WV",242,WV,1919-12-16,50
+Wauwatosa news,"Montgomery, AL",744,WI,1919-10-03,51
+The Cordova daily times,"Montgomery, AL",3276,AK,1919-09-30,51
+The Topeka state journal,"Duluth, MN",565,KS,1920-07-03,52
+The Birmingham age-herald,"Duluth, MN",959,AL,1920-06-17,52
+,"Harrison, AR",1137,CT,1923-02-02,53
+The Indianapolis times,"Harrison, AR",451,IN,1923-01-17,53
+The Detroit tribune.,"Texarkana, TX",859,MI,1942-07-25,54
+The Detroit tribune.,"Texarkana, TX",859,MI,1942-07-18,54
+The Havre herald,"Mobile, AL",1678,MT,1906-10-05,55
+Watertown weekly leader,"Mobile, AL",865,WI,1906-10-12,55
