@@ -623,26 +623,6 @@ y <- clean_main_index %>%
 #347 categories in the newspaper_states, needs to be cleaned to 50 or so categories in standard two-digit state format, ie. GA for Georgia, CA for California
 
 ```
-North Dakota: "Billings", "Bott", "D", "Dakot & Bismarck", "Dakota & Pembina", 'Star", "DickeyC", "DT", "Gr", "McLea", "N & Valley City", "N & Grand Forks", "ND", "Richl", "Stark", "Stut", "Ward", "WardCou", "Will
-Ohio: "Ashlan", "Bro", "Hancoc", "High", "Ho", "HolmesCoOOhio", "Mahon", "Meigs", "O (Excepting Oregon)", "Oh", "Ohi", "OO", "OOh", "OOhi", "OOhio", "Sandus", "StarkC", "Vinto", "Woo
-Oklahoma: "Choctaw", "CraigC", "Indi", "India", "Indian", "IndianT", "IndTe", "Okla", "Oklah", "OTO
-Oregon: "Lin", "Lincoln", "LinnCo", "Morrow", "O & Pendleton", "Or", "Orego", "Wal
-Pennsylvania: "Pa
-Rhode Island
-South Carolina: "Claren", "SC
-South Dakota: "Bl", "Broo", "Brule", "Gann Valley & Dakota", "Dako", "Dakot & Mitchell", "S (Excepting NJ)", "Dakota & Hurley", "Dakota & Miller", "DayCo", "DTS", "Haakon", "HandCo", "Pen", "Rober", "SD", "South", "Stanley", "Unio
-Tennessee: "GibsonC", "Hardem", "McNairy", "MorganC", "T", "Te (excepting Texas results)", "Ten", "Tenn
-Texas: "Brownsville & Te", "San Antonio & Te", "Tex
-Utah: "CityUt", "U", "Uta
-Vermont: "St. Johnsb", "Orlean", "Vt
-Virginia: "Augus", "Highl", "V (Excepting WV)
-Washington: "Cheha", "OT", "North Yakima & W", "White Bluffs & W", "Wa", "Wash", "Washin", "WT", "Port Townsend", "Was"
-Washington D.C.: "DC
-West Virginia: "Charles Town & V", "Charlestown & Va", "Clarksburg & Va", "Lewisburg & Va", "Morgantown & Va", "Wheeling & Va", W, "VaW", "WV", "WVa
-Wisconsin: "Ashland", "Jeff", "Pi", "Rusk", "Vi", "Wi", "Wis
-Wyoming: "Carbo", "Wyo
-
-
 Alabama: "Ala
 Alaska: "Alas", "Alask
 Arizona: "Ari", "Ariz", "ArizT", "ATA", "Cochise", "Marico", "Pima", "PimaCo", "Pin
@@ -676,3 +656,21 @@ New Jersey: "Bu & Mount Holly", "N & Perth Amboy", "NJ", "Penn's Grove & S
 New Mexico: "Gu", "MoraCo", "N & Silver City", "N & Albuquerque", "Ne & Albuquerque", "NM", "NMT", "Rooseve", "Socorr", "Torra
 New York: "NY
 North Carolina: "E", "Edge", "Meck", "N & Jacksonville", "N & Hillsborough", "N & Chapel Hill", "NC", "Watauga
+North Dakota: "Billings", "Bott", "D", "Dakot & Bismarck", "Dakota & Pembina", 'Star", "DickeyC", "DT", "Gr", "McLea", "N & Valley City", "N & Grand Forks", "ND", "Richl", "Stark", "Stut", "Ward", "WardCou", "Will
+Ohio: "Ashlan", "Bro", "Hancoc", "High", "Ho", "HolmesCoOOhio", "Mahon", "Meigs", "O (Excepting Oregon)", "Oh", "Ohi", "OO", "OOh", "OOhi", "OOhio", "Sandus", "StarkC", "Vinto", "Woo
+Oklahoma: "Choctaw", "CraigC", "Indi", "India", "Indian", "IndianT", "IndTe", "Okla", "Oklah", "OTO
+Oregon: "Lin", "Lincoln", "LinnCo", "Morrow", "O & Pendleton", "Or", "Orego", "Wal
+Pennsylvania: "Pa
+Rhode Island
+South Carolina: "Claren", "SC
+South Dakota: "Bl", "Broo", "Brule", "Gann Valley & Dakota", "Dako", "Dakot & Mitchell", "S (Excepting NJ)", "Dakota & Hurley", "Dakota & Miller", "DayCo", "DTS", "Haakon", "HandCo", "Pen", "Rober", "SD", "South", "Stanley", "Unio
+Tennessee: "GibsonC", "Hardem", "McNairy", "MorganC", "T", "Te (excepting Texas results)", "Ten", "Tenn
+Texas: "Brownsville & Te", "San Antonio & Te", "Tex
+Utah: "CityUt", "U", "Uta
+Vermont: "St. Johnsb", "Orlean", "Vt
+Virginia: "Augus", "Highl", "V (Excepting WV)
+Washington: "Cheha", "OT", "North Yakima & W", "White Bluffs & W", "Wa", "Wash", "Washin", "WT", "Port Townsend", "Was"
+Washington D.C.: "DC
+West Virginia: "Charles Town & V", "Charlestown & Va", "Clarksburg & Va", "Lewisburg & Va", "Morgantown & Va", "Wheeling & Va", W, "VaW", "WV", "WVa
+Wisconsin: "Ashland", "Jeff", "Pi", "Rusk", "Vi", "Wi", "Wis
+Wyoming: "Carbo", "Wyo
