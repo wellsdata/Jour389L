@@ -500,8 +500,8 @@ write_sheet(decade_comparison, "https://docs.google.com/spreadsheets/d/1udiQCGe-
 alabama <- c("Ala")
 alaska <- c("Alas", "Alask")
 arizona <- c("Ari", "Ariz", "ArizT", "ATA", "Cochise", "Marico", "Pima", "PimaCo", "Pin")
-arkansas <- c("A", "Ark", "Arkcurrent", "Faulkne")
-california <- c("Butte", "Ca", "Cal", "Calif", "El", "ElDora", "Placer")
+arkansas <- c("A", "Ark", "Arkcurrent", "Faulkne", "Ar")
+california <- c("Butte", "Ca", "Cal", "Calif", "El", "ElDora", "Placer", "Cali")
 colorado <- c("Ba", "Col", "Colo", "Conejo", "DeltaCo", "Elbert", "Logan", "Montez", "RubyCaGunnisonCountyColo", "Wel", "WeldCou")
 connecticut <- c("Con", "Conn", "Litc")
 delaware <- c("De", "Del")
@@ -510,27 +510,27 @@ georgia <- c("Ga")
 hawaii <- c("Hawai", "HawaiianIsland", "HI", "Maui", "TH")
 idaho <- c("Id", "Ida", "Idah", "Idaho", "North")
 illinois <- c("Il", "Ill")
-indiana <- c("Ia", "Iai", "Ind", "MarshallCountyInd", "Ran", "Wayne")
-iowa <- c("Audubo", "CedarC", "How", "Howard", "Io", "Iow", "Maha", "TamaCo", "Winnes")
-kansas <- c("Allen Cou", "K", "Ka", "Kan", "Kansa")
-kentucky <- c("Bourbon", "Ky Madis", "Wo")
+indiana <- c("Ia", "IAi", "Ind", "MarshallCountyInd", "Ran", "Wayne")
+iowa <- c("Audubo", "CedarC", "How", "Howard", "Io", "Iow", "Maha", "TamaCo", "Winnes", "I")
+kansas <- c("AllenCou", "K", "Ka", "Kan", "Kansa", "Sum")
+kentucky <- c("Bourbon", "Ky", "Madis", "Wo")
 louisiana <- c("Attak", "Bossi", "Calcasie", "GrantP", "L", "La", "Lna", "P", "Par", "Pari")
 maine <- c("Me")
 maryland <- c("Md")
 massachusetts <- c()
 michigan <- c("Mic", "Mich", "StClair", "LSM")
-minnesota <- c("Be", "Bemidji", "BlueE", "Brown", "Goodh", "Min", "Minn", "MT", "PineCou", "Stevens", "StL")
+minnesota <- c("Be", "Beltra", "BlueE", "Brown", "Goodh", "Min", "Minn", "MT", "PineCou", "Stevens", "StL", "St")
 mississippi <- c("Cop", "DeSot", "Lafayet", "Lefl", "MT", "Marshal", "Mis", "Miss", "Stone")
 missouri <- c("Ada", "Audrain", "Ch", "IronC", "Lafa", "Missour", "Mo", "RayC", "Salin", "ScottC")
-montana <- c("MTM", "Mont", "Montcurrent")
-nebraska <- c("BoxB", "Cher", "H","Neb", "Nebr", "Nebras", "Nebrask", "Nem", "Webs")
+montana <- c("MTM", "Mont", "Montcurrent", "Mon")
+nebraska <- c("BoxB", "Cher", "H","Neb", "Nebr", "Nebra", "Nebras", "Nebrask", "Nem", "Webs")
 nevada <- c("Nev", "NT")
 new_hampshire <- c()
 new_jersey <- c("NJ")
 new_mexico <- c("Gu", "MoraCo", "NM", "NMT", "Rooseve", "Socorr", "Torra")
 new_york <- c("NY")
 north_carolina <- c("E", "Edge", "Meck", "NC", "Watauga")
-north_dakota <- c("Billings", "Bott", "D", "DickeyC", "DT", "Gr", "McLea", "ND", "Richl", "Stark", "Stut", "Ward", "WardCou", "Will")
+north_dakota <- c("Billings", "Bott", "D", "DickeyC", "DT", "Gr", "McLea", "ND", "Richl", "Stark", "Star", "Stut", "Ward", "WardCou", "Will")
 ohio <- c("Ashlan", "Bro", "Hancoc", "High", "Ho", "HolmesCoOOhio", "Mahon", "Meigs", "O", "Oh", "Ohi", "OO", "OOh", "OOhi", "OOhio", "Sandus", "StarkC", "Vinto", "Woo")
 oklahoma <- c("Choctaw", "CraigC", "Indi", "India", "Indian", "IndianT", "IndTe", "Okla", "Oklah", "OTO")
 oregon <- c("Lin", "Lincoln", "LinnCo", "Morrow", "Or", "Orego", "Wal")
@@ -542,10 +542,10 @@ tennessee <- c("GibsonC", "Hardem", "McNairy", "MorganC", "T", "Te", "Ten", "Ten
 texas <- c("Tex")
 utah <- c("CityUt", "U", "Uta")
 vermont <- c("St. Johnsb", "Orlean", "Vt")
-virginia <- c("Augus", "Highl", "V")
-washington <- c("Cheha", "OT", "Wa", "Wash", "Washin", "WT")
+virginia <- c("Augus", "Highl", "V", "Va")
+washington <- c("Cheha", "OT", "Wa", "Wash", "Washin", "WT", "Was")
 w_dc <- c("DC")
-west_virginia <- c("VaW", "WV", "WVa")
+west_virginia <- c("VaW", "WV", "WVa", "W")
 wisconsin <- c("Ashland", "Jeff", "Pi", "Rusk", "Vi", "Wi", "Wis")
 wyoming <- c("Carbo", "Wyo")
 
@@ -564,29 +564,91 @@ clean_main_index <- main_index %>%
   # Clean out any non-letter characters
   mutate(newspaper_state_clean = str_squish(gsub("\\W", "", newspaper_state_clean))) %>% 
   mutate(newspaper_state_clean = case_when(
+    newspaper_state_clean %in% alabama ~ "AL",
+    newspaper_state_clean %in% alaska ~ "AK",
+    newspaper_state_clean %in% arizona ~ "AZ",
+    newspaper_state_clean %in% arkansas ~ "AR",
+    newspaper_state_clean %in% california | str_detect(newspaper_city, "Grass Valley") ~ "CA",
+    newspaper_state_clean %in% colorado | str_detect(newspaper_city, "Cañon City") ~ "CO",
+    newspaper_state_clean %in% connecticut | str_detect(newspaper_city, "New Britain") ~ "CT",
+    newspaper_state_clean %in% delaware ~ "DE",
+    newspaper_state_clean %in% w_dc ~ "DC",
+    newspaper_state_clean %in% florida ~ "FL",
     newspaper_state_clean %in% georgia ~ "GA",
-    newspaper_state_clean %in% mississippi | (newspaper_state_clean == "M" & str_detect(newspaper_city, "Philadelphia")) | (newspaper_state_clean == "Mi" & str_detect(newspaper_city, "Hattiesburg|Leakesville|Poplarville|Port Gibson"))
+    newspaper_state_clean %in% hawaii ~ "HI",
+    newspaper_state_clean %in% idaho | (newspaper_state_clean == "I" & str_detect(newspaper_city, "Silver City")) ~ "ID",
+    newspaper_state_clean %in% illinois ~ "IL",
+    newspaper_state_clean %in% indiana | str_detect(newspaper_city, "Bloomington|Indianapolis") ~ "IN",
+    newspaper_state_clean %in% iowa | str_detect(newspaper_city, "Mashalltown|Independence")~ "IA",
+    newspaper_state_clean %in% kansas ~ "KS",
+    newspaper_state_clean %in% kentucky ~ "KY",
+    newspaper_state_clean %in% louisiana ~ "LA",
+    newspaper_state_clean %in% maine ~ "ME",
+    newspaper_state_clean %in% maryland | str_detect(newspaper_city, "Port Tobacco|Leonard Town") ~ "MD",
+    newspaper_state_clean %in% michigan | (newspaper_state_clean == "M" & str_detect(newspaper_city, "Grand Rapids")) | str_detect(newspaper_city, "East Saginaw|Constantine|Grand Haven") ~ "MI",
+    newspaper_state_clean %in% montana | str_detect(newspaper_city, "Stevensville|Diamond City|Philipsburg|Great Falls|Fort Benton") ~ "MT",
+    newspaper_state_clean %in% missouri | str_detect(newspaper_city, "Farmington") ~ "MO",
+    newspaper_state_clean %in% minnesota | str_detect(newspaper_city, "Grand Marais|Little Falls|Fergus Falls|Sauk Rapids|Minneapolis|White Earth|Worthington") ~ "MN",
+    newspaper_state_clean %in% mississippi | (newspaper_state_clean == "M" & str_detect(newspaper_city, "Philadelphia|Water Valley")) | (newspaper_state_clean == "Mi" & str_detect(newspaper_city, "Hattiesburg|Leakesville|Poplarville|Port Gibson")) ~ "MS",
+    newspaper_state_clean %in% nebraska | str_detect(newspaper_city, "North Platte|Grand Island|Nemaha City|Dakota City") ~ "NE",
+    newspaper_state_clean %in% nevada | (newspaper_state_clean == "Ne" & str_detect(newspaper_city, "Silver City")) | str_detect(newspaper_city, "Carson City|Gardnerville") ~ "NV",
+    newspaper_state_clean %in% new_jersey | str_detect(newspaper_city, "Mount Holly|Perth Amboy|Penn's Grove") ~ "NJ",
+    newspaper_state_clean %in% new_mexico | str_detect(newspaper_city, "Silver City|Albuquerque") ~ "NM",
+    newspaper_state_clean %in% new_york ~ "NY",
+    newspaper_state_clean %in% north_carolina | (newspaper_state_clean == "N" & str_detect(newspaper_city, "Hillsborough")) | str_detect(newspaper_city, "Jacksonville|Chapel Hill") ~ "NC",
+    newspaper_state_clean %in% north_dakota | str_detect(newspaper_city, "Bismarck|Pembina|Valley City|Grand Forks") ~ "ND",
+    newspaper_state_clean %in% oregon | str_detect(newspaper_city, "Pendleton") ~ "OR",
+    newspaper_state_clean %in% ohio ~ "OH",
+    newspaper_state_clean %in% oklahoma ~ "OK",
+    newspaper_state_clean %in% pennsylvania ~ "PA",
+    newspaper_state_clean %in% south_carolina ~ "SC",
+    newspaper_state_clean %in% wisconsin ~ "WI",
+    newspaper_state_clean %in% south_dakota | str_detect(newspaper_city, "Gann Valley|Mitchell|Hurley|Miller") ~ "SD",
+    newspaper_state_clean %in% texas | str_detect(newspaper_city, "Brownsville|San Antonio") ~ "TX",
+    newspaper_state_clean %in% tennessee ~ "TN",
+    newspaper_state_clean %in% utah ~ "UT",
+    newspaper_state_clean %in% vermont ~ "VT",
+    newspaper_state_clean %in% washington | str_detect(newspaper_city, "North Yakima|White Bluffs") ~ "WA",
+    newspaper_state_clean %in% west_virginia | str_detect(newspaper_city, "Charles|Clarksburg|Lewisburg|Wheeling|Morgantown") ~ "WV",
+    newspaper_state_clean %in% virginia ~ "VA",
+    newspaper_state_clean %in% wisconsin ~ "WI",
+    newspaper_state_clean %in% wyoming ~ "WY",
+    TRUE ~ newspaper_state_clean
   ))
-
-"M & Philadelphia", "MT", "Marshal", "Mis", "Miss", "Stone", "Hattiesburg & Mi", "Leakesville & Mi", "Poplarville & Mi", "Port Gibson & Mi
 
 y <- clean_main_index %>% 
   count(newspaper_state_clean) %>% 
   arrange(desc(n))
 
-mi_papers <- clean_main_index %>% 
-  filter(newspaper_state_clean == "Mi")
-
 #347 categories in the newspaper_states, needs to be cleaned to 50 or so categories in standard two-digit state format, ie. GA for Georgia, CA for California
 
 ```
+North Dakota: "Billings", "Bott", "D", "Dakot & Bismarck", "Dakota & Pembina", 'Star", "DickeyC", "DT", "Gr", "McLea", "N & Valley City", "N & Grand Forks", "ND", "Richl", "Stark", "Stut", "Ward", "WardCou", "Will
+Ohio: "Ashlan", "Bro", "Hancoc", "High", "Ho", "HolmesCoOOhio", "Mahon", "Meigs", "O (Excepting Oregon)", "Oh", "Ohi", "OO", "OOh", "OOhi", "OOhio", "Sandus", "StarkC", "Vinto", "Woo
+Oklahoma: "Choctaw", "CraigC", "Indi", "India", "Indian", "IndianT", "IndTe", "Okla", "Oklah", "OTO
+Oregon: "Lin", "Lincoln", "LinnCo", "Morrow", "O & Pendleton", "Or", "Orego", "Wal
+Pennsylvania: "Pa
+Rhode Island
+South Carolina: "Claren", "SC
+South Dakota: "Bl", "Broo", "Brule", "Gann Valley & Dakota", "Dako", "Dakot & Mitchell", "S (Excepting NJ)", "Dakota & Hurley", "Dakota & Miller", "DayCo", "DTS", "Haakon", "HandCo", "Pen", "Rober", "SD", "South", "Stanley", "Unio
+Tennessee: "GibsonC", "Hardem", "McNairy", "MorganC", "T", "Te (excepting Texas results)", "Ten", "Tenn
+Texas: "Brownsville & Te", "San Antonio & Te", "Tex
+Utah: "CityUt", "U", "Uta
+Vermont: "St. Johnsb", "Orlean", "Vt
+Virginia: "Augus", "Highl", "V (Excepting WV)
+Washington: "Cheha", "OT", "North Yakima & W", "White Bluffs & W", "Wa", "Wash", "Washin", "WT", "Port Townsend", "Was"
+Washington D.C.: "DC
+West Virginia: "Charles Town & V", "Charlestown & Va", "Clarksburg & Va", "Lewisburg & Va", "Morgantown & Va", "Wheeling & Va", W, "VaW", "WV", "WVa
+Wisconsin: "Ashland", "Jeff", "Pi", "Rusk", "Vi", "Wi", "Wis
+Wyoming: "Carbo", "Wyo
+
 
 Alabama: "Ala
 Alaska: "Alas", "Alask
 Arizona: "Ari", "Ariz", "ArizT", "ATA", "Cochise", "Marico", "Pima", "PimaCo", "Pin
 Arkansas: "A", "Ark", "Arkcurrent", "Faulkne
-California: "Butte", "Ca", "Cal", "C & Grass Valley", "Calif", "El", "ElDora", "Placer
-Colorado: "Ba", "Co & Canon City", "Col", "Colo", "Conejo", "DeltaCo", "Elbert", "Logan", "Montez", "RubyCaGunnisonCountyColo", "Wel", "WeldCou
+California: "Butte", "Ca", "Cal", "C & Grass Valley", "Calif", "El", "ElDora", "Placer", "Cali"
+Colorado: "Ba", "Co & Cañon City", "Col", "Colo", "Conejo", "DeltaCo", "Elbert", "Logan", "Montez", "RubyCaGunnisonCountyColo", "Wel", "WeldCou
 Connecticut: "Co & New Britain", "Con", "Conn", "Litc
 Delaware: "De", "Del", "
 Florida: "F", "Fl", "Fla", "MarionC
@@ -596,40 +658,21 @@ Idaho: "I & Silver City", "Id", "Ida", "Idah", "Idaho", "North
 Illinois: "Il", "Ill
 Indiana: "I & Bloomington", "I & Indianapolis", "Ia", "Iai", "Ind", "MarshallCountyInd", "Ran", "Wayne
 Iowa: "Audubo", "CedarC", "How", "Howard", "I & Marshalltown", "I & Independence", "Io", "Iow", "Maha", "TamaCo", "Winnes
-Kansas: "Allen Cou", "K", "Ka", "Kan", "Kansa
-Kentucky: "Bourbon", "Ky Madis", "Wo
+Kansas: "Allen Cou", "K", "Ka", "Kan", "Kansa", "Sum"
+Kentucky: "Bourbon", "Ky," "Madis", "Wo
 Louisiana: "Attak", "Bossi", "Calcasie", "GrantP", "L", "La", "Lna", "P", "Par", "Pari
 Maine: "Me
 Maryland: "M & Port Tobacco", "M & Leonard Town", "Md
 Massachusetts
-Michigan: "LSM", "M & Grand Rapids", "M & East Saginaw", "Mic", "Mich", "StClair", "Constantine & Mi", "Grand Haven & Mi
-Minnesota: "Be", "Bemidji", "BlueE", "Brown", "C & Cook County", "Goodh", "M & Little Falls", "M & Fergus Falls", "M & Grand Marais", "M & Sauk Rapids", "Min", "Minn", "MT", "PineCou", "St (Excepting Missouri)", "Stevens", "StL", "Minneapolis & Mi", "White Earth & Mi", "Worthington & Mi
+Michigan: "LSM", "M & Grand Rapids", "M & East Saginaw", "Mic", "Mich", "StClair", "Constantine & Mi", "Grand Haven & Mi"
+Minnesota: "Be", "Beltra", "BlueE", "Brown", "C & Grand Marais", "Goodh", "M & Little Falls", "M & Fergus Falls", "M & Grand Marais", "M & Sauk Rapids", "Min", "Minn", "MT", "PineCou", "St (Excepting Missouri)", "Stevens", "StL", "Minneapolis & Mi", "White Earth & Mi", "Worthington & Mi
 Mississippi: "Cop", "DeSot", "Lafayet", "Lefl", "M & Water Valley", "M & Philadelphia", "MT", "Marshal", "Mis", "Miss", "Stone", "Hattiesburg & Mi", "Leakesville & Mi", "Poplarville & Mi", "Port Gibson & Mi
-Missouri: "Ada", "Audrain", "Ch", "IronC", "Lafa", "Missour", "Mo (excepting Montana examples)", "RayC", "Salin", "ScottC", "Farmington & St
-Montana: "M & Stevensville", "M & Diamond City", "MTM", "Philipsburg & Mo", "Mo & Great Falls", "Mo & Fort Benton", "Mont", "Montcurrent", "MTM
-Nebraska: "BoxB", "Cher", "H", "N & North Platte", "N & Grand Island", "Ne & Nemaha City", "Ne & Dakota City", "Neb", "Nebr", "Nebras", "Nebrask", "Nem", "Webs
+Missouri: "Ada", "Audrain", "Ch", "IronC", "Lafa", "Missour", "Mo (excepting Montana examples)", "RayC", "Salin", "ScottC", "Farmington & St"
+Montana: "M & Stevensville", "M & Diamond City", "MTM", "Philipsburg & Mo", "Mo & Great Falls", "Mo & Fort Benton", "Mont", "Montcurrent", "MTM", "Mon"
+Nebraska: "BoxB", "Cher", "H", "N & North Platte", "N & Grand Island", "Ne & Nemaha City", "Ne & Dakota City", "Neb", "Nebr", "Nebra", Nebras", "Nebrask", "Nem", "Webs
 Nevada: "Ne & Carson City", "Ne & Silver City", "Nev", "NT
 New Hampshire
 New Jersey: "Bu & Mount Holly", "N & Perth Amboy", "NJ", "Penn's Grove & S
 New Mexico: "Gu", "MoraCo", "N & Silver City", "N & Albuquerque", "Ne & Albuquerque", "NM", "NMT", "Rooseve", "Socorr", "Torra
 New York: "NY
-
 North Carolina: "E", "Edge", "Meck", "N & Jacksonville", "N & Hillsborough", "N & Chapel Hill", "NC", "Watauga
-North Dakota: "Billings", "Bott", "D", "Dakot & Bismarck", "Dakota & Pembina", "DickeyC", "DT", "Gr", "McLea", "N & Valley City", "N & Grand Forks", "ND", "Richl", "Stark", "Stut", "Ward", "WardCou", "Will
-Ohio: "Ashlan", "Bro", "Hancoc", "High", "Ho", "HolmesCoOOhio", "Mahon", "Meigs", "O (Excepting Oregon)", "Oh", "Ohi", "OO", "OOh", "OOhi", "OOhio", "Sandus", "StarkC", "Vinto", "Woo
-Oklahoma: "Choctaw", "CraigC", "Indi", "India", "Indian", "IndianT", "IndTe", "Okla", "Oklah", "OTO
-Oregon: "Lin", "Lincoln", "LinnCo", "Morrow", "O & Pendleton", "Or", "Orego", "Wal
-Pennsylvania: "Pa
-Rhode Island
-South Carolina: "Claren", "SC
-South Dakota: "Bl", "Broo", "Brule", "Bu & Dakota", "Dako", "Dakot & Mitchell", "S (Excepting NJ)", "Dakota & Hurley", "Dakota & Miller", "DayCo", "DTS", "Haakon", "HandCo", "Pen", "Rober", "SD", "South", "Stanley", "Unio
-Tennessee: "GibsonC", "Hardem", "McNairy", "MorganC", "T", "Te (excepting Texas results)", "Ten", "Tenn
-Texas: "Brownsville & Te", "San Antonio & Te", "Tex
-Utah: "CityUt", "U", "Uta
-Vermont: "St. Johnsb", "Orlean", "Vt
-Virginia: "Augus", "Highl", "V (Excepting WV)
-Washington: "Cheha", "OT", "North Yakima & W", "White Bluffs & W", "Wa", "Wash", "Washin", "WT
-Washington D.C.: "DC
-West Virginia: "Charles Town & V", "Charlestown & Va", "Clarksburg & Va", "Lewisburg & Va", "Morgantown & Va", "Wheeling & Va", "VaW", "WV", "WVa
-Wisconsin: "Ashland", "Jeff", "Pi", "Rusk", "Vi", "Wi", "Wis
-Wyoming: "Carbo", "Wyo
