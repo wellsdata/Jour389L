@@ -102,13 +102,15 @@ tolnay_by_decade <- tolnay_md %>%
 totals_by_decade <- left_join(md_cases_by_decade, tolnay_by_decade, by = "decade")
 
 #Pulling only cases from Prince George's County
+tolnay_pg_county_list <- tolnay_md %>%
+  filter(lynch_county == "Prince George’s")
+
+tolnay_pg <- tolnay_pg_county_list %>%
+  select(year, lynch_county)
+
 pg_county <- distinct_md %>%
   filter(city_lynch == "Prince George's County") %>%
   select(city_lynch, year)
-
-tolnay_pg <- tolnay_md %>%
-  select(year, lynch_county) %>%
-  filter(lynch_county == "Prince George’s")
 
 total_pg_county <- bind_rows(pg_county, tolnay_pg) %>%
   group_by(year) %>%
