@@ -1,6 +1,6 @@
 ---
 title: "Maryland"
-author: "Rob Wells"
+author: "Rob Wells, Hannah Marszalek"
 date: "2023-10-18"
 output: html_document
 ---
@@ -130,6 +130,7 @@ total_count <- bind_rows(count_tolnay, count_geocode) %>%
   group_by(decade, source) %>%
   count()
 
+#RSW: Can you add numbers to the bars?
 #Graph comparing our data and Tolnay's by decade
 ggplot(total_count, aes(decade, n, fill = source)) +
   geom_bar(stat="identity", position = "dodge", width = 8) + 
@@ -138,6 +139,9 @@ ggplot(total_count, aes(decade, n, fill = source)) +
        y="Number of Reported Lynchings",
        fill = "Source")
 
+```
+
+```{r}
 #Map of in state vs out of state coverage from our data
 #Note: I haven't yet figured out why it is not including all the plot points (besides the ones with missing coordinates)
 edited_distinct <- distinct_md %>%
