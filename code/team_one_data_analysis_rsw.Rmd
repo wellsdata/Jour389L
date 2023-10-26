@@ -620,6 +620,9 @@ y <- clean_main_index %>%
   count(newspaper_state_clean) %>% 
   arrange(desc(n))
 
+clean_na <- clean_main_index %>% 
+  filter(is.na(newspaper_state_clean))
+
 #347 categories in the newspaper_states, needs to be cleaned to 50 or so categories in standard two-digit state format, ie. GA for Georgia, CA for California
 
 write.csv(clean_main_index,"../data/mainindex_10_25.csv")
