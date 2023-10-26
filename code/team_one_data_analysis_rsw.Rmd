@@ -633,14 +633,14 @@ ga_papers <- clean_main_index %>%
   group_by(newspaper_state_clean, newspaper_name) %>% 
   count()
 
-write.csv(ga_papers,"../output/ga_papers.csv")
+#write.csv(ga_papers,"../output/ga_papers.csv")
 
 ga_papers_years <- clean_main_index %>% 
   filter(newspaper_state_clean =="GA") %>% 
   group_by(newspaper_state_clean, newspaper_name, year) %>% 
   count()
 
-write.csv(ga_papers_years,"../output/ga_papers_years.csv")
+#write.csv(ga_papers_years,"../output/ga_papers_years.csv")
 
 
 ms_papers <- clean_main_index %>% 
@@ -648,14 +648,14 @@ ms_papers <- clean_main_index %>%
   group_by(newspaper_state_clean, newspaper_name) %>% 
   count()
 
-write.csv(ms_papers,"../output/ms_papers.csv")
+#write.csv(ms_papers,"../output/ms_papers.csv")
 
 ms_papers_years <- clean_main_index %>% 
   filter(newspaper_state_clean =="MS") %>% 
   group_by(newspaper_state_clean, newspaper_name, year) %>% 
   count()
 
-write.csv(ms_papers_years,"../output/ms_papers_years.csv")
+#write.csv(ms_papers_years,"../output/ms_papers_years.csv")
 
 
 #isolate the NAs
