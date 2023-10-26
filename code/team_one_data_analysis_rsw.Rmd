@@ -622,6 +622,51 @@ y <- clean_main_index %>%
 
 #347 categories in the newspaper_states, needs to be cleaned to 50 or so categories in standard two-digit state format, ie. GA for Georgia, CA for California
 
+write.csv(clean_main_index,"../data/mainindex_10_25.csv")
+
+```
+
+### filters for ga, ms, na titles
+```{r}
+ga_papers <- clean_main_index %>% 
+  filter(newspaper_state_clean =="GA") %>% 
+  group_by(newspaper_state_clean, newspaper_name) %>% 
+  count()
+
+write.csv(ga_papers,"../output/ga_papers.csv")
+
+ga_papers_years <- clean_main_index %>% 
+  filter(newspaper_state_clean =="GA") %>% 
+  group_by(newspaper_state_clean, newspaper_name, year) %>% 
+  count()
+
+write.csv(ga_papers_years,"../output/ga_papers_years.csv")
+
+
+ms_papers <- clean_main_index %>% 
+  filter(newspaper_state_clean =="MS") %>% 
+  group_by(newspaper_state_clean, newspaper_name) %>% 
+  count()
+
+write.csv(ms_papers,"../output/ms_papers.csv")
+
+ms_papers_years <- clean_main_index %>% 
+  filter(newspaper_state_clean =="MS") %>% 
+  group_by(newspaper_state_clean, newspaper_name, year) %>% 
+  count()
+
+write.csv(ms_papers_years,"../output/ms_papers_years.csv")
+
+
+#isolate the NAs
+df_na <- clean_main_index %>% filter(if_all(c(newspaper_state_clean), ~ is.na(.)))
+
+
+df_na %>% 
+    count(newspaper_city) %>% 
+  arrange(desc(n))
+
+
 ```
 Alabama: "Ala
 Alaska: "Alas", "Alask
