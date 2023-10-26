@@ -140,6 +140,7 @@ ggplot(total_count, aes(decade, n, fill = source)) +
        x="Decade",
        y="Number of Reported Lynchings",
        fill = "Source")
+  #geom_text(aes(label = n), vjust = 1, hjust = 0.5)
 
 ```
 
@@ -168,4 +169,30 @@ map_plot <- ggplot(data = md_map, aes(x = long, y = lat)) +
     axis.ticks.y = element_blank())
 
 print(map_plot)
+```
+
+## Comparing the Maryland Lynching Memorial Project's List to Ours and Tolnay's
+```{r}
+md_memorial_project <- read_sheet("https://docs.google.com/spreadsheets/d/1MUBAvoaaU0tzdgDUgTRcBu7zGWwZL9_RnbtVZ-zO2lc/edit#gid=0") %>%
+  mutate(name = paste(first_name, last_name),
+         year = year(date)) %>%
+  distinct()
+
+#Comparing with Tolnay's list
+subset_tolnay <- tolnay_md %>%
+  select(name, year)
+         
+subset_memorial <- md_memorial_project %>%
+  select(name, year)
+
+unknown_cases_tolnay <- anti_join(subset_tolnay, subset_memorial)
+
+#Comparing with our list
+subset_geocoded <- distinct_md %>%
+  select(city_lynch, date)
+
+second_subset_memorial <- md_memorial_project %>%
+  select(city, date)
+
+unknown_cases_geocoded <- anti_join(subset_geocoded, second_subset_memorial)
 ```
