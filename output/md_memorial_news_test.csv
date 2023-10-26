@@ -1,0 +1,84 @@
+"","name","city","date.x","year","lynch_address","date.y","newspaper_name","newspaper_state_code","in_state","miles"
+"1",NA,NA,NA,1839,"Hagerstown, MD",1839-06-20,NA,"WV","N",164
+"2",NA,NA,NA,1842,"Annapolis, MD",1842-01-26,"Vermont telegraph","VT","N",377
+"3",NA,NA,NA,1848,"Centreville, MD",1848-04-19,"The daily crescent","LA","N",1055
+"4","David Thomas","Denton",1854-10-10,1854,"Denton, MD",1854-10-14,"The Cecil Whig","MD","Y",50
+"5","David Thomas","Denton",1854-10-10,1854,"Caroline County, MD",1854-10-26,"The daily Minnesota pioneer","MN","N",978
+"6","David Thomas","Denton",1854-10-10,1854,"Denton, MD",1854-10-25,"Smyrna times","DE","N",31
+"7","David Thomas","Denton",1854-10-10,1854,"Denton, MD",1854-10-26,"Edgefield advertiser","SC","N",489
+"8",NA,NA,NA,1860,"Baltimore, MD",1860-05-05,"The North-Carolinian","NC","N",319
+"9","Frederick Pearce","Cecilton",1861-09-26,1861,NA,NA,NA,NA,NA,NA
+"10","Jim Wilson","Oakland",1862-11-04,1862,NA,NA,NA,NA,NA,NA
+"11","Isaac Moore","Bel Air",1868-07-22,1868,NA,NA,NA,NA,NA,NA
+"12","Jim Quinn","Whitehall",1869-10-10,1869,NA,NA,NA,NA,NA,NA
+"13","Thomas Juricks","Piscataway",1869-10-12,1869,NA,NA,NA,NA,NA,NA
+"14","John Sims","Annapolis",1875-06-07,1875,"Annapolis, MD",1875-06-19,"Shepherdstown register","WV","N",77
+"15","John Henry Scott","Notley Hall",1875-03-23,1875,"Annapolis, MD",1875-06-19,"Shepherdstown register","WV","N",77
+"16","Mike Green","Upper Marlboro",1878-09-01,1878,NA,NA,NA,NA,NA,NA
+"17","James Carroll","Point of Rocks",1879-04-17,1879,"Frederick, MD",1879-04-22,"Knoxville daily chronicle","TN","N",429
+"18","George Peck","Poolesville",1880-01-10,1880,"Montgomery County, MD",1880-01-30,"Montgomery County sentinel","MD","Y",7
+"19","George Peck","Poolesville",1880-01-10,1880,"Anne Arundel County, MD",1880-01-30,"Montgomery County sentinel","MD","Y",34
+"20","George Peck","Poolesville",1880-01-10,1880,"Prince George's County, MD",1880-01-30,"Montgomery County sentinel","MD","Y",26
+"21","John Diggs-Dorsey","Darnestown",1880-07-27,1880,"Montgomery County, MD",1880-01-30,"Montgomery County sentinel","MD","Y",7
+"22","John Diggs-Dorsey","Darnestown",1880-07-27,1880,"Anne Arundel County, MD",1880-01-30,"Montgomery County sentinel","MD","Y",34
+"23","John Diggs-Dorsey","Darnestown",1880-07-27,1880,"Prince George's County, MD",1880-01-30,"Montgomery County sentinel","MD","Y",26
+"24","George Briscoe","Jacobsville",1884-11-26,1884,NA,NA,NA,NA,NA,NA
+"25","Townsend Cook","Westminster",1885-06-02,1885,NA,NA,NA,NA,NA,NA
+"26","Howard Cooper","Towson",1885-07-13,1885,NA,NA,NA,NA,NA,NA
+"27","Charles Whitley","Prince Frederick",1886-06-06,1886,NA,NA,NA,NA,NA,NA
+"28","Benjamin Hance","Leonardtown",1887-06-17,1887,"Towson, MD",1887-07-07,"The Wheeling daily intelligencer","WV","N",224
+"29","Benjamin Hance","Leonardtown",1887-06-17,1887,"Leonardtown, MD",1887-07-28,"Saint Mary's beacon","MD","Y",0
+"30","John Bigus","Frederick",1887-11-23,1887,"Towson, MD",1887-07-07,"The Wheeling daily intelligencer","WV","N",224
+"31","John Bigus","Frederick",1887-11-23,1887,"Leonardtown, MD",1887-07-28,"Saint Mary's beacon","MD","Y",0
+"32",NA,NA,NA,1888,"Union Bridge, MD",1888-06-21,"The Big Sandy news","KY","N",309
+"33","Asbury Green","Centreville",1891-05-13,1891,"Queen Annes County (eastern shore), MD",1891-05-16,"The Cecil Whig","MD","Y",43
+"34","Asbury Green","Centreville",1891-05-13,1891,"Baltimore, MD",1891-05-14,NA,"TX","N",1399
+"35","James Taylor","Chestertown",1892-05-17,1892,NA,NA,NA,NA,NA,NA
+"36",NA,NA,NA,1893,"Chestertown, MD",1893-01-20,"The Hope pioneer","ND","N",1220
+"37","Isaac Kemp","Princess Anne",1894-06-08,1894,NA,NA,NA,NA,NA,NA
+"38","Stephen Williams","Upper Marlboro",1894-10-20,1894,NA,NA,NA,NA,NA,NA
+"39","Jacob Henson Jr.","Ellicott City",1895-03-28,1895,"Frederick, MD",1895-11-18,"The San Francisco call","CA","N",2410
+"40","Jacob Henson Jr.","Ellicott City",1895-03-28,1895,"Frederick, MD",1895-11-23,"The Kootenai herald","ID","N",2020
+"41","Jacob Henson Jr.","Ellicott City",1895-03-28,1895,"Ellicott City, MD",1895-05-31,"The Coalville times","UT","N",1823
+"42","James Bowens","Frederick",1895-11-16,1895,"Frederick, MD",1895-11-18,"The San Francisco call","CA","N",2410
+"43","James Bowens","Frederick",1895-11-16,1895,"Frederick, MD",1895-11-23,"The Kootenai herald","ID","N",2020
+"44","James Bowens","Frederick",1895-11-16,1895,"Ellicott City, MD",1895-05-31,"The Coalville times","UT","N",1823
+"45","Sydney Randolph","Rockville",1896-07-03,1896,"Gaithersburg, MD",1896-07-11,"Western Kansas world","KS","N",1214
+"46","Sydney Randolph","Rockville",1896-07-03,1896,"Baltimore, MD",1896-06-29,"The copper country evening news","MI","N",810
+"47","Sydney Randolph","Rockville",1896-07-03,1896,"Frederick, MD",1896-02-07,NA,"MD","Y",48
+"48","William Andrews","Princess Anne",1897-06-09,1897,"Princess Anne, MD",1897-06-10,"Evening journal","DE","N",107
+"49","William Andrews","Princess Anne",1897-06-09,1897,"Princess Anne, MD",1897-06-10,"The Wilmington daily Republican.","DE","N",107
+"50","William Andrews","Princess Anne",1897-06-09,1897,"Princess Anne, MD",1897-06-19,"Red Lodge picket","MT","N",1785
+"51","William Andrews","Princess Anne",1897-06-09,1897,"Somerset County, MD",1897-06-18,"The Chanute times","KS","N",1069
+"52","Garfield King","Salisbury",1898-05-25,1898,"Salisbury, MD",1898-05-27,"The Salt Lake herald","UT","N",1929
+"53","Wright Smith","Annapolis",1898-10-05,1898,"Salisbury, MD",1898-05-27,"The Salt Lake herald","UT","N",1929
+"54",NA,NA,NA,1899,"Upper Marlboro, MD",1899-03-25,"The Democratic advocate","MD","Y",54
+"55",NA,NA,NA,1899,"Charlestown, MD",1899-04-01,"The Washburn leader","ND","N",1359
+"56","Lewis Harris","Bel Air",1900-03-27,1900,"Belair, MD",1900-03-27,"The St. Louis Republic","MO","N",746
+"57","Lewis Harris","Bel Air",1900-03-27,1900,"Belair, MD",1900-03-31,"The Wilmington daily Republican.","DE","N",45
+"58","Lewis Harris","Bel Air",1900-03-27,1900,"Belair, MD",1900-09-01,"The evening bulletin","KY","N",402
+"59","Lewis Harris","Bel Air",1900-03-27,1900,"Baltimore, MD",1900-03-29,"Delaware gazette and state journal.","DE","N",65
+"60","Lewis Harris","Bel Air",1900-03-27,1900,"Bel Air, MD",1900-03-27,"The San Francisco call","CA","N",2464
+"61","Lewis Harris","Bel Air",1900-03-27,1900,"Belair, MD",1900-09-07,"The Worthington advance","MN","N",1032
+"62","Henry Davis","Annapolis",1906-12-21,1906,"Salisbury, MD",1906-08-11,"Democratic messenger","MD","Y",17
+"63","Henry Davis","Annapolis",1906-12-21,1906,"Annapolis, MD",1906-12-27,"The Spanish Fork press","UT","N",1865
+"64","Henry Davis","Annapolis",1906-12-21,1906,"Crisfield, MD",1906-08-03,"The Rice belt journal.","LA","N",1107
+"65","Henry Davis","Annapolis",1906-12-21,1906,"Annapolis, MD",1906-12-28,"The Kendrick gazette","ID","N",2081
+"66","Henry Davis","Annapolis",1906-12-21,1906,"NA, MD",1906-08-01,"The Topeka state journal","KS","N",NA
+"67","James Reed","Crisfield",1907-07-28,1907,"Crisfield, MD",1907-08-03,"Seward weekly gateway.","AK","N",3449
+"68","James Reed","Crisfield",1907-07-28,1907,"Crisfield, MD",1907-08-08,"Watson's weekly Jeffersonian","GA","N",561
+"69","James Reed","Crisfield",1907-07-28,1907,"Crisfield, MD",1907-08-07,"Vernon County censor","WI","N",875
+"70","William Burns","Cumberland",1907-10-06,1907,"Crisfield, MD",1907-08-03,"Seward weekly gateway.","AK","N",3449
+"71","William Burns","Cumberland",1907-10-06,1907,"Crisfield, MD",1907-08-08,"Watson's weekly Jeffersonian","GA","N",561
+"72","William Burns","Cumberland",1907-10-06,1907,"Crisfield, MD",1907-08-07,"Vernon County censor","WI","N",875
+"73","King Johnson","Brooklyn",1911-12-25,1911,"Cumberland, MD",1911-04-21,"The Wheeling intelligencer","WV","N",108
+"74",NA,NA,NA,1912,"Brooklyn, MD",1912-01-03,"Vilas County news","WI","N",791
+"75",NA,NA,NA,1914,"Chestertown, MD",1914-01-03,"Middletown transcript","DE","N",25
+"76","Matthew Williams","Salisbury",1931-12-04,1931,"Salisbury, MD",1931-12-11,NA,"MD","Y",74
+"77","Matthew Williams","Salisbury",1931-12-04,1931,"Anne Arundel County, MD",1931-12-11,NA,"MD","Y",8
+"78","Matthew Williams","Salisbury",1931-12-04,1931,"N/A, MD",1931-12-19,"The daily worker","IL","N",NA
+"79","NA NA","Salisbury",1931-12-04,1931,"Salisbury, MD",1931-12-11,NA,"MD","Y",74
+"80","NA NA","Salisbury",1931-12-04,1931,"Anne Arundel County, MD",1931-12-11,NA,"MD","Y",8
+"81","NA NA","Salisbury",1931-12-04,1931,"N/A, MD",1931-12-19,"The daily worker","IL","N",NA
+"82","George Armwood","Princess Anne",1933-10-18,1933,NA,NA,NA,NA,NA,NA
+"83","John Fields","Queenstown",NA,NA,NA,NA,NA,NA,NA,NA

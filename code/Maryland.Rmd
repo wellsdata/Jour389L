@@ -173,6 +173,7 @@ print(map_plot)
 
 ## Comparing the Maryland Lynching Memorial Project's List to Ours and Tolnay's
 ```{r}
+googlesheets4::gs4_deauth()
 md_memorial_project <- read_sheet("https://docs.google.com/spreadsheets/d/1MUBAvoaaU0tzdgDUgTRcBu7zGWwZL9_RnbtVZ-zO2lc/edit#gid=0") %>%
   mutate(name = paste(first_name, last_name),
          year = year(date)) %>%
@@ -195,4 +196,21 @@ second_subset_memorial <- md_memorial_project %>%
   select(city, date)
 
 unknown_cases_geocoded <- anti_join(subset_geocoded, second_subset_memorial)
+```
+
+### wells matching md memorial and LOC data by year
+```{r}
+md_memorial2 <- md_memorial_project %>% 
+  select(name, city, date, year)
+
+news_md <- distinct_md %>% 
+  select(lynch_address, date, year, newspaper_name, newspaper_state_code, in_state, miles)
+
+
+combo <- md_memorial2 %>% 
+  full_join(news_md, by=c("year")) %>% 
+  arrange(year)
+
+write.csv(combo, "../output/md_memorial_news_test.csv")
+
 ```
