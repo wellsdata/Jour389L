@@ -730,7 +730,7 @@ tolnay_georgia %>%
   filter(year == 1889 | year == 1890 | year == 1891)
 
 tolnay_georgia %>%
-  filter(year == 1896)
+  filter(year == 1903)
 
 # there was a lynching in savannah that took place on 1896-07-09 and covered by the Butler Weekly Times in Missouri
 
@@ -746,6 +746,9 @@ new_georgia_coverage %>%
   filter(year == 1896)
 #nope lol
 
+
+new_mississippi_coverage %>%
+  filter(newspaper_name == "Warren sheaf")
 
 ```
 
