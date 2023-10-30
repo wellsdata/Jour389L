@@ -551,6 +551,7 @@ wyoming <- c("Carbo", "Wyo")
 
 ```
 
+## Clean given states
 ```{r}
 main_index <- read_csv("../data/mainindex.csv")
 
@@ -620,16 +621,13 @@ y <- clean_main_index %>%
   count(newspaper_state_clean) %>% 
   arrange(desc(n))
 
-clean_na <- clean_main_index %>% 
-  filter(is.na(newspaper_state_clean))
-
 #347 categories in the newspaper_states, needs to be cleaned to 50 or so categories in standard two-digit state format, ie. GA for Georgia, CA for California
 
 write.csv(clean_main_index,"../data/mainindex_10_25.csv")
 
 ```
 
-### filters for ga, ms, na titles
+## Filters for ga, ms, na titles
 ```{r}
 ga_papers <- clean_main_index %>% 
   filter(newspaper_state_clean =="GA") %>% 
@@ -722,3 +720,49 @@ Washington D.C.: "DC
 West Virginia: "Charles Town & V", "Charlestown & Va", "Clarksburg & Va", "Lewisburg & Va", "Morgantown & Va", "Wheeling & Va", W, "VaW", "WV", "WVa
 Wisconsin: "Ashland", "Jeff", "Pi", "Rusk", "Vi", "Wi", "Wis
 Wyoming: "Carbo", "Wyo
+
+## Clean NAs
+```{r}
+new_main_index <- read_csv("../data/mainindex_10_25.csv")
+
+clean_main_index <- new_main_index %>% 
+  mutate(newspaper_state_clean = case_when(
+    str_detect(newspaper_city, "San Francisco|Los Angeles|Sacramento") ~ "CA",
+    str_detect(newspaper_city, "Salt Lake City|Great Salt Lake") ~ "UT",
+    str_detect(newspaper_city, "Washington") ~ "DC",
+    str_detect(newspaper_city, "York") ~ "NY",
+    str_detect(newspaper_city, "Richmond|Lynchburg") ~ "VA",
+    str_detect(newspaper_city, "Grand Rapids") ~ "MI",
+    str_detect(newspaper_city, "Mineral Point") ~ "WI",
+    str_detect(newspaper_city, "Honolulu") ~ "HI",
+    str_detect(newspaper_city, "Omaha") ~ "NE",
+    str_detect(newspaper_city, "Shepherdstown") ~ "WV",
+    str_detect(newspaper_city, "Ste. Genevieve") ~ "MO",
+    str_detect(newspaper_city, "Maysville") ~ "KY",
+    str_detect(newspaper_city, "Savannah") ~ "GA",
+    str_detect(newspaper_city, "Winston|Hendersonville") ~ "NC",
+    str_detect(newspaper_city, "West Randolph|St. Johnsbury") ~ "VT",
+    str_detect(newspaper_city, "Redwood Falls") ~ "MN",
+    str_detect(newspaper_city, "St. Clairsville|Hillsborough") ~ "OH",
+    str_detect(newspaper_city, "Waterbury|New Haven") ~ "CT",
+    str_detect(newspaper_city, "Medicine Lodge|Baxter Springs") ~ "KS",
+    str_detect(newspaper_city, "Donaldsonville|New Orleans") ~ "LA",
+    str_detect(newspaper_name, "Le Meschacébé|The weekly messenger") ~ "LA",
+    TRUE ~ newspaper_state_clean
+  ))
+
+filtered_main_index <- clean_main_index %>% 
+  filter(is.na(newspaper_state_clean)) %>% 
+  filter(!is.na(newspaper_city))
+  
+
+cities_list <- filtered_main_index %>% 
+  group_by(newspaper_city) %>% 
+  count()
+
+no_city <- clean_main_index %>% 
+  filter(is.na(newspaper_state_clean)) %>% 
+  filter(is.na(newspaper_city))
+
+```
+
