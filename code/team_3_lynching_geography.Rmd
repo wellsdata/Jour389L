@@ -713,11 +713,41 @@ new_mississippi_coverage %>%
 tolnay_ms %>%
   filter(decade == 1890)
 
+
 ```
 
+# Memo 6
+
+```{r}
+
+lynch_updated %>%
+  filter(state_lynch == "GA" & year == 1896) 
+
+new_georgia_coverage %>%
+  filter(year == 1903)
+
+tolnay_georgia %>%
+  filter(year == 1889 | year == 1890 | year == 1891)
+
+tolnay_georgia %>%
+  filter(year == 1896)
+
+# there was a lynching in savannah that took place on 1896-07-09 and covered by the Butler Weekly Times in Missouri
+
+# let's account for all possible names of savannah papers
+# nothing
+
+new_georgia_coverage %>%
+  filter(newspaper_name == "The morning news" | newspaper_name == "Savannah morning news" | newspaper_name == "The Savannah morning news.") %>%
+  filter(year == 1896)
+
+# any other georgia newspapers?
+new_georgia_coverage %>%
+  filter(year == 1896)
+#nope lol
 
 
-
+```
 
 
 
