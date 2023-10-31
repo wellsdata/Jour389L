@@ -229,6 +229,8 @@ write.csv(combo, "../output/md_memorial_news_test.csv")
 
 ## Attempting to create a complete list of MD cases using all three data sources
 ```{r}
+#First method: using combo and adding on tolnay data by doing another full join on name
+
 tolnay_md <- tolnay_md %>%
   mutate(date = paste(year, month, day, sep = "-"))
 
@@ -239,6 +241,9 @@ tolnay_2 <- tolnay_md %>%
 
 full_combo <- combo %>%
   full_join(tolnay_2, by=c("name"))
+
+full_combo <- full_combo %>%
+  distinct(name, .keep_all = TRUE, )
 
 write_sheet(full_combo, "https://docs.google.com/spreadsheets/d/1GLoTEwZvuhAFo8zdHnGmhxgx7l9FFlc4UZDWvUyPAGk/edit#gid=0", sheet = "2023-10-30")
 ```
