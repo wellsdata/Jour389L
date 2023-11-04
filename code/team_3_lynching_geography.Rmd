@@ -840,3 +840,41 @@ ga_tolnay_news
 
 
 ```
+
+
+```{r}
+
+bigram_lynch_1890s <- read_csv("../output/1890s_lynch_bigram_count.csv")
+trigram_lynch_1890s <- read_csv("../output/1890s_lynch_trigram_count.csv")
+
+bigram_lynch_1890s <- bigram_lynch_1890s %>%
+  filter(n > 5)
+
+trigram_lynch_1890s <- trigram_lynch_1890s %>%
+  filter(n > 5)
+
+bigram_lynch_1890s %>%
+  filter(str_detect(word1, 'lynch') | str_detect(word2, 'lynch'))
+
+bigram_lynch_1890s %>%
+  filter(str_detect(word1, 'negro') | str_detect(word2, 'negro')) 
+
+trigram_lynch_1890s %>%
+  filter(str_detect(word1, 'lynch') | str_detect(word2, 'lynch') | str_detect(word3, 'lynch'))
+
+trigram_lynch_1890s %>%
+  filter(str_detect(word1, 'negro') | str_detect(word2, 'negro') | str_detect(word3, 'negro'))
+
+trigram_lynch_1890s %>%
+  filter(str_detect(word1, 'mob') | str_detect(word2, 'mob') | str_detect(word3, 'mob'))
+
+```
+
+
+
+
+
+
+
+
+
