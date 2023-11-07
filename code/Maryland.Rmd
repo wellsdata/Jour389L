@@ -4,7 +4,6 @@ author: "Rob Wells, Hannah Marszalek"
 date: "2023-10-18"
 output: html_document
 ---
-# Starter code for a quick analysis of Maryland news coverage and overall lynching data
 ```{r message=FALSE, warning=FALSE}
 #install.packages("here")
 here::here()
@@ -20,6 +19,7 @@ library(janitor)
 library(lubridate)
 library(kableExtra)
 library(ggplot2)
+library(sf)
 ```
 
 ## Creating and Cleaning Maryland Subset
@@ -132,15 +132,23 @@ total_count <- bind_rows(count_tolnay, count_geocode) %>%
   group_by(decade, source) %>%
   count()
 
-#RSW: Can you add numbers to the bars?
 #Graph comparing our data and Tolnay's by decade
 ggplot(total_count, aes(decade, n, fill = source)) +
-  geom_bar(stat="identity", position = "dodge", width = 8) + 
+  geom_bar(stat="identity", position = "dodge", width = 8) +
   labs(title="Comparing Lynching Counts in Maryland Per Decade",
        x="Decade",
        y="Number of Reported Lynchings",
        fill = "Source")
-  #geom_text(aes(label = n), vjust = 1, hjust = 0.5)
+
+#Version 2 of graph: trying to add values to the bars
+ggplot(total_count, aes(x = decade, y = n, fill = source)) +
+geom_col(position = "dodge", show.legend = FALSE) + 
+  geom_bar(stat = "identity") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 2)) + 
+  geom_text(aes(label = n), vjust=-0.3, size = 3) + 
+  scale_x_continuous(breaks=c(1830, 1840, 1850, 1860, 1870, 1880, 1890, 1900, 1910, 1920, 1930)) + 
+  scale_y_continuous(limits=c(0, 17)) + 
+  labs(title="Comparing Lynching Counts in Maryland Per Decade", x="Decade", y="Number of Reported Lynchings", fill = "Source")
 
 ```
 
@@ -153,8 +161,12 @@ edited_distinct <- distinct_md %>%
 
 md_map <- map_data("state", region = "maryland")
 
+#Trying to add outline of counties using Shapefile
+maryland_counties <- st_read("data/Maryland_Physical_Boundaries_-_County_Boundaries_(Generalized)/BNDY_CountyPhyBoundaryGen_DoIT.shp")
+
 map_plot <- ggplot(data = md_map, aes(x = long, y = lat)) +
   geom_polygon(fill = "white", color = "black") +
+  #geom_sf(data = maryland_counties, color = "gray", fill = NA)
   geom_point(data = edited_distinct, aes(x = lynching.lon, y = lynching.lat, color = in_state), size = 3) +
   scale_color_manual(values = c("Out-of-state" = "red", "In-state" = "blue")) +
   coord_quickmap() +
@@ -173,7 +185,7 @@ print(map_plot)
 
 ## Comparing the Maryland Lynching Memorial Project's List to Ours and Tolnay's
 ```{r}
-googlesheets4::gs4_deauth()
+#googlesheets4::gs4_deauth()
 md_memorial_project <- read_sheet("https://docs.google.com/spreadsheets/d/1MUBAvoaaU0tzdgDUgTRcBu7zGWwZL9_RnbtVZ-zO2lc/edit#gid=0") %>%
   mutate(name = paste(first_name, last_name),
          year = year(date)) %>%
@@ -198,14 +210,14 @@ second_subset_memorial <- md_memorial_project %>%
 unknown_cases_geocoded <- anti_join(subset_geocoded, second_subset_memorial)
 ```
 
-### wells matching md memorial and LOC data by year
+## wells matching md memorial and LOC data by year
 ```{r}
 md_memorial2 <- md_memorial_project %>% 
   select(name, city, date, year)
 
 news_md <- distinct_md %>% 
-  select(lynch_address, date, year, newspaper_name, newspaper_state_code, in_state, miles)
-
+  #select(lynch_address, date, year, newspaper_name, newspaper_state_code, in_state, miles)
+  select(lynch_address, date, year)
 
 combo <- md_memorial2 %>% 
   full_join(news_md, by=c("year")) %>% 
@@ -213,4 +225,25 @@ combo <- md_memorial2 %>%
 
 write.csv(combo, "../output/md_memorial_news_test.csv")
 
+```
+
+## Attempting to create a complete list of MD cases using all three data sources
+```{r}
+#First method: using combo and adding on tolnay data by doing another full join on name
+
+tolnay_md <- tolnay_md %>%
+  mutate(date = paste(year, month, day, sep = "-"))
+
+tolnay_md$date <- as.Date(tolnay_md$date, format = "%Y-%m-%d")
+
+tolnay_2 <- tolnay_md %>%
+  select(name, date, year, lynch_county)
+
+full_combo <- combo %>%
+  full_join(tolnay_2, by=c("name"))
+
+full_combo <- full_combo %>%
+  distinct(name, .keep_all = TRUE, )
+
+write_sheet(full_combo, "https://docs.google.com/spreadsheets/d/1GLoTEwZvuhAFo8zdHnGmhxgx7l9FFlc4UZDWvUyPAGk/edit#gid=0", sheet = "2023-10-30")
 ```

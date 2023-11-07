@@ -5,7 +5,6 @@ date: "2023-09-20"
 output: html_document
 ---
 
-#Wells comments on this fine data analysis
 
 ```{r}
 #install.packages("here")
@@ -764,5 +763,60 @@ no_city <- clean_main_index %>%
   filter(is.na(newspaper_state_clean)) %>% 
   filter(is.na(newspaper_city))
 
+no_city %>% 
+  count(newspaper_state)
+
+write.csv(new_main_index,"../data/mainindex_10_30.csv")
+
 ```
 
+
+```{r}
+ga_papers <- new_main_index %>% 
+  filter(newspaper_state_clean =="GA") %>% 
+  group_by(newspaper_state_clean, newspaper_name) %>% 
+  count()
+sum(ga_papers$n)
+#997
+
+ga_papers1 <- clean_main_index %>% 
+  filter(newspaper_state_clean =="GA") %>% 
+  group_by(newspaper_state_clean, newspaper_name) %>% 
+  count()
+sum(ga_papers1$n)
+#1085
+
+#write.csv(ga_papers,"../output/ga_papers.csv")
+
+ga_papers_years <- new_main_index %>% 
+  filter(newspaper_state_clean =="GA") %>% 
+  group_by(newspaper_state_clean, newspaper_name, year) %>% 
+  count()
+
+#write.csv(ga_papers_years,"../output/ga_papers_years.csv")
+
+
+ms_papers <- new_main_index %>% 
+  filter(newspaper_state_clean =="MS") %>% 
+  group_by(newspaper_state_clean, newspaper_name) %>% 
+  count()
+#sum(ms_papers$n)
+#1084
+
+ms_papers1 <- clean_main_index %>% 
+  filter(newspaper_state_clean =="MS") %>% 
+  group_by(newspaper_state_clean, newspaper_name) %>% 
+  count()
+#sum(ms_papers1$n)
+#1084
+
+#write.csv(ms_papers,"../output/ms_papers.csv")
+
+ms_papers_years <- new_main_index %>% 
+  filter(newspaper_state_clean =="MS") %>% 
+  group_by(newspaper_state_clean, newspaper_name, year) %>% 
+  count()
+
+
+
+```
