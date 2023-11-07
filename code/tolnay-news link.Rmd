@@ -39,28 +39,32 @@ lynch_updated <- lynch_updated %>%
 
 ```
 
-
-```
-
-
 ```{r}
 #How many GA papers that we coded could have covered Tolnay-Beck listed lynchings
 ga_tolnay <- tolnay_beck %>% 
   filter(lynch_state =="GA") %>% 
   mutate(date = paste(month,day,year, sep = "/")) %>% 
   mutate(tolnay_date = as.Date(date, "%m/%d/%Y")) %>% 
-  select(status, tolnay_date, year, month, day, name, alt_name_1, lynch_county, lynch_state, method_of_death, accusation)
+  mutate(date_est = tolnay_date - 5) %>% 
+  select(status, tolnay_date, year, month, day, name, alt_name_1, lynch_county, lynch_state, method_of_death, accusation, date_est) %>% 
+  filter(!is.na(date_est))
 #685 from 1865-2001
 
 ga_news <- lynch_updated %>% 
-   filter(newspaper_state_code == "GA") %>%
-   mutate(date = as.Date(date, "%m/%d/%Y")) %>% 
-   mutate(year = lubridate::year(date), 
-                month = lubridate::month(date), 
-                day = lubridate::day(date)) %>% 
+  filter(newspaper_state_code == "GA") %>%
+  mutate(date = as.Date(date, "%m/%d/%Y")) %>%
+  mutate(year = lubridate::year(date), 
+        month = lubridate::month(date), 
+        day = lubridate::day(date)) %>% 
   select(date, newspaper_name, newspaper_state_code, year, month, day, decade, city_lynch, state_lynch, in_state, border, total_words, file_id, url)
 #66 obs 1881-1920
 
+
+tolnay_filtered <- ga_tolnay %>% 
+  filter(year <= 1920)
+
+tolnay_filtered$date_seq <- lapply(tolnay_filtered$date_est, function(x) seq(as.Date(x), by = "day", length.out = 10))
+tolnay_filtered <- unnest(tolnay_filtered, cols = c(date_seq))
 
 # Create a sequence of dates for 15 days after date1
 ga_news$date_seq <- lapply(ga_news$date, function(x) seq(as.Date(x), by = "day", length.out = 16))
@@ -69,15 +73,18 @@ ga_news$date_seq <- lapply(ga_news$date, function(x) seq(as.Date(x), by = "day",
 library(tidyr)
 ga_news <- unnest(ga_news, cols = c(date_seq))
 
-ga_tolnay_news <- ga_tolnay %>% 
-  inner_join(ga_news, by=c("tolnay_date"="date_seq")) %>% 
+ga_tolnay_news <- tolnay_filtered %>% 
+  inner_join(ga_news, by=c("date_seq"="date_seq")) %>% 
   rename(city_newspaper_report = city_lynch, tolnay_year = year.x, tolnay_month = month.x, tolnay_day = day.x, news_year = year.y, news_month = month.y, news_day = day.y, news_date = date) %>% 
   select(tolnay_year, tolnay_date, news_date, name, lynch_county, newspaper_name, news_date, news_day, city_newspaper_report, state_lynch, total_words, file_id, url, alt_name_1, method_of_death, accusation, decade) %>% 
-  filter(state_lynch =="GA") 
+  filter(state_lynch =="GA") %>% 
+  distinct(name, lynch_county, newspaper_name, city_newspaper_report, .keep_all = TRUE)
+
+ga_tolnay_second <- tolnay_filtered %>% 
+  anti_join(ga_tolnay_news, by = c("name", "lynch_county"))
 
 #3 cases where GA papers covered lynchings on the Tolnay list
 #My broader join showed 20 obs where GA newspapers match the Tolnay List by year and month. See below
-
 
 #Notes from earlier method
 
