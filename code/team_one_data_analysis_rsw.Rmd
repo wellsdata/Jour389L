@@ -820,3 +820,25 @@ ms_papers_years <- new_main_index %>%
 
 
 ```
+
+# List of all Newspapers
+
+## Download and convert to CSV
+```{r}
+download_loc <- "../data/newspapers_list.txt"
+download.file("https://chroniclingamerica.loc.gov/newspapers.txt", donwload_loc)
+
+newspaper_list <- read_delim(download_loc, delim = "|")
+
+clean_newspaper_list <- newspaper_list %>% 
+  clean_names() %>% 
+  select(state, title, no_of_issues, first_issue_date, last_issue_date) %>% 
+  rename(newspaper = title, no_issues = no_of_issues, earliest_issue = first_issue_date, latest_issue = last_issue_date) %>% 
+  mutate_all(str_squish) %>% 
+  mutate(earliest_issue = mdy(earliest_issue)) %>% 
+  mutate(latest_issue = mdy(latest_issue))
+
+write_csv(clean_newspaper_list, "../data/newspaper_list.csv")
+```
+
+
