@@ -23,6 +23,7 @@ library(tigris)
 library(stringr)
 library(janitor)
 library(zoo)
+library(lubridate)
 
 ```
 # Analysis
@@ -766,7 +767,9 @@ no_city <- clean_main_index %>%
 no_city %>% 
   count(newspaper_state)
 
-write.csv(new_main_index,"../data/mainindex_10_30.csv")
+#write.csv(new_main_index,"../data/mainindex_10_30.csv")
+
+
 
 ```
 
@@ -826,19 +829,49 @@ ms_papers_years <- new_main_index %>%
 ## Download and convert to CSV
 ```{r}
 download_loc <- "../data/newspapers_list.txt"
-download.file("https://chroniclingamerica.loc.gov/newspapers.txt", donwload_loc)
+download.file("https://chroniclingamerica.loc.gov/newspapers.txt", download_loc)
 
 newspaper_list <- read_delim(download_loc, delim = "|")
 
 clean_newspaper_list <- newspaper_list %>% 
   clean_names() %>% 
-  select(state, title, no_of_issues, first_issue_date, last_issue_date) %>% 
+  #i added the lccn, oclc and issn, which allow us to link to the Printing Hate index 
+  select(state, title, lccn, oclc, issn, no_of_issues, first_issue_date, last_issue_date) %>% 
+  #select(state, title, no_of_issues, first_issue_date, last_issue_date) %>% 
   rename(newspaper = title, no_issues = no_of_issues, earliest_issue = first_issue_date, latest_issue = last_issue_date) %>% 
   mutate_all(str_squish) %>% 
-  mutate(earliest_issue = mdy(earliest_issue)) %>% 
-  mutate(latest_issue = mdy(latest_issue))
+  mutate(earliest_issue = lubridate::mdy(earliest_issue)) %>% 
+  mutate(latest_issue = lubridate::mdy(latest_issue))
 
-write_csv(clean_newspaper_list, "../data/newspaper_list.csv")
+#write_csv(clean_newspaper_list, "../data/newspaper_list.csv")
 ```
 
 
+# join test NA with the LOC main index by sn
+```{r}
+#20,226 record with no state
+filtered_main_index <- clean_main_index %>% 
+  filter(is.na(newspaper_state_clean)) 
+
+#20,529 records with states added
+#why did it add 303 records? 
+fixed <- clean_newspaper_list %>% 
+  inner_join(filtered_main_index, by=c("lccn"="sn")) %>% 
+  distinct()
+
+
+
+#new index joins with clean newspaper
+#62,814.
+#why did it add 2,772 records?
+
+main_index_2 <- clean_newspaper_list %>% 
+   inner_join(new_main_index, by=c("lccn"="sn")) %>% 
+  distinct()
+
+x <- main_index_2 %>% 
+  anti_join(new_main_index, by=c("lccn"="sn"))
+
+
+
+```
