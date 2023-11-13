@@ -767,7 +767,7 @@ no_city <- clean_main_index %>%
 no_city %>% 
   count(newspaper_state)
 
-#write.csv(new_main_index,"../data/mainindex_10_30.csv")
+write_csv(clean_main_index,"../data/mainindex_11_09.csv")
 
 
 
@@ -824,7 +824,7 @@ ms_papers_years <- new_main_index %>%
 
 ```
 
-# List of all Newspapers
+# LIST OF ALL NEWSPAPERS
 
 ## Download and convert to CSV
 ```{r}
@@ -847,7 +847,7 @@ clean_newspaper_list <- newspaper_list %>%
 ```
 
 
-# join test NA with the LOC main index by sn
+## Join test NA with the LOC main index by sn
 ```{r}
 #20,226 record with no state
 filtered_main_index <- clean_main_index %>% 
@@ -870,8 +870,22 @@ main_index_2 <- clean_newspaper_list %>%
   distinct()
 
 x <- main_index_2 %>% 
-  anti_join(new_main_index, by=c("lccn"="sn"))
+  anti_join(new_main_index)
 
 
 
 ```
+# MORE NEWSPAPER CLEANING
+
+```{r}
+main_index <- read_csv("../data/mainindex_11_09.csv")
+
+filtered_main_index <- main_index %>% 
+  filter(is.na(newspaper_state_clean))
+
+newspaper_list <- read_csv("../data/newspaper_list.csv")
+
+paper_list_joined <- filtered_main_index %>% 
+  left_join(newspaper_list, by = c("sn" = "lccn"))
+```
+
