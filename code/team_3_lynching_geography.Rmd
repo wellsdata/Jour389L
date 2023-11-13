@@ -871,6 +871,38 @@ trigram_lynch_1890s %>%
 ```
 
 
+```{r}
+
+bigram_lynch_1920s <- read_csv("../output/1920s_lynch_bigram_count.csv")
+trigram_lynch_1920s <- read_csv("../output/1920s_lynch_trigram_count.csv")
+
+bigram_lynch_1920s <- bigram_lynch_1920s %>%
+  filter(n > 5)
+
+trigram_lynch_1920s <- trigram_lynch_1920s %>%
+  filter(n > 5)
+
+bigram_lynch_1920s %>%
+  filter(str_detect(word1, 'white') | str_detect(word2, "white"))
+
+bigram_lynch_1920s %>%
+  filter(str_detect(word1, 'negro') | str_detect(word2, 'negro')) 
+
+trigram_lynch_1920s %>%
+  filter(str_detect(word1, 'associated') | str_detect(word2, 'associated') | str_detect(word3, 'associated'))
+
+trigram_lynch_1920s %>%
+  filter(str_detect(word1, 'negro') | str_detect(word2, 'negro') | str_detect(word3, 'negro'))
+
+trigram_lynch_1920s %>%
+  filter(str_detect(word1, 'mob') | str_detect(word2, 'mob') | str_detect(word3, 'mob'))
+
+bigram_lynch_1920s
+
+
+
+```
+
 
 
 
