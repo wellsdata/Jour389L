@@ -49,6 +49,7 @@ ga_tolnay <- tolnay_beck %>%
   select(status, tolnay_date, year, month, day, name, alt_name_1, lynch_county, lynch_state, method_of_death, accusation, date_est) %>% 
   filter(!is.na(date_est))
 #685 from 1865-2001
+#with lynch_state = 677
 
 ga_news <- lynch_updated %>% 
   filter(state_lynch == "GA") %>%
@@ -58,15 +59,19 @@ ga_news <- lynch_updated %>%
         day = lubridate::day(date)) %>% 
   select(date, newspaper_name, newspaper_state_code, year, month, day, decade, city_lynch, state_lynch, in_state, border, total_words, file_id, url)
 #66 obs 1881-1920
+#201 results changing to state_lynch from news_state
 
 tolnay_filtered <- ga_tolnay %>% 
   filter(year <= 1920)
 
-tolnay_filtered$date_seq <- lapply(tolnay_filtered$date_est, function(x) seq(as.Date(x), by = "day", length.out = 8))
+#first set for 8. 
+#trying 15 for both
+tolnay_filtered$date_seq <- lapply(tolnay_filtered$date_est, function(x) seq(as.Date(x), by = "day", length.out = 15))
 tolnay_filtered <- unnest(tolnay_filtered, cols = c(date_seq))
 
 # Create a sequence of dates for 15 days after date1
-ga_news$date_seq <- lapply(ga_news$date, function(x) seq(as.Date(x), by = "day", length.out = 6))
+#trying 15 length.out = 6
+ga_news$date_seq <- lapply(ga_news$date, function(x) seq(as.Date(x), by = "day", length.out = 15))
 
 # Unnest the data frame
 library(tidyr)
@@ -75,13 +80,15 @@ ga_news <- unnest(ga_news, cols = c(date_seq))
 ga_tolnay_news <- tolnay_filtered %>% 
   inner_join(ga_news, by="date_seq") %>% 
   rename(city_newspaper_report = city_lynch, tolnay_year = year.x, tolnay_month = month.x, tolnay_day = day.x, news_year = year.y, news_month = month.y, news_day = day.y, news_date = date) %>% 
-  select(tolnay_year, tolnay_date, news_date, name, lynch_county, newspaper_name, news_date, news_day, city_newspaper_report, state_lynch, total_words, file_id, url, alt_name_1, method_of_death, accusation, decade) %>% 
+  select(tolnay_year, tolnay_date, news_date, name, lynch_county, newspaper_name, newspaper_state_code, news_date, news_day, city_newspaper_report, state_lynch, total_words, file_id, url, alt_name_1, method_of_death, accusation, decade) %>% 
   filter(state_lynch =="GA") %>% 
   distinct(name, lynch_county, newspaper_name, city_newspaper_report, .keep_all = TRUE)
 
 ga_tolnay_distinct <- ga_tolnay_news %>% 
   distinct(name, lynch_county, tolnay_year, .keep_all = TRUE) %>% 
   mutate(date_dif = tolnay_date - news_date)
+#126 results but more than just GA newspapers. Only 6 GA newspapers
+#220 results set at 15 each, 15 GA newspapers.
 
 ga_tolnay_second <- tolnay_filtered %>% 
   anti_join(ga_tolnay_distinct, by = c("name", "lynch_county"))

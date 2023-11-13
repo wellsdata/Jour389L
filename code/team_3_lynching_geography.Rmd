@@ -757,25 +757,35 @@ new_mississippi_coverage %>%
 
 ```{r}
 #How many GA papers that we coded could have covered Tolnay-Beck listed lynchings
+library(zoo)
 ga_tolnay <- tolnay_beck %>% 
   filter(lynch_state =="GA") %>% 
   mutate(date = paste(month,day,year, sep = "/")) %>% 
   mutate(tolnay_date = as.Date(date, "%m/%d/%Y")) %>% 
-  select(status, tolnay_date, year, month, day, name, alt_name_1, lynch_county, lynch_state, method_of_death, accusation)
+  mutate(yearmo = as.Date(as.yearmon(tolnay_date, "%m/%Y"))) %>%
+  select(status, tolnay_date, year, month, day, yearmo, name, alt_name_1, lynch_county, lynch_state, method_of_death, accusation)
 #685 from 1865-2001
 
+
+#lynch_updated <- read.csv("../data/lynch_geocoded_10.8.csv")
+# # make less ugly
+# lynch_updated <- lynch_updated %>%
+#   clean_names()
 ga_news <- lynch_updated %>% 
    filter(newspaper_state_code == "GA") %>%
    mutate(date = as.Date(date, "%m/%d/%Y")) %>% 
    mutate(year = lubridate::year(date), 
                 month = lubridate::month(date), 
                 day = lubridate::day(date)) %>% 
-  select(date, newspaper_name, newspaper_state_code, year, month, day, decade, city_lynch, state_lynch, in_state, border, total_words, file_id, url)
+    mutate(yearmo = as.Date(as.yearmon(date, "%m/%Y"))) %>%
+  select(date, newspaper_name, newspaper_state_code, year, month, day, yearmo, decade, city_lynch, state_lynch, in_state, border, total_words, file_id, url)
+
+ga_news_years <- ga_news %>% 
+  count(year)
 #66 obs 1881-1920
 
-
-# Create a sequence of dates for 15 days after date1
-ga_news$date_seq <- lapply(ga_news$date, function(x) seq(as.Date(x), by = "day", length.out = 16))
+# Create a sequence of dates for 21 days after date1
+ga_news$date_seq <- lapply(ga_news$date, function(x) seq(as.Date(x), by = "day", length.out = 21))
 
 # Unnest the data frame
 library(tidyr)
@@ -783,9 +793,21 @@ ga_news <- unnest(ga_news, cols = c(date_seq))
 
 ga_tolnay_news <- ga_tolnay %>% 
   inner_join(ga_news, by=c("tolnay_date"="date_seq")) %>% 
-  rename(city_newspaper_report = city_lynch, tolnay_year = year.x, tolnay_month = month.x, tolnay_day = day.x, news_year = year.y, news_month = month.y, news_day = day.y, news_date = date) %>% 
-  select(tolnay_year, tolnay_date, news_date, name, lynch_county, newspaper_name, news_date, news_day, city_newspaper_report, state_lynch, total_words, file_id, url, alt_name_1, method_of_death, accusation, decade) %>% 
-  filter(state_lynch =="GA") 
+  rename(city_lynched_news = city_lynch, tolnay_year = year.x, tolnay_month = month.x, tolnay_day = day.x, news_year = year.y, news_month = month.y, news_day = day.y, news_date = date) %>% 
+  select(tolnay_year, tolnay_date, news_date, name, lynch_county, lynch_state, newspaper_name, city_lynched_news, state_lynch,  total_words, file_id, url, alt_name_1, method_of_death, accusation, decade)
+#59 results with a broader range of 21 days
+# 
+#  Savanah Morning News was publishing in 1881 and carried stories about lynching in CO, NM and TN but there was no coverage of a lynching 1881-03-24 of Felix Barnes in Hancock GA.
+# 
+# 
+# Savanah Morning News was publishing in 1884 and carried stories about lynching in KY, AR but there was no coverage of a lynching 1884-05-13
+# of Hardy Grady Effingham GA
+# 
+# (look at ga_tolnay_news which has both GA news coverage of all lynchings for dates 21 days within the tolnay entries. then double check against ga_news1, which has all the ga entries. for the specific title, look at LOC and the calendar to verify it was publishing.)
+# 
+# need to get the api for the LOC data and check it comprehensively. all states and dates of editions
+#https://chroniclingamerica.loc.gov/lccn/sn82015137/issues/1884/
+
 
 #3 cases where GA papers covered lynchings on the Tolnay list
 #My broader join showed 20 obs where GA newspapers match the Tolnay List by year and month. See below
@@ -805,6 +827,15 @@ ga_tolnay_news <- ga_tolnay %>%
 #filter so the news follows tolnay
 #ga_tolnay_news <- ga_tolnay_news[ga_tolnay_news$news_day <= ga_tolnay_news$tolnay_day, ]
 #6 cases where GA papers could have covered a lynching listed in tolnay and beck  
+
+
+#Alternative 11.12
+#Match tolnay and GA by yearmon
+tolnay_ga_news <- ga_tolnay %>% 
+  inner_join(ga_news, by=c("yearmo")) %>% 
+  select(status, tolnay_date, date, yearmo, name, lynch_county, lynch_state, newspaper_name, newspaper_state_code, city_lynch, state_lynch, file_id, url)
+#101 matches so some potential double counting
+#doesn't work with cases that are at the 21 or 22 of the monthv- news coverage could be the next month
 ```
 
 
