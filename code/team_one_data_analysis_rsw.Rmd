@@ -875,17 +875,55 @@ x <- main_index_2 %>%
 
 
 ```
-# MORE NEWSPAPER CLEANING
 
+# MORE NEWSPAPER CLEANING
 ```{r}
+state_crosswalk <- read_csv("../data/states.csv") %>% 
+  clean_names()
+
 main_index <- read_csv("../data/mainindex_11_09.csv")
 
-filtered_main_index <- main_index %>% 
+newspaper_list <- read_csv("../data/newspaper_list.csv") 
+
+clean_newspaper_list <- newspaper_list %>% 
+  distinct(lccn, .keep_all = TRUE)
+
+paper_list_joined <- main_index %>% 
+  left_join(newspaper_list, by = c("sn" = "lccn")) %>% 
+  left_join(state_crosswalk, by = c("state"))
+  
+paper_list_problems <- paper_list_joined %>% 
+  filter(duplicated(file_id) | duplicated(file_id, fromLast = TRUE)) %>% 
+  filter(is.na(newspaper_state_clean) | newspaper_state_clean == abbreviation) %>% 
+  mutate(newspaper_state_clean = case_when(
+    str_detect(newspaper, "N.D.") ~ "ND",
+    str_detect(newspaper, "Ark") ~ "AR",
+    str_detect(newspaper, "Utah") ~ "UT",
+    str_detect(newspaper, "Chicago") ~ "IL",
+    str_detect(newspaper, "New Haven") ~ "CT",
+    str_detect(newspaper, "Fowler") ~ "MO",
+    TRUE ~ newspaper_state_clean
+  )) %>% 
+  distinct(file_id, newspaper_state_clean, .keep_all = TRUE)
+  
+paper_list_good <- paper_list_joined %>% 
+  filter(!(duplicated(file_id) | duplicated(file_id, fromLast = TRUE)))
+
+full_list_clean <- paper_list_good %>% 
+  rbind(paper_list_problems) %>%
+  mutate(newspaper_state_clean = case_when(
+    is.na(newspaper_state_clean) ~ abbreviation,
+    TRUE ~ newspaper_state_clean)) %>% 
+  mutate(newspaper_state_clean = case_when(
+    str_detect(sn, "sn84037526") ~ "VI",
+    str_detect(sn, "sn96080161|sn94055234") ~ "NE",
+    str_detect(sn, "97071090") ~ "OR",
+    TRUE ~ newspaper_state_clean
+  ))
+
+clean_check <- full_list_clean %>% 
   filter(is.na(newspaper_state_clean))
 
-newspaper_list <- read_csv("../data/newspaper_list.csv")
-
-paper_list_joined <- filtered_main_index %>% 
-  left_join(newspaper_list, by = c("sn" = "lccn"))
+write_csv(full_list_clean, "../data/main_index_with_names_111323.csv")
 ```
 
