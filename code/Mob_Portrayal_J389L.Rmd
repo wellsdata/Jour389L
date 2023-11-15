@@ -151,6 +151,82 @@ ggplot(mob_melt, aes(x = decade, y = value, fill = variable)) +
 # mob2 <- mob2 %>% 
 #   select(docname, newspaper_name, date.x, url, hostile, neutral, orderly, justice, identified, unsure, other, lynch_address, newspaper_state_code, year, city_lynch, state_lynch, miles, decade, Newspaper_Region, total_words)
 
+#I created a data frame that filtered for only Alabama, Mississippi, Georgia and Texas, and looked at columns with the total amounts of each categorization as well as the percentage of each mob categorization.
+
+mob_state <- mob2 |>
+  filter(
+    str_detect(
+      state_lynch, "AL|MS|GA|TX")) |>
+  group_by(state_lynch) |>
+  summarise(total_hostile = sum(hostile, na.rm = TRUE),
+    total_neutral = sum(neutral, na.rm = TRUE),
+    total_orderly = sum(orderly, na.rm = TRUE)) |>
+    mutate(total = total_hostile + total_neutral + total_orderly,
+    percent_hostile = total_hostile/total * 100,
+    percent_neutral = total_neutral/total * 100,
+    percent_orderly = total_orderly/total * 100) 
+
+mob_state |>
+  summarise(sum(total))
+
+
+#Created a separate data frame that filtered for all of the Northeast states to easily compare the results to the four Southern states. 
+
+mob_northeast <- mob2 |>
+  filter(mob_region == 'Northeast') |>
+    group_by(state_lynch) |>
+    summarise(
+      total_hostile = sum(hostile, na.rm = TRUE),
+      total_neutral = sum(neutral, na.rm = TRUE),
+      total_orderly = sum(orderly, na.rm = TRUE)) |>
+    mutate(total = total_hostile + total_neutral + total_orderly,
+      percent_hostile = total_hostile/total * 100,
+      percent_neutral = total_neutral/total * 100,
+      percent_orderly = total_orderly/total * 100) 
+
+mob_northeast |>
+  summarise(sum(total))
+  
+#Charts! Hostile, Neutral, Orderly Percentages for Alabama, Georgia, Mississippi and Texas.
+
+ggplot(mob_state, aes(x=state_lynch, y=percent_hostile)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(x = "State", y = "Percent Hostile", title = "Southern Hostile Mob Portrayal Percentages") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1)) 
+
+ggplot(mob_state, aes(x=state_lynch, y=percent_neutral)) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(x = "State", y = "Percent Neutral", title= "Southern Neutral Mob Portrayal Percentages") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
+
+ggplot(mob_state, aes(x=state_lynch, y=percent_orderly)) +
+    geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "State", y = "Percent Orderly", title = "Southern Orderly Mob Portrayal Percentages") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
+
+#Hostile, Neutral, Orderly Percentages for Northeast states: CT, ME, NJ, NY and PA.
+
+ggplot(mob_northeast, aes(x=state_lynch, y=percent_hostile)) +
+    geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "State", y = "Percent Hostile", title = "Northeast Hostile Mob Portrayal Percentages") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
+
+ggplot(mob_northeast, aes(x=state_lynch, y=percent_neutral)) +
+    geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "State", y = "Percent Neutral",title = "Northeast Neutral Mob Portrayal Percentages") +
+   theme_bw() +
+  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
+
+ggplot(mob_northeast, aes(x=state_lynch, y=percent_orderly)) +
+    geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "State", y = "Percentage Orderly", title = "Northeast Orderly Mob Portrayal Percentages") +
+   theme_bw() +
+  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1)) 
+  
 
 
 ```
