@@ -1,7 +1,7 @@
 ---
 title: "Mob Analysis_Jour389L version"
 author: "Rob Wells"
-date: "2023-11-8"
+date: "2023-11-15"
 output: html_document
 ---
 ```{r message=FALSE, warning=FALSE}
@@ -20,13 +20,21 @@ library(geosphere)
 library(stringr)
 ```
 
+# Updates Nov. 15 with corrected data from Rachel McCrea
 ```{r}
 
 googledrive::drive_auth()
 # 
 googlesheets4::gs4_deauth()
 
-mob <- read_sheet("https://docs.google.com/spreadsheets/d/1oKkRSInN8tO6Z-kyMoIUYOX1uHQhP7FdrR1xie4O-XQ/edit?usp=sharing")
+#mob <- read_sheet("https://docs.google.com/spreadsheets/d/1oKkRSInN8tO6Z-kyMoIUYOX1uHQhP7FdrR1xie4O-XQ/edit?usp=sharing")
+
+#updates with Rachel McCrea's corrections
+mob <- read_sheet("https://docs.google.com/spreadsheets/d/1-zwBtcpdH1Hnb5WROJVuPdm_HC9nTmDl-dbiSHE5tJ8/edit#gid=10206338")
+```
+
+
+```{r}
 
 mob <- mob %>% 
   janitor::clean_names() 
@@ -106,7 +114,8 @@ mob1 <- mob %>%
 mob2 <- mob1 %>% 
   left_join(lynch_geocoded_10.8, by=c("docname"="file_id", "url"))
 
-#write.csv(mob2, "../output/mob_full_11_6.csv")
+#write.csv(mob2, "../output/mob_full_11_15.csv")
+
 
 mob3 <- mob2 %>% 
   group_by(decade) %>% 
@@ -122,14 +131,15 @@ mob3 <- mob2 %>%
     percent_orderly = total_orderly / grand_total * 100
   )
 
-#write.csv(mob3, "../output/mob2_11_6.csv")
+#write.csv(mob3, "../output/mob3_11_15.csv")
+
 
 # Reshape the data
 library(reshape2)
 mob_melt <- melt(mob3, id.vars = "decade", 
                 measure.vars = c("percent_hostile", "percent_neutral", "percent_orderly"))
 
-#write.csv(mob_melt, "../output/mob_melt_11_6.csv")
+#write.csv(mob_melt, "../output/mob_melt_11_15.csv")
 
 # Create the plot
 ggplot(mob_melt, aes(x = decade, y = value, fill = variable)) +
