@@ -151,6 +151,8 @@ ggplot(mob_melt, aes(x = decade, y = value, fill = variable)) +
 # mob2 <- mob2 %>% 
 #   select(docname, newspaper_name, date.x, url, hostile, neutral, orderly, justice, identified, unsure, other, lynch_address, newspaper_state_code, year, city_lynch, state_lynch, miles, decade, Newspaper_Region, total_words)
 
+#Apurva wrote this section
+
 #I created a data frame that filtered for only Alabama, Mississippi, Georgia and Texas, and looked at columns with the total amounts of each categorization as well as the percentage of each mob categorization.
 
 mob_state <- mob2 |>
