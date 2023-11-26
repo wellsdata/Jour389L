@@ -1011,11 +1011,17 @@ write_sheet(all_mob_connected, "https://docs.google.com/spreadsheets/d/1XG2um-mk
 
 ## Analyzing by Decade
 ```{r}
-decade_trends <- all_mob_connected %>% 
+decade_hostile_trends <- all_mob_connected %>% 
   filter(!is.na(decade)) %>% 
-  group_by(decade, hostile) %>% 
+  group_by(decade, hostile, justice) %>% 
   count() %>% 
-  pivot_wider(names_from = decade, values_from = n)
+  pivot_wider(names_from = decade, values_from = n) %>% 
+  mutate(named = case_when(
+    hostile == 1 & justice == 0 ~ "Hostile",
+    hostile == 1 & justice == 1 ~ "Hostile & Justice",
+    justice == 1 ~ "Justice",
+    TRUE ~ "Neither"
+  ))
 
 ```
 
