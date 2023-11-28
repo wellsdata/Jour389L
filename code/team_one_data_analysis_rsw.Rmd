@@ -991,7 +991,7 @@ all_mob_connected <- mob_master_easy %>%
   mutate(newspaper_region = case_when(
     str_detect(newspaper_state_clean, "SC|TX|LA|TN|MS|AR|AL|GA|VA|FL|NC|MD|DE|WV|KY|OK|DC")~"South",
     str_detect(newspaper_state_clean, "MO|OH|IN|KS|MI|WI|MN|IA|IL|NE|ND|SD")~"Midwest",
-    str_detect(newspaper_state_clean, "NY|NH|VT|MA|CT|RI|PA|NJ")~"Northeast",
+    str_detect(newspaper_state_clean, "NY|NH|VT|MA|CT|RI|PA|NJ|ME")~"Northeast",
     str_detect(newspaper_state_clean, "CA|NV|OR|CO|MT|WA|ID|WY|UT|NM|AZ|AK|HI")~"West",
     TRUE~newspaper_state_clean
   )) %>% 
@@ -1004,25 +1004,101 @@ all_mob_connected <- mob_master_easy %>%
   rename(newspaper = newspaper.y, newspaper_state_clean = newspaper_state_clean.y) %>% 
   select(docname, newspaper, date, url:newspaper_region, sn, newspaper_state_clean, year, state_lynch, miles, in_state, decade, filename)
 
-write_sheet(all_mob_connected, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0")
+write_sheet(all_mob_connected, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "all_mob_connected")
 
 ```
 
 
 ## Analyzing by Decade
 ```{r}
-decade_hostile_trends <- all_mob_connected %>% 
-  filter(!is.na(decade)) %>% 
-  group_by(decade, hostile, justice) %>% 
-  count() %>% 
-  pivot_wider(names_from = decade, values_from = n) %>% 
-  mutate(named = case_when(
-    hostile == 1 & justice == 0 ~ "Hostile",
-    hostile == 1 & justice == 1 ~ "Hostile & Justice",
-    justice == 1 ~ "Justice",
-    TRUE ~ "Neither"
-  ))
 
+all_mob_connected <- read_sheet("https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "all_mob_connected")
+
+decade_trends <- all_mob_connected %>% 
+  filter(!is.na(decade)) %>% 
+  group_by(decade) %>% 
+  summarize(
+    hostile = sum(hostile),
+    orderly = sum(orderly),
+    neutral = sum(neutral),
+    justice = sum(justice),
+    identified = sum(identified),
+    total = n(),
+    percent_hostile = round(hostile/total*100,2),
+    percent_orderly = round(orderly/total*100,2),
+    percent_neutral = round(neutral/total*100,2),
+    percent_justice = round(justice/total*100,2),
+    percent_identified = round(identified/total*100,2)
+  )
+  
+write_sheet(decade_trends, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "decade_trends")
+
+```
+
+## Analyzing by Region
+```{r}
+regional_trends <- all_mob_connected %>% 
+  filter(!is.na(newspaper_region)) %>% 
+  group_by(newspaper_region) %>% 
+  summarize(
+    hostile = sum(hostile),
+    orderly = sum(orderly),
+    neutral = sum(neutral),
+    justice = sum(justice),
+    identified = sum(identified),
+    total = n(),
+    percent_hostile = round(hostile/total*100,2),
+    percent_orderly = round(orderly/total*100,2),
+    percent_neutral = round(neutral/total*100,2),
+    percent_justice = round(justice/total*100,2),
+    percent_identified = round(identified/total*100,2)
+  )
+  
+write_sheet(regional_trends, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "regional_trends")
+```
+
+## Analyzing by State
+```{r}
+state_trends <- all_mob_connected %>% 
+  filter(!is.na(newspaper_state_clean)) %>% 
+  group_by(newspaper_state_clean) %>% 
+  summarize(
+    hostile = sum(hostile),
+    orderly = sum(orderly),
+    neutral = sum(neutral),
+    justice = sum(justice),
+    identified = sum(identified),
+    total = n(),
+    percent_hostile = round(hostile/total*100,2),
+    percent_orderly = round(orderly/total*100,2),
+    percent_neutral = round(neutral/total*100,2),
+    percent_justice = round(justice/total*100,2),
+    percent_identified = round(identified/total*100,2)
+  )
+  
+write_sheet(state_trends, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "state_trends")
+```
+
+## Co-Occurences of Hostile, Justice and Orderly
+```{r}
+all_occurrences <- nrow(all_mob_connected)
+
+cooccurrence_table <- all_mob_connected %>% 
+  group_by(hostile, justice, orderly) %>% 
+  count() %>% 
+  mutate(named = case_when(
+    hostile == 1 & justice == 1 & orderly == 1 ~ "all",
+    hostile == 1 & justice == 1 ~ "hostile, justice",
+    hostile == 1 & orderly == 1 ~ "hostile, orderly",
+    orderly == 1 & justice == 1 ~ "oderly, justice",
+    orderly == 0 & justice == 0 & hostile == 0 ~ "none"
+  )) %>% 
+  filter(!is.na(named)) %>% 
+  ungroup() %>% 
+  select(named, n) %>% 
+  mutate(percent_occurrences = round(n/all_occurrences*100,2))
+
+write_sheet(cooccurrence_table, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "co_occurrences")
 ```
 
 
