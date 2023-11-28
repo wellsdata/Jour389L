@@ -22,6 +22,7 @@ library(geosphere)
 library(kableExtra)
 #webshot::install_phantomjs()
 library(lubridate)
+library(janitor)
 ```
 
 # Analysis
@@ -338,4 +339,30 @@ fixed_wire_coverage_groups <- fixed_wire_coverage_groups %>%
   group_by(new_group, lynch_address) %>%
   summarise(count = n())
 
+```
+
+## Analysis for Final Project
+```{r}
+all_bigrams <- read_csv("~/Desktop/GitHub/Jour389L/output/all_bigrams_11.10.csv") |>
+  clean_names() |>
+  select(-x1)
+  
+filtered_bigrams <- all_bigrams |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women")
+
+white_women <- filtered_bigrams |>
+  filter(word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(white_women$word1, white_women$word2, sep=" ")) |>
+  select(-word1, -word2)
+  
+white_girls <- filtered_bigrams |>
+  filter(word2=="girl" | word2=="girls") |>
+  mutate(total = sum(n))
+
+white_ladies <- filtered_bigrams |>
+  filter(word2=="lady" | word2=="ladies") |>
+  mutate(total = sum(n))
+
+write_csv(white_women, "~/Desktop/white_women_bigrams.csv")
 ```
