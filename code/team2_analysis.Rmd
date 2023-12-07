@@ -22,6 +22,7 @@ library(geosphere)
 library(kableExtra)
 #webshot::install_phantomjs()
 library(lubridate)
+library(janitor)
 ```
 
 # Analysis
@@ -338,4 +339,111 @@ fixed_wire_coverage_groups <- fixed_wire_coverage_groups %>%
   group_by(new_group, lynch_address) %>%
   summarise(count = n())
 
+```
+
+## Analysis for Final Project
+```{r}
+all_bigrams <- read_csv("~/Desktop/GitHub/Jour389L/output/all_bigrams_11.10.csv") |>
+  clean_names() |>
+  select(-x1) |>
+  na.omit()
+  
+filtered_bigrams <- all_bigrams |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women")
+
+filtered_bigrams <- filtered_bigrams |>
+  mutate(phrase = paste(filtered_bigrams$word1, filtered_bigrams$word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1850s <- all_bigrams |>
+  filter(decade == "1850") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1860s <- all_bigrams |>
+  filter(decade == "1860") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1870s <- all_bigrams |>
+  filter(decade == "1870") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1880s <- all_bigrams |>
+  filter(decade == "1880") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1890s <- all_bigrams |>
+  filter(decade == "1890") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1900s <- all_bigrams |>
+  filter(decade == "1900") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1910s <- all_bigrams |>
+  filter(decade == "1910") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1920s <- all_bigrams |>
+  filter(decade == "1920") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1930s <- all_bigrams |>
+  filter(decade == "1930") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+bigrams_1940s <- all_bigrams |>
+  filter(decade == "post1940") |>
+  mutate(decade_total = sum(n)) |>
+  filter(word1=="white") |>
+  filter(word2=="girl" | word2=="girls" | word2=="lady" | word2=="ladies" | word2=="woman" | word2=="women") |>
+  mutate(phrase = paste(word1, word2, sep=" ")) |>
+  select(-word1, -word2)
+
+write_sheet(bigrams_1850s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1860s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1870s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1880s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1890s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1900s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1910s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1920s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1930s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
+write_sheet(bigrams_1940s, "https://docs.google.com/spreadsheets/d/1PiI891Q2GKoeXKb4SzoyGhBfbjR6Pcvs_uq9ukhHCPg/edit#gid=0")
 ```

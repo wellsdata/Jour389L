@@ -5,7 +5,7 @@ date: "2023-09-20"
 output: html_document
 ---
 
-
+# PACKAGES
 ```{r}
 #install.packages("here")
 here::here()
@@ -26,7 +26,9 @@ library(zoo)
 library(lubridate)
 
 ```
-# Analysis
+
+# ANALYSIS
+
 ```{r}
 lynch_geocoded_9.16 <- read.csv("../data/lynch_geocoded_9.16.csv")
 
@@ -926,4 +928,177 @@ clean_check <- full_list_clean %>%
 
 write_csv(full_list_clean, "../data/main_index_with_names_111323.csv")
 ```
+
+# FINAL PROJECT MOB ANALYSIS
+
+## Cleaning and Connecting Data
+```{r}
+mob_full <- read_csv("../output/mob_full_11_15.csv")
+mob_melt <- read_csv("../output/mob_melt_11_15.csv")
+mob_three <- read_csv("../output/mob3_11_15.csv")
+
+main_index <- read_csv("../data/main_index_with_names_111323.csv")
+main_selected <- main_index %>% 
+  select(sn, newspaper, newspaper_state_clean, date) %>% 
+  distinct(sn, .keep_all = TRUE) %>% 
+  mutate(newspaper_clean = str_squish(sub("\\..*$", "",  newspaper))) %>% 
+  distinct(newspaper_clean, .keep_all = TRUE)
+
+master_index <- read_csv("../data/master_article_index_10.19.csv")
+master_selected <- master_index %>% 
+  select(file_id2:date, file_id:filename) %>% 
+  mutate(docname = gsub(".txt", "", filename))
+
+mob_full_subset <- mob_full %>% 
+  select(docname:other, sn, Newspaper_Region, file_id_old, year, state_lynch, miles, in_state, decade)
+
+mob_master <- mob_full_subset %>% 
+  left_join(master_selected, by = c("docname")) %>% 
+  mutate(sn = case_when(
+    !is.na(sn.y) ~ sn.y,
+    TRUE ~ sn.x
+  )) %>% 
+  select(docname:other, Newspaper_Region, sn, year, state_lynch, miles, in_state, decade, filename) %>% 
+  rename(url = url.x, date = date.x)
+
+mob_master_easy <- mob_master %>% 
+  filter(!is.na(sn)) %>% 
+  left_join(main_selected, by = "sn") %>% 
+  clean_names() %>% 
+  rename(newspaper = newspaper_y, date = date_x) %>% 
+  select(docname, newspaper, date, url:newspaper_region, sn, newspaper_state_clean, year, state_lynch, miles, in_state, decade, filename)
+
+mm_filter <- mob_master %>%
+  clean_names() %>% 
+  filter(is.na(sn)) %>% 
+  mutate(newspaper_clean = str_squish(gsub("\\d+|\\s*\\([^)]+\\)|\\.|-", "", newspaper))) %>% 
+  mutate(newspaper_clean = case_when(
+    newspaper_clean == "Cayton's weekly" ~ "Cayton&#39;s weekly",
+    newspaper_clean == "St Johnsbury Caledonian" ~ "The Caledonian",
+    is.na(newspaper_clean) ~ "Mineral Point tribune",
+    TRUE ~ newspaper_clean
+  )) %>% 
+  left_join(main_selected, by = c("newspaper_clean")) %>% 
+  rename(newspaper = newspaper.y, date = date.x, sn = sn.y) %>% 
+  select(docname, newspaper, date, url:newspaper_region, sn, newspaper_state_clean, year, state_lynch, miles, in_state, decade, filename)
+
+master_small <- main_index %>% 
+  select(sn, newspaper, newspaper_state_clean) %>% 
+  distinct(sn, .keep_all = TRUE)
+
+all_mob_connected <- mob_master_easy %>% 
+  rbind(mm_filter) %>% 
+  mutate(newspaper_region = case_when(
+    str_detect(newspaper_state_clean, "SC|TX|LA|TN|MS|AR|AL|GA|VA|FL|NC|MD|DE|WV|KY|OK|DC")~"South",
+    str_detect(newspaper_state_clean, "MO|OH|IN|KS|MI|WI|MN|IA|IL|NE|ND|SD")~"Midwest",
+    str_detect(newspaper_state_clean, "NY|NH|VT|MA|CT|RI|PA|NJ|ME")~"Northeast",
+    str_detect(newspaper_state_clean, "CA|NV|OR|CO|MT|WA|ID|WY|UT|NM|AZ|AK|HI")~"West",
+    TRUE~newspaper_state_clean
+  )) %>% 
+  mutate(newspaper_border = case_when(
+    str_detect(newspaper_state_clean, "MD|DE|WV|KY|MO")~"Border",
+    TRUE~"Not_Border"
+  )) %>% 
+  arrange(filename) %>% 
+  left_join(master_small, by = c("sn")) %>% 
+  rename(newspaper = newspaper.y, newspaper_state_clean = newspaper_state_clean.y) %>% 
+  select(docname, newspaper, date, url:newspaper_region, sn, newspaper_state_clean, year, state_lynch, miles, in_state, decade, filename)
+
+write_sheet(all_mob_connected, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "all_mob_connected")
+
+```
+
+
+## Analyzing by Decade
+```{r}
+
+all_mob_connected <- read_sheet("https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "all_mob_connected")
+
+decade_trends <- all_mob_connected %>% 
+  filter(!is.na(decade)) %>% 
+  group_by(decade) %>% 
+  summarize(
+    hostile = sum(hostile),
+    orderly = sum(orderly),
+    neutral = sum(neutral),
+    justice = sum(justice),
+    identified = sum(identified),
+    total = n(),
+    percent_hostile = round(hostile/total*100,2),
+    percent_orderly = round(orderly/total*100,2),
+    percent_neutral = round(neutral/total*100,2),
+    percent_justice = round(justice/total*100,2),
+    percent_identified = round(identified/total*100,2)
+  )
+  
+write_sheet(decade_trends, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "decade_trends")
+
+```
+
+## Analyzing by Region
+```{r}
+regional_trends <- all_mob_connected %>% 
+  filter(!is.na(newspaper_region)) %>% 
+  group_by(newspaper_region) %>% 
+  summarize(
+    hostile = sum(hostile),
+    orderly = sum(orderly),
+    neutral = sum(neutral),
+    justice = sum(justice),
+    identified = sum(identified),
+    total = n(),
+    percent_hostile = round(hostile/total*100,2),
+    percent_orderly = round(orderly/total*100,2),
+    percent_neutral = round(neutral/total*100,2),
+    percent_justice = round(justice/total*100,2),
+    percent_identified = round(identified/total*100,2)
+  )
+  
+write_sheet(regional_trends, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "regional_trends")
+```
+
+## Analyzing by State
+```{r}
+state_trends <- all_mob_connected %>% 
+  filter(!is.na(newspaper_state_clean)) %>% 
+  group_by(newspaper_state_clean) %>% 
+  summarize(
+    hostile = sum(hostile),
+    orderly = sum(orderly),
+    neutral = sum(neutral),
+    justice = sum(justice),
+    identified = sum(identified),
+    total = n(),
+    percent_hostile = round(hostile/total*100,2),
+    percent_orderly = round(orderly/total*100,2),
+    percent_neutral = round(neutral/total*100,2),
+    percent_justice = round(justice/total*100,2),
+    percent_identified = round(identified/total*100,2)
+  )
+  
+write_sheet(state_trends, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "state_trends")
+```
+
+## Co-Occurences of Hostile, Justice and Orderly
+```{r}
+all_occurrences <- nrow(all_mob_connected)
+
+cooccurrence_table <- all_mob_connected %>% 
+  group_by(hostile, justice, orderly) %>% 
+  count() %>% 
+  mutate(named = case_when(
+    hostile == 1 & justice == 1 & orderly == 1 ~ "all",
+    hostile == 1 & justice == 1 ~ "hostile, justice",
+    hostile == 1 & orderly == 1 ~ "hostile, orderly",
+    orderly == 1 & justice == 1 ~ "oderly, justice",
+    orderly == 0 & justice == 0 & hostile == 0 ~ "none"
+  )) %>% 
+  filter(!is.na(named)) %>% 
+  ungroup() %>% 
+  select(named, n) %>% 
+  mutate(percent_occurrences = round(n/all_occurrences*100,2))
+
+write_sheet(cooccurrence_table, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "co_occurrences")
+```
+
 
