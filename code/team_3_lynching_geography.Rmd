@@ -942,7 +942,7 @@ black_bigrams_pre_1900 <- read_csv("../output/bp_bigrams/bp_pre1900_lynch_bigram
 
 black_bigrams %>%
   filter(n >= 5) %>%
-  filter(decade == "1930s")
+  filter(decade == "1930s") %>% 
   filter(str_detect(word1, 'mob') & str_detect(word2, 'violence'))
 
 
@@ -956,7 +956,7 @@ black_bigrams <- black_bigrams %>%
 bigrams_for_viz <- black_bigrams %>%
   mutate(black_bigrams, x = paste(word1, word2)) 
 
-write_csv(bigrams_for_viz, "bigrams_for_viz.csv")
+#write_csv(bigrams_for_viz, "bigrams_for_viz.csv")
 
 # comparing to the white press
 
@@ -975,7 +975,7 @@ white_bigrams %>%
 white_bigrams_for_viz <- white_bigrams %>%
   mutate(white_bigrams, x = paste(word1, word2)) 
 
-write_csv(white_bigrams_for_viz, "white_bigrams_viz.csv")
+#write_csv(white_bigrams_for_viz, "white_bigrams_viz.csv")
 
 white_bigrams %>%
   filter(n >= 5) %>%
