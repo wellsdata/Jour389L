@@ -998,11 +998,9 @@ white_bigrams %>%
   filter(str_detect(word1, 'mob') & str_detect(word2, 'violence'))
 
 black_bigrams %>%
-  filter(n >= 5) %>%
   filter(str_detect(word1, 'jim') & str_detect(word2, 'crow'))
 
 white_bigrams %>%
-  filter(decade == "1930") %>%
   filter(str_detect(word1, 'anti') & str_detect(word2, 'lynching'))
 
 black_bigrams %>%
