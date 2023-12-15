@@ -116,6 +116,8 @@ mob2 <- mob1 %>%
 
 #write.csv(mob2, "../output/mob_full_11_15.csv")
 
+mob2
+
 
 mob3 <- mob2 %>% 
   group_by(decade) %>% 
@@ -139,7 +141,7 @@ library(reshape2)
 mob_melt <- melt(mob3, id.vars = "decade", 
                 measure.vars = c("percent_hostile", "percent_neutral", "percent_orderly"))
 
-#write.csv(mob_melt, "../output/mob_melt_11_15.csv")
+write.csv(mob_melt, "../output/mob_melt_11_15.csv")
 
 # Create the plot
 ggplot(mob_melt, aes(x = decade, y = value, fill = variable)) +
@@ -151,7 +153,7 @@ ggplot(mob_melt, aes(x = decade, y = value, fill = variable)) +
 # mob2 <- mob2 %>% 
 #   select(docname, newspaper_name, date.x, url, hostile, neutral, orderly, justice, identified, unsure, other, lynch_address, newspaper_state_code, year, city_lynch, state_lynch, miles, decade, Newspaper_Region, total_words)
 
-#Apurva wrote this section
+#Apurva wrote this section -- updated
 
 #I created a data frame that filtered for only Alabama, Mississippi, Georgia and Texas, and looked at columns with the total amounts of each categorization as well as the percentage of each mob categorization.
 
@@ -171,8 +173,63 @@ mob_state <- mob2 |>
 mob_state |>
   summarise(sum(total))
 
+view(mob2)
 
 #Created a separate data frame that filtered for all of the Northeast states to easily compare the results to the four Southern states. 
+
+mob2 <- mob2 |> mutate(mob_region = case_when(state_lynch=="SC" ~ "South",
+                            state_lynch=="TX" ~ "South",
+                            state_lynch=="LA" ~ "South",
+                            state_lynch=="TN" ~ "South",
+                            state_lynch=="MS" ~ "South",
+                            state_lynch=="AR" ~ "South",
+                            state_lynch=="AL" ~ "South",
+                            state_lynch=="GA" ~ "South",
+                            state_lynch=="VA" ~ "South",
+                            state_lynch=="FL" ~ "South",
+                            state_lynch=="NC" ~ "South",
+                            state_lynch=="MD" ~ "South",
+                            state_lynch=="DE" ~ "South",
+                            state_lynch=="WV" ~ "South",
+                            state_lynch=="KY" ~ "South",
+                            state_lynch=="MO" ~ "Midwest",
+                            state_lynch=="ME" ~ "Northeast",
+                            state_lynch=="NY" ~ "Northeast",
+                            state_lynch=="NH" ~ "Northeast",
+                            state_lynch=="VT" ~ "Northeast",
+                            state_lynch=="MA" ~ "Northeast",
+                            state_lynch=="CT" ~ "Northeast",
+                            state_lynch=="RI" ~ "Northeast",
+                            state_lynch=="PA" ~ "Northeast",
+                            state_lynch=="NJ" ~ "Northeast",
+                            state_lynch=="OH" ~ "Midwest",
+                            state_lynch=="IN" ~ "Midwest",
+                            state_lynch=="KS" ~ "Midwest",
+                            state_lynch=="MI" ~ "Midwest",
+                            state_lynch=="WI" ~ "Midwest",
+                            state_lynch=="MN" ~ "Midwest",
+                            state_lynch=="IO" ~ "Midwest",
+                            state_lynch=="CA" ~ "West",
+                            state_lynch=="NE" ~ "West",
+                            state_lynch=="OR" ~ "West",
+                            state_lynch=="IL" ~ "Midwest",
+                            state_lynch=="NE" ~ "Midwest",
+                            state_lynch=="CO" ~ "West",
+                            state_lynch=="ND" ~ "Midwest",
+                            state_lynch=="SD" ~ "Midwest",
+                            state_lynch=="MO" ~ "West",
+                            state_lynch=="WA" ~ "West",
+                            state_lynch=="ID" ~ "West",
+                            state_lynch=="WY" ~ "West",
+                            state_lynch=="UT" ~ "West",
+                            state_lynch=="OK" ~ "South",
+                            state_lynch=="NM" ~ "West",
+                            state_lynch=="AZ" ~ "West",
+                            state_lynch=="AL" ~ "West",
+                            state_lynch=="HI" ~ "West",
+                            state_lynch=="DC" ~ "South",
+                            state_lynch=="VI" ~ "Misc",
+                                                     TRUE~mob_region))
 
 mob_northeast <- mob2 |>
   filter(mob_region == 'Northeast') |>
@@ -189,45 +246,36 @@ mob_northeast <- mob2 |>
 mob_northeast |>
   summarise(sum(total))
   
-#Charts! Hostile, Neutral, Orderly Percentages for Alabama, Georgia, Mississippi and Texas.
+#Charts Hostile, Neutral, Orderly Percentages for Alabama, Georgia, Mississippi and Texas.
 
-ggplot(mob_state, aes(x=state_lynch, y=percent_hostile)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    labs(x = "State", y = "Percent Hostile", title = "Southern Hostile Mob Portrayal Percentages") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1)) 
+library(reshape2)
 
-ggplot(mob_state, aes(x=state_lynch, y=percent_neutral)) +
-    geom_bar(stat = "identity", position = "dodge") +
-    labs(x = "State", y = "Percent Neutral", title= "Southern Neutral Mob Portrayal Percentages") +
-    theme_bw() +
-    theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
+mob_state_melt <- melt(mob_state, id.vars = "state_lynch", 
+                measure.vars = c("percent_hostile", "percent_neutral", "percent_orderly"))
 
-ggplot(mob_state, aes(x=state_lynch, y=percent_orderly)) +
-    geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "State", y = "Percent Orderly", title = "Southern Orderly Mob Portrayal Percentages") +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
+
+write.csv(mob_state_melt, "../output/mob_state_melt.csv")
+
+ggplot(mob_state_melt, aes(x = state_lynch, y = value, fill = variable)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "State", y = "Percentage", fill = "Variable") +
+  theme_minimal()
+
 
 #Hostile, Neutral, Orderly Percentages for Northeast states: CT, ME, NJ, NY and PA.
 
-ggplot(mob_northeast, aes(x=state_lynch, y=percent_hostile)) +
-    geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "State", y = "Percent Hostile", title = "Northeast Hostile Mob Portrayal Percentages") +
-  theme_bw() +
-  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
+mob_northeast_melt <- melt(mob_northeast, id.vars = "state_lynch", 
+                measure.vars = c("percent_hostile", "percent_neutral", "percent_orderly"))
 
-ggplot(mob_northeast, aes(x=state_lynch, y=percent_neutral)) +
-    geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "State", y = "Percent Neutral",title = "Northeast Neutral Mob Portrayal Percentages") +
-   theme_bw() +
-  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1))
 
-ggplot(mob_northeast, aes(x=state_lynch, y=percent_orderly)) +
-    geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "State", y = "Percentage Orderly", title = "Northeast Orderly Mob Portrayal Percentages") +
-   theme_bw() +
-  theme(axis.text.x = element_text(angle=45, vjust=1, hjust=1)) 
+write.csv(mob_state_melt, "../output/mob_northeast_melt.csv")
+
+ggplot(mob_northeast_melt, aes(x = state_lynch, y = value, fill = variable)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(x = "State", y = "Percentage", fill = "Variable") +
+  theme_minimal()
+
+
   
 
 

@@ -942,13 +942,73 @@ black_bigrams_pre_1900 <- read_csv("../output/bp_bigrams/bp_pre1900_lynch_bigram
 
 black_bigrams %>%
   filter(n >= 5) %>%
-  filter(decade == "1930s")
+  filter(decade == "1930s") %>% 
   filter(str_detect(word1, 'mob') & str_detect(word2, 'violence'))
 
 
 black_bigrams %>%
   filter(n >= 5) %>%
   filter(str_detect(word1, 'anti') & str_detect(word2, 'lynching'))
+
+black_bigrams <- black_bigrams %>%
+  na.omit()
+
+bigrams_for_viz <- black_bigrams %>%
+  mutate(black_bigrams, x = paste(word1, word2)) 
+
+#write_csv(bigrams_for_viz, "bigrams_for_viz.csv")
+
+# comparing to the white press
+
+white_bigrams <- read_csv("../output/all_bigrams_11.10.csv")
+
+white_bigrams %>%
+  filter(str_detect(word1, 'jim') & str_detect(word2, 'crow'))
+
+white_bigrams %>%
+  filter(str_detect(word1, 'civil') & str_detect(word2, 'rights'))
+
+white_bigrams %>%
+  filter(decade == "1930") %>%
+  filter(str_detect(word1, 'anti') & str_detect(word2, 'lynching'))
+
+white_bigrams_for_viz <- white_bigrams %>%
+  mutate(white_bigrams, x = paste(word1, word2)) 
+
+#write_csv(white_bigrams_for_viz, "white_bigrams_viz.csv")
+
+white_bigrams %>%
+  filter(n >= 5) %>%
+  filter(decade == "1930") %>%
+  filter(str_detect(word1, 'mob') & str_detect(word2, 'violence'))
+
+black_bigrams %>%
+  filter(decade == '1910s')
+
+black_bigrams %>%
+  filter(decade == '1920s')
+
+black_bigrams %>%
+  filter(decade == '1930s')
+
+black_bigrams %>%
+  filter(decade == '1940s')
+
+white_bigrams %>%
+  filter(str_detect(word1, 'mob') & str_detect(word2, 'violence'))
+
+black_bigrams %>%
+  filter(str_detect(word1, 'jim') & str_detect(word2, 'crow'))
+
+white_bigrams %>%
+  filter(str_detect(word1, 'anti') & str_detect(word2, 'lynching'))
+
+black_bigrams %>%
+  filter(decade == "1930s") %>%
+  filter(str_detect(word1, 'anti') & str_detect(word2, 'lynching'))
+
+black_bigrams %>%
+  filter(str_detect(word1, 'civil') & str_detect(word2, 'rights'))
 
 ```
 

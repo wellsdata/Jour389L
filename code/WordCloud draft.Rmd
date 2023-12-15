@@ -1,0 +1,57 @@
+---
+title: "WordCloud Draft"
+author: "Wells"
+date: "2023-11-28"
+output: html_document
+---
+# install.packages(c("shiny", "tm", "wordcloud", "dplyr", "stringr"))
+
+# Load required libraries
+library(shiny)
+library(tm)
+library(wordcloud)
+library(dplyr)
+library(stringr)
+
+# Example data
+data <- data.frame(
+  text = c("data science is awesome", "visualization is important", "word clouds are fun", "r programming is powerful"),
+  date = as.Date(c("2022-01-01", "2022-01-01", "2023-01-01", "2023-01-01"))
+)
+
+# Define UI
+ui <- fluidPage(
+  titlePanel("Interactive Word Cloud"),
+  sidebarLayout(
+    sidebarPanel(
+      dateRangeInput("date_range", "Select Date Range", start = min(data$date), end = max(data$date)),
+      actionButton("update_btn", "Update")
+    ),
+    mainPanel(
+      wordcloudOutput("wordcloud")
+    )
+  )
+)
+
+# Define server logic
+server <- function(input, output) {
+  # Filter data based on selected date range
+  filtered_data <- reactive({
+    data %>%
+      filter(date >= input$date_range[1] & date <= input$date_range[2])
+  })
+
+  # Generate word cloud
+  output$wordcloud <- renderWordcloud({
+    text <- filtered_data()$text
+    wordcloud(words = str_split(text, " "), min.freq = 1, scale=c(3,0.5), colors=brewer.pal(8, "Dark2"))
+  })
+
+  # Observer to update word cloud on button click
+  observeEvent(input$update_btn, {
+    updateWordcloud(session, "wordcloud")
+  })
+}
+
+# Run the application
+shinyApp(ui, server)
