@@ -1084,14 +1084,21 @@ write_sheet(state_trends, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6
 all_occurrences <- nrow(all_mob_connected)
 
 cooccurrence_table <- all_mob_connected %>% 
-  group_by(hostile, justice, orderly) %>% 
+  group_by(hostile, justice, orderly, neutral) %>% 
   count() %>% 
   mutate(named = case_when(
-    hostile == 1 & justice == 1 & orderly == 1 ~ "all",
-    hostile == 1 & justice == 1 ~ "hostile, justice",
-    hostile == 1 & orderly == 1 ~ "hostile, orderly",
-    orderly == 1 & justice == 1 ~ "oderly, justice",
-    orderly == 0 & justice == 0 & hostile == 0 ~ "none"
+    hostile == 1 & justice == 1 & orderly == 1 & neutral == 1 ~ "all",
+    hostile == 1 & justice == 1 & orderly == 1 ~ "hostile, justice, orderly",
+    hostile == 1 & orderly == 1 & neutral == 1 ~ "hostile, orderly, neutral",
+    orderly == 1 & justice == 1 & neutral == 1 ~ "oderly, justice, neutral",
+    hostile == 1 & justice == 1 & neutral == 1 ~ "hostile, justice, neutral",
+    justice == 1 & neutral == 1 ~ "justice, neutral",
+    orderly == 1 & neutral == 1 ~ "orderly, neutral",
+    justice == 1 & orderly == 1 ~ "justice, orderly",
+    justice == 1 & hostile == 1 ~ "justice, hostile",
+    orderly == 1 & hostile == 1 ~ "orderly, hostile",
+    hostile == 1 & neutral == 1 ~ "hostile, neutral",
+    orderly == 0 & justice == 0 & hostile == 0 & neutral == 0 ~ "none"
   )) %>% 
   filter(!is.na(named)) %>% 
   ungroup() %>% 
@@ -1099,6 +1106,7 @@ cooccurrence_table <- all_mob_connected %>%
   mutate(percent_occurrences = round(n/all_occurrences*100,2))
 
 write_sheet(cooccurrence_table, "https://docs.google.com/spreadsheets/d/1XG2um-mkZ0ta6kikMuQucydNOPV2POrWLPtxRTuBh0o/edit#gid=0", sheet = "co_occurrences")
+
 ```
 
 
