@@ -1,7 +1,7 @@
 ---
 title: "Maryland"
 author: "Rob Wells, Hannah Marszalek"
-date: "2023-10-18"
+date: "2024-9-30"
 output: html_document
 ---
 ```{r message=FALSE, warning=FALSE}
@@ -22,7 +22,83 @@ library(ggplot2)
 library(sf)
 ```
 
-## Creating and Cleaning Maryland Subset
+## 2024 Update -Creating and Cleaning Maryland Subset
+```{r}
+## Load Data
+#metadata for 11,396 articles observed by coding team. 19% of all 60,042 entries in search
+master_article_index_june_26_2024 <- read_csv("https://osf.io/download/fuh3m/?view_only=6c106acd6cb54f6f849e8c6f9098809f")
+
+
+#Index of 11,223 articles of text extracted from 60,000 lynching articles: 18.7% of all 60,042 search captured
+extracted_articles_index_june_22_2024 <- read_csv("https://osf.io/download/hzyw6/?view_only=6c106acd6cb54f6f849e8c6f9098809f") %>%
+  as.data.frame()
+
+#60,042 Library of Congress articles on lynching captured.
+main_index <- read_csv("https://osf.io/download/hda4v/?view_only=6c106acd6cb54f6f849e8c6f9098809f")
+
+
+maryland <- master_article_index_june_26_2024 %>% 
+  filter(newspaper_state=="Maryland") 
+
+#Formatting date and adding month column
+maryland <- maryland %>%
+  select(newspaper_name:url, newspaper_city:black_press, article_title)
+```
+
+#MD coverage by decade
+```{r}
+
+maryland <- maryland %>% 
+  mutate(decade = case_when(
+        year >= 1840 & year <=1849 ~ "1840",
+        year >= 1850 & year <=1859 ~ "1850",
+        year >= 1860 & year <=1869 ~ "1860",
+        year >= 1870 & year <=1879 ~ "1870",
+        year >= 1880 & year <=1889 ~ "1880",
+        year >= 1890 & year <=1899 ~ "1890",
+        year >= 1900 & year <=1909 ~ "1900",
+        year >= 1910 & year <=1919 ~ "1910",
+        year >= 1920 & year <=1929 ~ "1920",
+        year >= 1930 & year <=1939 ~ "1930"
+               ))
+
+md_cases_by_decade <- maryland %>%
+  group_by(decade) %>% 
+  count() %>% 
+  rename(articles_decade = n) %>% 
+  mutate(decade = as.numeric(decade))
+```
+
+
+## Tolnay Md Analysis
+```{r}
+tolnay_beck <- read_csv("../data/Bailey_Beck_lynching_list_8_1_2022.csv") %>% 
+  as.data.frame()
+
+tolnay_beck <- janitor::clean_names(tolnay_beck)
+
+tolnay_md <- tolnay_beck %>% 
+  filter(lynch_state=="MD") %>% 
+  select(name, year, month, day, status, lynch_county, place, method_of_death, accusation, mob_size, notes, decade) %>% 
+  arrange(year)
+
+#write.csv(tolnay_md, "../output/tolnay_md.csv")
+
+tolnay_by_decade <- tolnay_md %>% 
+  group_by(decade) %>% 
+  count() %>%
+  rename(tolnay_count = n)
+```
+
+## Combined Data Analysis
+```{r}
+# Comparison of numbers by decade
+totals_by_decade <- left_join(md_cases_by_decade, tolnay_by_decade, by = "decade")
+```
+
+
+
+## 2023 Creating and Cleaning Maryland Subset
 ```{r}
 lynch_geocoded_10.8 <- read.csv("../data/lynch_geocoded_10.8.csv")
 
@@ -76,25 +152,13 @@ in_vs_out_of_state <- distinct_md %>%
   count()
 ```
 
-## Tolnay Md Analysis
+
 ```{r}
-tolnay_beck <- read_csv("../data/Bailey_Beck_lynching_list_8_1_2022.csv") %>% 
-  as.data.frame()
-
-tolnay_beck <- janitor::clean_names(tolnay_beck)
-
-tolnay_md <- tolnay_beck %>% 
-  filter(lynch_state=="MD") %>% 
-  select(name, year, month, day, status, lynch_county, place, method_of_death, accusation, mob_size, notes, decade) %>% 
-  arrange(year)
-
-#write.csv(tolnay_md, "../output/tolnay_md.csv")
-
-tolnay_by_decade <- tolnay_md %>% 
-  group_by(decade) %>% 
-  count() %>%
-  rename(tolnay_count = n)
+x <- distinct_md %>% 
+  count(city_lynch)
 ```
+
+
 
 ## Combined Data Analysis
 ```{r}
