@@ -33,6 +33,8 @@ master_article_index_june_26_2024 <- read_csv("https://osf.io/download/fuh3m/?vi
 extracted_articles_index_june_22_2024 <- read_csv("https://osf.io/download/hzyw6/?view_only=6c106acd6cb54f6f849e8c6f9098809f") %>%
   as.data.frame()
 
+
+
 #60,042 Library of Congress articles on lynching captured.
 main_index <- read_csv("https://osf.io/download/hda4v/?view_only=6c106acd6cb54f6f849e8c6f9098809f")
 
@@ -94,6 +96,8 @@ tolnay_by_decade <- tolnay_md %>%
 ```{r}
 # Comparison of numbers by decade
 totals_by_decade <- left_join(md_cases_by_decade, tolnay_by_decade, by = "decade")
+
+write.csv(totals_by_decade, "tolnay_md.csv")
 ```
 
 
@@ -250,29 +254,94 @@ print(map_plot)
 ## Comparing the Maryland Lynching Memorial Project's List to Ours and Tolnay's
 ```{r}
 #googlesheets4::gs4_deauth()
-md_memorial_project <- read_sheet("https://docs.google.com/spreadsheets/d/1MUBAvoaaU0tzdgDUgTRcBu7zGWwZL9_RnbtVZ-zO2lc/edit#gid=0") %>%
-  mutate(name = paste(first_name, last_name),
-         year = year(date)) %>%
+#Updated with 7-31-2024 list
+md_memorial_project <- read_sheet("https://docs.google.com/spreadsheets/d/1MUBAvoaaU0tzdgDUgTRcBu7zGWwZL9_RnbtVZ-zO2lc/edit?gid=173261424#gid=173261424") %>%
+  clean_names() %>% 
+  rename(first_name = first, last_name = last) %>% 
+  mutate(name = paste(first_name, last_name, sep = " ")) %>% 
+  mutate(year = year(date)) %>%
   distinct()
+```
 
+
+```{r}
 #Comparing with Tolnay's list
 subset_tolnay <- tolnay_md %>%
-  select(name, year)
+  select(name, year, lynch_county) %>% 
+  mutate(county = str_replace_all(lynch_county,"[[:punct:]]", "")) %>% 
+  rename(tolnay_name = name)
          
 subset_memorial <- md_memorial_project %>%
-  select(name, year)
+  mutate(county = str_replace_all(county,"[[:punct:]]", "")) %>% 
+  select(name, year, county) %>% 
+  rename(md_memorial_name = name)
 
-unknown_cases_tolnay <- anti_join(subset_tolnay, subset_memorial)
+matching_cases_tolnay <- inner_join(subset_tolnay, subset_memorial, by=c("year", "county"))
+
+no_match_cases_tolnay <- anti_join(subset_tolnay, subset_memorial, by=c("year", "county"))
+
+
+```
+
+```{r}
 
 #Comparing with our list
 subset_geocoded <- distinct_md %>%
-  select(city_lynch, date)
+  select(city_lynch, date) %>% 
+    mutate(datemo = format(floor_date(as.Date(date), "month"), "%Y-%m")) %>% 
+  rename(oursample_city = city_lynch)
 
 second_subset_memorial <- md_memorial_project %>%
-  select(city, date)
+  select(city, date) %>% 
+    mutate(datemo = format(floor_date(as.Date(date), "month"), "%Y-%m")) %>% 
+  rename(md_memorial_city = city)
 
-unknown_cases_geocoded <- anti_join(subset_geocoded, second_subset_memorial)
+unknown_cases_geocoded <- anti_join(subset_geocoded, second_subset_memorial, by="datemo")
 ```
+
+
+#List of Md Lynching Memorial Victims
+```{r}
+# Assuming your dataframe is named subset_memorial
+library(dplyr)
+library(tidyr)
+library(kableExtra)
+
+subset_memorial <- subset_memorial %>% 
+  rename(name= md_memorial_name) %>% 
+  arrange(year)
+
+# Add a column number for layout purposes
+subset_memorial <- subset_memorial %>% 
+  mutate(col_num = rep(1:3, length.out = n()))
+
+# Reshape the data into the desired format
+formatted_data <- subset_memorial %>%
+  group_by(col_num) %>%
+  mutate(row_num = row_number()) %>%
+  select(row_num, col_num, year, name) %>%
+  pivot_wider(
+    names_from = col_num,
+    values_from = c(year, name),
+    names_glue = "col{col_num}_{.value}"
+  ) %>%
+  select(starts_with("col1"), starts_with("col2"), starts_with("col3"))
+
+# Create an HTML table
+html_table <- kable(formatted_data, format = "html", na = "N/A",
+                    col.names = c("Year", "Name", "Year", "Name", "Year", "Name")) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                full_width = FALSE) %>%
+  column_spec(1, bold = TRUE) %>%
+  column_spec(3, bold = TRUE) %>%
+  column_spec(5, bold = TRUE)
+
+# Print the HTML table
+print(html_table)
+
+
+```
+
 
 ## wells matching md memorial and LOC data by year
 ```{r}
@@ -287,7 +356,7 @@ combo <- md_memorial2 %>%
   full_join(news_md, by=c("year")) %>% 
   arrange(year)
 
-write.csv(combo, "../output/md_memorial_news_test.csv")
+#write.csv(combo, "../output/md_memorial_news_test.csv")
 
 ```
 
